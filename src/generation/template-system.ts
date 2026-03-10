@@ -26,4 +26,9 @@ export class TemplateSystem {
     listTemplates(): DocumentTemplate[] {
         return Array.from(this.templates.values());
     }
+
+    getTemplateSectionIds(documentId: string): string[] {
+        const template = this.getTemplate(documentId);
+        return template?.sections.map(s => s.id) || [];
+    }
 }

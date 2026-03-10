@@ -6,7 +6,7 @@
     "questions": [
         {
             "id": "tech_stack",
-            "sectionId": "technology_choices",
+            "sectionId": "technology_stack",
             "question": "What are the core technologies and frameworks for this solution?",
             "answerType": "list",
             "required": true,
@@ -16,21 +16,21 @@
         },
         {
             "id": "system_boundaries",
-            "sectionId": "system_context",
+            "sectionId": "system_architecture_context",
             "question": "Which external systems and services will the solution interact with?",
             "answerType": "list",
             "required": true
         },
         {
             "id": "scaling_needs",
-            "sectionId": "architectural_drivers",
+            "sectionId": "scalability_requirements",
             "question": "What are the anticipated scaling and throughput requirements?",
             "answerType": "long_text",
             "required": true
         },
         {
             "id": "infrastructure",
-            "sectionId": "deployment_view",
+            "sectionId": "deployment_requirements",
             "question": "Which infrastructure and hosting provider is targeted?",
             "answerType": "single_select_or_text",
             "options": [

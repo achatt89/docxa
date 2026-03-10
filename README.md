@@ -58,6 +58,13 @@ Docxa provides role-aware interview definitions to bridge information gaps.
 - **Available Roles**: `product_manager`, `solution_architect`, `engineering_lead`, `devops_engineer`, `business_stakeholder`.
 - **Session Persistence**: Progress is saved in `.docxa/interviews/`, allowing for resumable workflows.
 
+## Interview-Template Alignment
+
+Docxa enforces a strict contract between interview definitions and document templates.
+- **Section Traceability**: Every question in an interview must map to an exact `sectionId` defined in the corresponding document template JSON.
+- **Fail-Fast Validation**: The `InterviewLoader` will fail to load definitions that use invalid or approximate section IDs.
+- **Consistency**: This ensures that stakeholder answers are accurately traced to the correct sections during document generation.
+
 ## Architecture
 
 Docxa follows a modular architecture:

@@ -23,7 +23,7 @@
         },
         {
             "id": "user_personas",
-            "sectionId": "target_audience",
+            "sectionId": "target_users",
             "question": "Who are the primary user personas?",
             "answerType": "list",
             "required": true,
@@ -33,7 +33,7 @@
         },
         {
             "id": "user_problems",
-            "sectionId": "problem_statement",
+            "sectionId": "user_problems",
             "question": "What are the top 3 pain points users currently face?",
             "answerType": "list",
             "required": true
@@ -47,14 +47,14 @@
         },
         {
             "id": "key_features",
-            "sectionId": "product_features",
+            "sectionId": "features",
             "question": "What are the must-have features for the MVP?",
             "answerType": "list",
             "required": true
         },
         {
             "id": "critical_user_journey",
-            "sectionId": "user_experience",
+            "sectionId": "user_journeys",
             "question": "Describe the most critical user journey in detail.",
             "answerType": "long_text",
             "required": true

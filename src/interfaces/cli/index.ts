@@ -22,11 +22,14 @@ const store = new WorkspaceStore(process.cwd());
 const templateSystem = new TemplateSystem();
 
 const interviewDir = path.join(process.cwd(), 'interviews');
-const loader = new InterviewLoader();
+const loader = new InterviewLoader(templateSystem);
 const sessionStore = new InterviewSessionStore(process.cwd());
 const normalizer = new AnswerNormalizer();
 const strategy = new QuestionStrategy();
 const engine = new InterviewEngine(loader, sessionStore, normalizer, strategy, interviewDir);
+
+// Initialize templates at startup to enable alignment validation
+await TemplateBootstrap.initialize(templateSystem);
 
 program
     .name('docxa')
@@ -164,8 +167,6 @@ program
     .action(async (docType: string, options) => {
         const { DocumentGenerator } = await import('../../generation/document-generator.js');
         const planner = new GenerationPlanner();
-
-        await TemplateBootstrap.initialize(templateSystem);
         const docId = docType.toUpperCase();
 
         const existingDocs = await store.listDocuments();

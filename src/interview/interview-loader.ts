@@ -1,8 +1,16 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { InterviewDefinition, InterviewDefinitionSchema } from './interview-schema.js';
+import { TemplateSystem } from '../generation/template-system.js';
+import { InterviewTemplateAlignment } from './interview-template-alignment.js';
 
 export class InterviewLoader {
+    private templateSystem?: TemplateSystem;
+
+    constructor(templateSystem?: TemplateSystem) {
+        this.templateSystem = templateSystem;
+    }
+
     async loadInterviews(interviewDir: string): Promise<InterviewDefinition[]> {
         const interviews: InterviewDefinition[] = [];
         await this.recursiveLoad(interviewDir, interviews);
@@ -23,6 +31,17 @@ export class InterviewLoader {
                         const content = await fs.readFile(fullPath, 'utf-8');
                         const json = JSON.parse(content);
                         const validated = InterviewDefinitionSchema.parse(json);
+
+                        // Alignment Validation
+                        if (this.templateSystem) {
+                            const template = this.templateSystem.getTemplate(validated.documentId);
+                            if (template) {
+                                InterviewTemplateAlignment.validate(validated, template);
+                            } else {
+                                console.warn(`Skipping alignment validation for ${validated.documentId}: Template not found.`);
+                            }
+                        }
+
                         interviews.push(validated);
                     } catch (error: any) {
                         console.error(`Failed to load interview definition at ${fullPath}: ${error.message}`);

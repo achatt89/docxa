@@ -33,7 +33,7 @@
         },
         {
             "id": "recovery_objectives",
-            "sectionId": "resilience_requirements",
+            "sectionId": "resilience_and_recovery",
             "question": "What are the target RTO (Recovery Time Objective) and RPO (Recovery Point Objective)?",
             "answerType": "long_text",
             "required": true
@@ -47,7 +47,7 @@
         },
         {
             "id": "infra_constraints",
-            "sectionId": "deployment_constraints",
+            "sectionId": "deployment_and_environment_constraints",
             "question": "Identify any hard infrastructure or data residency constraints.",
             "answerType": "long_text",
             "required": true
@@ -61,14 +61,14 @@
         },
         {
             "id": "ops_readiness",
-            "sectionId": "validation_expectations",
+            "sectionId": "testing_and_validation_requirements",
             "question": "What are the criteria for operational readiness and go-live approval?",
             "answerType": "list",
             "required": true
         },
         {
             "id": "known_ops_gaps",
-            "sectionId": "operational_risks",
+            "sectionId": "risks_and_gaps",
             "question": "Identify any known gaps in current operations or toolsets.",
             "answerType": "list",
             "required": false
