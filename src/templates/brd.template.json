@@ -1,0 +1,289 @@
+{
+  "documentId": "BRD",
+  "name": "Business Requirements Document",
+  "phase": 1,
+  "version": "1.0.0",
+  "description": "Template for capturing the business context, goals, stakeholders, scope, rules, constraints, and success criteria for a project.",
+  "modeSupport": [
+    "greenfield",
+    "existing"
+  ],
+  "dependencies": [],
+  "primaryOwner": "Business Stakeholder",
+  "contributors": [
+    "Product Manager",
+    "Delivery Manager",
+    "Architect"
+  ],
+  "inputSources": {
+    "greenfield": [
+      "business stakeholder interviews",
+      "product manager interviews",
+      "delivery manager interviews",
+      "market/problem statements",
+      "strategy notes"
+    ],
+    "existing": [
+      "existing project documentation",
+      "stakeholder interviews",
+      "backlog or ticketing systems",
+      "repository analysis summary",
+      "process and support notes"
+    ]
+  },
+  "generationPolicy": {
+    "allowPartialDrafts": true,
+    "requiresHumanConfirmation": true,
+    "provenanceLabels": [
+      "inferred",
+      "generated",
+      "confirmed"
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive_summary",
+      "title": "Executive Summary",
+      "description": "A concise summary of the business problem, proposed initiative, and intended outcome.",
+      "required": true,
+      "recommendedSources": [
+        "stakeholder interviews",
+        "strategy notes"
+      ],
+      "guidance": [
+        "Explain the business context in plain language.",
+        "State why this initiative matters now.",
+        "Summarize the expected value of the project."
+      ]
+    },
+    {
+      "id": "business_problem_statement",
+      "title": "Business Problem Statement",
+      "description": "Defines the current business problem, pain point, or opportunity being addressed.",
+      "required": true,
+      "recommendedSources": [
+        "business stakeholder interviews",
+        "existing documentation",
+        "operational pain points"
+      ],
+      "guidance": [
+        "Describe the current issue or missed opportunity.",
+        "Explain who is affected and how.",
+        "State the cost or impact of not solving it."
+      ]
+    },
+    {
+      "id": "business_objectives",
+      "title": "Business Objectives",
+      "description": "Lists the measurable business goals this initiative is expected to achieve.",
+      "required": true,
+      "recommendedSources": [
+        "stakeholder interviews",
+        "strategy notes",
+        "OKRs or KPIs"
+      ],
+      "guidance": [
+        "Use measurable business outcomes where possible.",
+        "Separate primary objectives from secondary ones.",
+        "Align objectives to organizational priorities."
+      ]
+    },
+    {
+      "id": "stakeholders",
+      "title": "Stakeholders",
+      "description": "Identifies the key business, product, delivery, and technical stakeholders involved.",
+      "required": true,
+      "recommendedSources": [
+        "stakeholder registry",
+        "project kickoff inputs"
+      ],
+      "guidance": [
+        "List stakeholder groups and named roles where available.",
+        "Clarify ownership, influence, and approval responsibility.",
+        "Capture who benefits from or is impacted by the project."
+      ]
+    },
+    {
+      "id": "business_context",
+      "title": "Business Context",
+      "description": "Explains the wider business environment, process, market, or operational background relevant to the initiative.",
+      "required": true,
+      "recommendedSources": [
+        "strategy notes",
+        "existing project material",
+        "stakeholder interviews"
+      ],
+      "guidance": [
+        "Provide enough context for a new team member to understand the domain.",
+        "Mention existing workflows or legacy systems if relevant.",
+        "Highlight current limitations or dependencies."
+      ]
+    },
+    {
+      "id": "scope",
+      "title": "Scope",
+      "description": "Defines what is included within the boundaries of this initiative.",
+      "required": true,
+      "recommendedSources": [
+        "stakeholder interviews",
+        "early planning notes",
+        "backlog themes"
+      ],
+      "guidance": [
+        "State what business areas, processes, or capabilities are in scope.",
+        "Be concrete rather than vague.",
+        "Keep scope aligned to the stated objectives."
+      ]
+    },
+    {
+      "id": "out_of_scope",
+      "title": "Out of Scope",
+      "description": "Defines what is explicitly excluded from the initiative to avoid ambiguity.",
+      "required": false,
+      "recommendedSources": [
+        "stakeholder interviews",
+        "planning notes"
+      ],
+      "guidance": [
+        "List exclusions clearly.",
+        "Call out nearby items people may mistakenly assume are included.",
+        "Use this section to reduce expectation drift."
+      ]
+    },
+    {
+      "id": "business_rules",
+      "title": "Business Rules",
+      "description": "Captures domain rules, policies, and operational constraints that the solution must respect.",
+      "required": true,
+      "recommendedSources": [
+        "domain experts",
+        "policy docs",
+        "existing process documentation"
+      ],
+      "guidance": [
+        "Document rules that affect behavior, approvals, calculations, compliance, or workflow.",
+        "Differentiate permanent rules from temporary workarounds.",
+        "Call out exceptions where relevant."
+      ]
+    },
+    {
+      "id": "assumptions",
+      "title": "Assumptions",
+      "description": "Lists assumptions made during planning and document creation.",
+      "required": false,
+      "recommendedSources": [
+        "project team inputs",
+        "interview summaries"
+      ],
+      "guidance": [
+        "Only include assumptions that materially affect planning or outcomes.",
+        "Write them so they can later be validated or disproven.",
+        "Avoid mixing assumptions with confirmed facts."
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "Constraints",
+      "description": "Defines business, timeline, budget, legal, operational, or organizational constraints.",
+      "required": true,
+      "recommendedSources": [
+        "delivery manager inputs",
+        "stakeholder interviews",
+        "compliance notes"
+      ],
+      "guidance": [
+        "Capture limits that the solution must operate within.",
+        "Mention deadlines, regulatory obligations, budget ceilings, or staffing realities.",
+        "Explain why the constraint matters."
+      ]
+    },
+    {
+      "id": "risks",
+      "title": "Risks",
+      "description": "Summarizes major business and delivery risks known at this stage.",
+      "required": false,
+      "recommendedSources": [
+        "stakeholder interviews",
+        "delivery planning",
+        "existing retrospectives"
+      ],
+      "guidance": [
+        "Focus on material risks, not speculative noise.",
+        "Include dependency, adoption, resourcing, and operational risks.",
+        "Where possible, note mitigation direction."
+      ]
+    },
+    {
+      "id": "success_criteria",
+      "title": "Success Criteria",
+      "description": "Defines how the business will determine whether the initiative succeeded.",
+      "required": true,
+      "recommendedSources": [
+        "business objectives",
+        "KPIs",
+        "stakeholder interviews"
+      ],
+      "guidance": [
+        "Link success criteria back to business objectives.",
+        "Prefer measurable targets where possible.",
+        "Include qualitative outcomes when quantitative measures are not yet defined."
+      ]
+    },
+    {
+      "id": "high_level_timeline",
+      "title": "High Level Timeline",
+      "description": "Provides a business-facing timeline view of the initiative.",
+      "required": false,
+      "recommendedSources": [
+        "delivery manager input",
+        "planning artifacts"
+      ],
+      "guidance": [
+        "Keep this section high level.",
+        "Use major milestones rather than detailed sprint plans.",
+        "Highlight externally important dates if known."
+      ]
+    },
+    {
+      "id": "approval_and_signoff",
+      "title": "Approval and Sign-off",
+      "description": "Captures who approves the business requirements and any sign-off status.",
+      "required": false,
+      "recommendedSources": [
+        "stakeholder registry",
+        "project governance process"
+      ],
+      "guidance": [
+        "List approving roles or named approvers if known.",
+        "Record sign-off status or pending approvals.",
+        "Do not invent approval states."
+      ]
+    }
+  ],
+  "validationRules": [
+    "Business objectives must be consistent with the problem statement.",
+    "Scope must not contradict out_of_scope items.",
+    "Success criteria should map to at least one business objective where possible.",
+    "Constraints must not be written as objectives.",
+    "Assumptions must be distinguishable from confirmed facts."
+  ],
+  "downstreamDependencies": [
+    "PRD",
+    "FRD",
+    "TRD"
+  ],
+  "promptHints": {
+    "systemIntent": "Generate a business-focused BRD that is clear, structured, and useful for both leadership and delivery teams.",
+    "mustDo": [
+      "Write in business language first, not implementation language.",
+      "State unknowns clearly rather than guessing.",
+      "Preserve distinctions between confirmed facts, inferred context, and assumptions.",
+      "Keep the document suitable as an upstream input to PRD and FRD generation."
+    ],
+    "mustNotDo": [
+      "Do not invent KPIs, budgets, dates, or stakeholders.",
+      "Do not drift into detailed technical design.",
+      "Do not restate the same point across multiple sections unless required for clarity."
+    ]
+  }
+}

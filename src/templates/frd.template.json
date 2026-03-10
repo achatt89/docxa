@@ -1,0 +1,110 @@
+{
+  "documentId": "FRD",
+  "name": "Functional Requirements Document",
+  "phase": 1,
+  "version": "1.0",
+  "metadata": {
+    "description": "Defines detailed system behaviors, workflows, and functional interactions required to satisfy product features defined in the PRD.",
+    "primaryOwner": "Product Manager",
+    "contributors": [
+      "Solution Architect",
+      "Engineering Lead",
+      "QA Lead",
+      "Developers"
+    ]
+  },
+  "documentControl": {
+    "sections": [
+      "Document Version",
+      "Author",
+      "Reviewers",
+      "Approvers",
+      "Change History"
+    ]
+  },
+  "dependencies": [
+    "PRD"
+  ],
+  "sections": [
+    {
+      "id": "functional_overview",
+      "title": "Functional Overview",
+      "purpose": "Provide a summary of the functional capabilities required to implement the product features."
+    },
+    {
+      "id": "system_actors",
+      "title": "System Actors",
+      "purpose": "Identify the users, systems, and roles interacting with the system."
+    },
+    {
+      "id": "use_cases",
+      "title": "Use Cases",
+      "purpose": "Describe user interactions with the system to achieve specific goals."
+    },
+    {
+      "id": "user_flows",
+      "title": "User Workflows",
+      "purpose": "Define step-by-step flows describing how users interact with the system."
+    },
+    {
+      "id": "functional_requirements",
+      "title": "Functional Requirements",
+      "purpose": "Provide a detailed list of system capabilities required to support product features."
+    },
+    {
+      "id": "input_output_definitions",
+      "title": "Input and Output Definitions",
+      "purpose": "Describe the expected data inputs and outputs for system interactions."
+    },
+    {
+      "id": "validation_rules",
+      "title": "Validation Rules",
+      "purpose": "Define business and system validation rules applied to inputs and workflows."
+    },
+    {
+      "id": "state_transitions",
+      "title": "State Transitions",
+      "purpose": "Describe lifecycle states and transitions of entities within the system."
+    },
+    {
+      "id": "error_handling",
+      "title": "Error Handling",
+      "purpose": "Define expected system behavior when failures or invalid operations occur."
+    },
+    {
+      "id": "audit_and_logging",
+      "title": "Audit and Logging Requirements",
+      "purpose": "Specify functional logging and auditing requirements where applicable."
+    },
+    {
+      "id": "dependencies",
+      "title": "Functional Dependencies",
+      "purpose": "Identify dependencies on external systems, workflows, or operational processes."
+    },
+    {
+      "id": "approval",
+      "title": "Approval and Sign Off",
+      "purpose": "Capture approval of the functional requirements."
+    }
+  ],
+  "validationRules": [
+    "Each functional requirement must map to at least one PRD feature.",
+    "User workflows must correspond to defined use cases.",
+    "Validation rules must apply to at least one input or workflow.",
+    "State transitions must be defined for major entities."
+  ],
+  "downstreamDependencies": [
+    "TRD",
+    "HLD",
+    "LLD"
+  ],
+  "promptHints": {
+    "systemIntent": "Generate a detailed functional requirements document describing system behaviors and workflows required to implement the product features.",
+    "rules": [
+      "Do not introduce new product features not defined in the PRD.",
+      "Focus on system behavior rather than implementation details.",
+      "Clearly describe workflows and state transitions.",
+      "Ensure traceability between PRD features and functional requirements."
+    ]
+  }
+}

@@ -54,11 +54,23 @@ Docxa follows a modular architecture:
 - `generation/`: Document generators and validators.
 - `interfaces/`: CLI, Teams Copilot, and VSCode extension.
 
-## Environment Variables
+## Template System
 
-- `DOCXA_PROVIDER`: LLM provider (openai, anthropic, google).
-- `DOCXA_MODEL`: Model ID to use.
-- `DOCXA_API_KEY`: API key for the selected provider.
+Docxa uses a rich JSON-based template system to define the structure and guidance for generated documents. 
+
+- **Location**: Templates are stored in `src/templates/*.json` and can be supplemented by a root `templates/` directory.
+- **Validation**: Every template is validated against a strict Zod schema (`src/generation/template-schema.ts`) on startup.
+- **Hierarchical Sections**: Supports nested sections with specific purposes, guidance, and required flags.
+- **Prompt Hints**: Templates include `systemIntent`, `rules`, `mustDo`, and `mustNotDo` to guide the LLM precisely.
+
+### Adding a New Template
+To add a new document type (e.g., `HLD`):
+1. Create `src/templates/hld.template.json`.
+2. Define the `documentId`, `name`, and `sections`.
+3. Add `promptHints` to ensure the AI follows specific architectural standards.
+4. The system will automatically detect and load the template on the next run.
+
+## Environment Variables
 
 ---
 Built with ❤️ for AI-native engineering teams.

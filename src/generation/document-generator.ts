@@ -1,7 +1,9 @@
 import { LLMWrapper } from '../utils/llm-wrapper.js';
-import { TemplateSystem, DocumentTemplate } from './template-system.js';
+import { TemplateSystem } from './template-system.js';
 import { Document, DocumentType, DocumentSection } from '../models/document-model.js';
 import { WorkspaceStore } from '../storage/workspace-store.js';
+import { DocumentTemplate, TemplateSection } from './template-schema.js';
+import crypto from 'crypto';
 
 export class DocumentGenerator {
     private llm: LLMWrapper;
@@ -14,50 +16,137 @@ export class DocumentGenerator {
         this.store = store;
     }
 
-    async generate(type: DocumentType, context: any): Promise<Document> {
+    async generate(type: string, context: any): Promise<Document> {
         const template = this.templateSystem.getTemplate(type);
         if (!template) throw new Error(`Template for ${type} not found`);
 
-        // Check dependencies
+        // Check dependencies (soft check for now)
         for (const dep of template.dependencies) {
-            // In a real system, we'd check if dep exists in workspace
+            // Future: check if dependency document exists in store
         }
 
-        const filledPrompt = this.fillTemplate(template.prompt, {
-            ...context,
-            sections: template.sections.join('\n- ')
-        });
+        const systemPrompt = this.buildSystemPrompt(template);
+        const userPrompt = this.buildUserPrompt(template, context);
 
-        const content = await this.llm.generate(filledPrompt, `You are a high-level technical writer generating a ${type} document.`);
-
-        // Simplistic section parsing for now - in production use structured LLM output
-        const sections: DocumentSection[] = template.sections.map(title => ({
-            id: crypto.randomUUID(),
-            title,
-            content: `Content for ${title}...`, // Real implementation would parse 'content'
-            provenance: {
-                source: 'generated',
-                timestamp: new Date().toISOString(),
-                reasoning: 'Generated from stakeholder interviews and project context.'
-            }
-        }));
+        const rawResponse = await this.llm.generate(userPrompt, systemPrompt);
+        const sections = this.parseSections(rawResponse, template.sections);
 
         return {
-            type,
-            version: '1.0.0',
+            type: type.toUpperCase() as DocumentType,
+            version: template.version,
             status: 'draft',
             sections,
-            dependencies: template.dependencies,
-            metadata: {},
+            dependencies: template.dependencies as DocumentType[],
+            metadata: {
+                templateVersion: template.version,
+                generatedAt: new Date().toISOString(),
+            },
             lastUpdated: new Date().toISOString(),
         };
     }
 
-    private fillTemplate(template: string, data: any): string {
-        let result = template;
-        for (const key in data) {
-            result = result.replace(new RegExp(`{{${key}}}`, 'g'), data[key]);
+    private buildSystemPrompt(template: DocumentTemplate): string {
+        const hints = template.promptHints;
+        let prompt = `You are a professional documentation architect. 
+Your goal is to generate a ${template.name} (${template.documentId}) based on the provided project context.
+
+SYSTEM INTENT:
+${hints?.systemIntent || `Generate a high-quality ${template.name}.`}
+
+RULES:
+${hints?.rules?.map(r => `- ${r}`).join('\n') || ''}
+
+MUST DO:
+${hints?.mustDo?.map(r => `- ${r}`).join('\n') || ''}
+
+MUST NOT DO:
+${hints?.mustNotDo?.map(r => `- ${r}`).join('\n') || ''}
+
+Format your response as markdown. Use the exact section titles provided in the instructions as H2 headers (## Title).
+Do not include a table of contents or introductory text. Start directly with the first section header.
+`;
+        return prompt;
+    }
+
+    private buildUserPrompt(template: DocumentTemplate, context: any): string {
+        let prompt = `PROJECT CONTEXT:
+Project Name: ${context.projectName}
+Interview Summaries: ${context.interviewSummaries}
+Additional Context: ${JSON.stringify(context.additionalContext || {}, null, 2)}
+
+Please generate content for the following sections:
+
+`;
+
+        for (const section of template.sections) {
+            prompt += `## ${section.title}\n`;
+            prompt += `ID: ${section.id}\n`;
+            prompt += `PURPOSE: ${section.purpose || section.description || ''}\n`;
+            if (section.guidance?.length) {
+                prompt += `GUIDANCE:\n${section.guidance.map(g => `- ${g}`).join('\n')}\n`;
+            }
+            prompt += `\n`;
         }
-        return result;
+
+        return prompt;
+    }
+
+    private parseSections(rawResponse: string, templateSections: TemplateSection[]): DocumentSection[] {
+        const sections: DocumentSection[] = [];
+        const lines = rawResponse.split('\n');
+
+        let currentSection: Partial<DocumentSection> | null = null;
+        let currentContent: string[] = [];
+
+        const flushSection = () => {
+            if (currentSection && currentSection.title) {
+                sections.push({
+                    id: currentSection.id || crypto.randomUUID(),
+                    title: currentSection.title,
+                    content: currentContent.join('\n').trim(),
+                    provenance: {
+                        source: 'generated',
+                        timestamp: new Date().toISOString(),
+                        reasoning: 'Generated from template and LLM prompt.'
+                    }
+                });
+            }
+        };
+
+        for (const line of lines) {
+            if (line.startsWith('## ')) {
+                flushSection();
+                const title = line.replace('## ', '').trim();
+                const templateMatch = templateSections.find(s => s.title.toLowerCase() === title.toLowerCase());
+
+                currentSection = {
+                    id: templateMatch?.id || crypto.randomUUID(),
+                    title: templateMatch?.title || title,
+                };
+                currentContent = [];
+            } else if (currentSection) {
+                // Skip metadata lines often generated by LLM if they repeat the prompt structure
+                if (!line.startsWith('ID: ') && !line.startsWith('PURPOSE: ') && !line.startsWith('GUIDANCE:')) {
+                    currentContent.push(line);
+                }
+            }
+        }
+        flushSection();
+
+        // If no sections were parsed, fallback to a single block (very unlikely if LLM followed instructions)
+        if (sections.length === 0) {
+            sections.push({
+                id: crypto.randomUUID(),
+                title: 'Document Content',
+                content: rawResponse,
+                provenance: {
+                    source: 'generated',
+                    timestamp: new Date().toISOString(),
+                    reasoning: 'Parsing failed, returning raw response.'
+                }
+            });
+        }
+
+        return sections;
     }
 }

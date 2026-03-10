@@ -6,10 +6,13 @@ import { FrameworkDetector } from '../../analysis/framework-detector.js';
 import { ArchitectureDetector } from '../../analysis/architecture-detector.js';
 import { LLMWrapper } from '../../utils/llm-wrapper.js';
 import { ProjectConfig } from '../../models/project-model.js';
+import { TemplateSystem } from '../../generation/template-system.js';
+import { TemplateBootstrap } from '../../generation/template-bootstrap.js';
 import path from 'path';
 
 const program = new Command();
 const store = new WorkspaceStore(process.cwd());
+const templateSystem = new TemplateSystem();
 
 program
     .name('docxa')
@@ -102,20 +105,15 @@ program
     .argument('<document>', 'Document type (prd, brd, hld, etc.)')
     .action(async (docType: string) => {
         const { DocumentGenerator } = await import('../../generation/document-generator.js');
-        const { TemplateSystem } = await import('../../generation/template-system.js');
-        const { BRDTemplate } = await import('../../templates/brd.template.js');
-        const { PRDTemplate } = await import('../../templates/prd.template.js');
+
+        await TemplateBootstrap.initialize(templateSystem);
 
         console.log(`📄 Generating ${docType.toUpperCase()}...`);
 
-        const system = new TemplateSystem();
-        system.register(BRDTemplate);
-        system.register(PRDTemplate);
-
         const llm = new LLMWrapper();
-        const generator = new DocumentGenerator(llm, system, store);
+        const generator = new DocumentGenerator(llm, templateSystem, store);
 
-        const doc = await generator.generate(docType.toUpperCase() as any, {
+        const doc = await generator.generate(docType.toUpperCase(), {
             projectName: path.basename(process.cwd()),
             interviewSummaries: "Simulated interview summaries."
         });

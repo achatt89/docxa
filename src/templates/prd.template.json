@@ -1,0 +1,131 @@
+{
+  "documentId": "PRD",
+  "name": "Product Requirements Document",
+  "phase": 1,
+  "version": "1.0",
+  "metadata": {
+    "description": "Defines product vision, user needs, functional capabilities, and success criteria derived from the Business Requirements Document.",
+    "primaryOwner": "Product Manager",
+    "contributors": [
+      "Business Stakeholder",
+      "Solution Architect",
+      "Delivery Manager",
+      "Engineering Lead",
+      "QA Lead"
+    ]
+  },
+  "documentControl": {
+    "sections": [
+      "Document Version",
+      "Author",
+      "Reviewers",
+      "Approvers",
+      "Change History"
+    ]
+  },
+  "dependencies": [
+    "BRD"
+  ],
+  "sections": [
+    {
+      "id": "product_overview",
+      "title": "Product Overview",
+      "purpose": "Provide a high-level overview of the product and how it addresses the business objectives."
+    },
+    {
+      "id": "product_vision",
+      "title": "Product Vision",
+      "purpose": "Describe the long-term vision and positioning of the product."
+    },
+    {
+      "id": "target_users",
+      "title": "Target Users and Personas",
+      "purpose": "Identify the primary user groups and describe their characteristics and needs."
+    },
+    {
+      "id": "user_problems",
+      "title": "User Problems / Pain Points",
+      "purpose": "Describe the key problems faced by users that the product intends to solve."
+    },
+    {
+      "id": "product_goals",
+      "title": "Product Goals",
+      "purpose": "Define measurable product-level goals aligned with business objectives."
+    },
+    {
+      "id": "features",
+      "title": "Product Features",
+      "purpose": "Provide a structured list of product capabilities required to address the user problems."
+    },
+    {
+      "id": "user_journeys",
+      "title": "User Journeys",
+      "purpose": "Describe end-to-end workflows showing how users interact with the product."
+    },
+    {
+      "id": "mvp_scope",
+      "title": "Minimum Viable Product (MVP) Scope",
+      "purpose": "Define the set of features included in the initial release."
+    },
+    {
+      "id": "functional_overview",
+      "title": "Functional Overview",
+      "purpose": "Provide a high-level overview of system behavior without implementation details."
+    },
+    {
+      "id": "non_goals",
+      "title": "Non Goals",
+      "purpose": "Clarify which capabilities or features are explicitly excluded."
+    },
+    {
+      "id": "assumptions",
+      "title": "Assumptions",
+      "purpose": "List assumptions made during product definition."
+    },
+    {
+      "id": "constraints",
+      "title": "Constraints",
+      "purpose": "Identify constraints affecting product development."
+    },
+    {
+      "id": "success_metrics",
+      "title": "Success Metrics",
+      "purpose": "Define KPIs and product metrics that determine success."
+    },
+    {
+      "id": "dependencies",
+      "title": "Dependencies",
+      "purpose": "List dependencies on external systems, teams, or third parties."
+    },
+    {
+      "id": "acceptance_criteria",
+      "title": "High Level Acceptance Criteria",
+      "purpose": "Define conditions that determine whether the product features meet expectations."
+    },
+    {
+      "id": "approval",
+      "title": "Approval and Sign Off",
+      "purpose": "Capture formal approval of the product requirements."
+    }
+  ],
+  "validationRules": [
+    "Every feature must trace back to at least one user problem.",
+    "Product goals must align with business objectives defined in the BRD.",
+    "MVP scope must be a subset of the defined features.",
+    "Acceptance criteria must correspond to defined product features."
+  ],
+  "downstreamDependencies": [
+    "FRD",
+    "TRD",
+    "HLD"
+  ],
+  "promptHints": {
+    "systemIntent": "Generate a structured product requirements document translating business goals into product capabilities.",
+    "rules": [
+      "Do not invent personas, metrics, or stakeholders not supported by inputs.",
+      "Avoid describing technical implementation details.",
+      "Ensure each feature addresses a defined user problem.",
+      "Ensure product goals align with business objectives."
+    ]
+  }
+}

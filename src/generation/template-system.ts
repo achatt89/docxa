@@ -1,26 +1,29 @@
 import { DocumentType } from '../models/document-model.js';
-
-export interface DocumentTemplate {
-    type: DocumentType;
-    sections: string[];
-    prompt: string;
-    schema?: any;
-    dependencies: DocumentType[];
-}
+import { DocumentTemplate } from './template-schema.js';
 
 export class TemplateSystem {
-    private templates: Map<DocumentType, DocumentTemplate> = new Map();
+    private templates: Map<string, DocumentTemplate> = new Map();
 
     register(template: DocumentTemplate) {
-        this.templates.set(template.type, template);
+        this.templates.set(template.documentId.toUpperCase(), template);
     }
 
-    getTemplate(type: DocumentType): DocumentTemplate | undefined {
-        return this.templates.get(type);
+    registerMany(templates: DocumentTemplate[]) {
+        for (const template of templates) {
+            this.register(template);
+        }
     }
 
-    getDependencies(type: DocumentType): DocumentType[] {
-        const template = this.getTemplate(type);
+    getTemplate(documentId: string): DocumentTemplate | undefined {
+        return this.templates.get(documentId.toUpperCase());
+    }
+
+    getDependencies(documentId: string): string[] {
+        const template = this.getTemplate(documentId);
         return template?.dependencies || [];
+    }
+
+    listTemplates(): DocumentTemplate[] {
+        return Array.from(this.templates.values());
     }
 }
