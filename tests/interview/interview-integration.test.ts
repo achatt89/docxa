@@ -9,8 +9,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 describe('Interview-Template Integration', () => {
-    const templateDir = path.resolve(__dirname, '../../src/templates');
-    const interviewDir = path.resolve(__dirname, '../../interviews/phase1');
+    const templateDir = path.resolve(__dirname, '../../templates/documents');
+    const interviewDir = path.resolve(__dirname, '../../templates/interviews');
 
     it('should validate all phase 1 interviews against real templates', async () => {
         const templateLoader = new TemplateLoader();

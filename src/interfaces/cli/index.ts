@@ -21,7 +21,33 @@ const program = new Command();
 const store = new WorkspaceStore(process.cwd());
 const templateSystem = new TemplateSystem();
 
-const interviewDir = path.join(process.cwd(), 'interviews');
+// 1. Primary and official source: templates/interviews/
+let interviewDir = path.join(process.cwd(), 'templates', 'interviews');
+const legacyInterviewDir = path.join(process.cwd(), 'interviews');
+
+// Check for legacy directory if official one doesn't exist or is empty
+import fs from 'fs/promises';
+try {
+    const officialEntries = await fs.readdir(interviewDir);
+    if (officialEntries.length === 0) {
+        const legacyEntries = await fs.readdir(legacyInterviewDir);
+        if (legacyEntries.length > 0) {
+            console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
+            interviewDir = legacyInterviewDir;
+        }
+    }
+} catch (e) {
+    try {
+        const legacyEntries = await fs.readdir(legacyInterviewDir);
+        if (legacyEntries.length > 0) {
+            console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
+            interviewDir = legacyInterviewDir;
+        }
+    } catch (le) {
+        // Neither exists, InterviewLoader will handle it
+    }
+}
+
 const loader = new InterviewLoader(templateSystem);
 const sessionStore = new InterviewSessionStore(process.cwd());
 const normalizer = new AnswerNormalizer();

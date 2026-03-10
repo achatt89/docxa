@@ -10,21 +10,43 @@ export class TemplateBootstrap {
     static async initialize(templateSystem: TemplateSystem): Promise<void> {
         const loader = new TemplateLoader();
 
-        // We look in src/templates by default as seen in the repo
-        // But we also support templates/ at root if it exists
-        const rootTemplateDir = path.resolve(process.cwd(), 'templates');
-        const srcTemplateDir = path.resolve(__dirname, '..', 'templates');
+        // 1. Primary and official source: templates/documents/
+        const officialTemplateDir = path.resolve(process.cwd(), 'templates', 'documents');
+
+        // 2. Legacy support: src/templates (internal)
+        const legacySrcTemplateDir = path.resolve(__dirname, '..', 'templates');
+
+        // 3. Root templates/ (backward compatibility)
+        const legacyRootTemplateDir = path.resolve(process.cwd(), 'templates');
 
         console.log(`🚀 Initializing templates...`);
 
-        // Load from src/templates
-        const srcTemplates = await loader.loadTemplates(srcTemplateDir);
-        templateSystem.registerMany(srcTemplates);
+        // Load from official source
+        const officialTemplates = await loader.loadTemplates(officialTemplateDir);
+        templateSystem.registerMany(officialTemplates);
 
-        // Load from root templates/ if it exists and is different
-        if (rootTemplateDir !== srcTemplateDir) {
-            const rootTemplates = await loader.loadTemplates(rootTemplateDir);
-            templateSystem.registerMany(rootTemplates);
+        // Load from legacy src/templates if it exists and contains templates (internal developer support)
+        try {
+            const srcTemplates = await loader.loadTemplates(legacySrcTemplateDir);
+            if (srcTemplates.length > 0) {
+                console.warn(`⚠️  Warning: Loading templates from legacy internal directory: ${legacySrcTemplateDir}. Please move templates to templates/documents/`);
+                templateSystem.registerMany(srcTemplates);
+            }
+        } catch (e) {
+            // Ignore if internal dir is missing
+        }
+
+        // Load from legacy root templates/ (if they were directly in templates/ instead of templates/documents/)
+        if (legacyRootTemplateDir !== officialTemplateDir) {
+            try {
+                const rootTemplates = await loader.loadTemplates(legacyRootTemplateDir);
+                if (rootTemplates.length > 0) {
+                    console.warn(`⚠️  Warning: Loading templates from legacy root directory: ${legacyRootTemplateDir}. Please move templates to templates/documents/`);
+                    templateSystem.registerMany(rootTemplates);
+                }
+            } catch (e) {
+                // Ignore
+            }
         }
 
         console.log(`✅ Loaded ${templateSystem.listTemplates().length} templates.`);

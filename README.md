@@ -54,7 +54,7 @@ Docxa uses an intelligent **Generation Planner** to evaluate document readiness.
 ## Structured Stakeholder Interviews
 
 Docxa provides role-aware interview definitions to bridge information gaps.
-- **Location**: Interview definitions are stored in `interviews/phase1/*.json`.
+- **Location**: Interview definitions are stored in `templates/interviews/*.json`.
 - **Available Roles**: `product_manager`, `solution_architect`, `engineering_lead`, `devops_engineer`, `business_stakeholder`.
 - **Session Persistence**: Progress is saved in `.docxa/interviews/`, allowing for resumable workflows.
 
@@ -75,18 +75,16 @@ Docxa follows a modular architecture:
 - `generation/`: Document generators and validators.
 - `interfaces/`: CLI, Teams Copilot, and VSCode extension.
 
-## Template System
-
 Docxa uses a rich JSON-based template system to define the structure and guidance for generated documents. 
 
-- **Location**: Templates are stored in `src/templates/*.json` and can be supplemented by a root `templates/` directory.
+- **Location**: Templates are stored in `templates/documents/*.json`.
 - **Validation**: Every template is validated against a strict Zod schema (`src/generation/template-schema.ts`) on startup.
 - **Hierarchical Sections**: Supports nested sections with specific purposes, guidance, and required flags.
 - **Prompt Hints**: Templates include `systemIntent`, `rules`, `mustDo`, and `mustNotDo` to guide the LLM precisely.
 
 ### Adding a New Template
 To add a new document type (e.g., `HLD`):
-1. Create `src/templates/hld.template.json`.
+1. Create `templates/documents/hld.template.json`.
 2. Define the `documentId`, `name`, and `sections`.
 3. Add `promptHints` to ensure the AI follows specific architectural standards.
 4. The system will automatically detect and load the template on the next run.

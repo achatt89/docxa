@@ -6,7 +6,7 @@ import fs from 'fs/promises';
 describe('TemplateLoader', () => {
     it('should load and validate all JSON templates in src/templates', async () => {
         const loader = new TemplateLoader();
-        const templateDir = path.resolve(process.cwd(), 'src/templates');
+        const templateDir = path.resolve(process.cwd(), 'templates/documents');
         const templates = await loader.loadTemplates(templateDir);
 
         expect(templates.length).toBeGreaterThan(0);
