@@ -56,14 +56,15 @@ Docxa uses an intelligent **Generation Planner** to evaluate document readiness.
 Docxa provides role-aware interview definitions to bridge information gaps.
 - **Location**: Interview definitions are stored in `templates/interviews/*.json`.
 - **Available Roles**: `product_manager`, `solution_architect`, `engineering_lead`, `devops_engineer`, `business_stakeholder`.
-- **Session Persistence**: Progress is saved in `.docxa/interviews/`, allowing for resumable workflows.
-
-## Interview-Template Alignment
-
-Docxa enforces a strict contract between interview definitions and document templates.
-- **Section Traceability**: Every question in an interview must map to an exact `sectionId` defined in the corresponding document template JSON.
-- **Fail-Fast Validation**: The `InterviewLoader` will fail to load definitions that use invalid or approximate section IDs.
 - **Consistency**: This ensures that stakeholder answers are accurately traced to the correct sections during document generation.
+
+## Repository Analysis Persistence
+
+Docxa can analyze your repository to automatically satisfy technical evidence requirements.
+- **Persistence**: Running `docxa discover` saves analysis results to `.docxa/analysis.json`.
+- **Evidence-Based Planning**: `docxa generate` loads this analysis to satisfy requirements like `frameworks` or `architecture`.
+- **Technical Docs**: This strengthens readiness planning for technical documents (TRD, HLD, LLD) even when upstream documentation is missing.
+- **Workflow**: If critical technical context is missing, Docxa will suggest running `docxa discover` first.
 
 ## Architecture
 

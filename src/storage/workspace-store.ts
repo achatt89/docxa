@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { ProjectConfig, ProjectConfigSchema } from '../models/project-model.js';
 import { Stakeholder, StakeholderSchema } from '../models/stakeholder-model.js';
+import { SavedAnalysis, SavedAnalysisSchema } from '../models/analysis-model.js';
 
 export class WorkspaceStore {
     private workspaceDir: string;
@@ -45,6 +46,22 @@ export class WorkspaceStore {
             return JSON.parse(data).map((s: any) => StakeholderSchema.parse(s));
         } catch (e) {
             return [];
+        }
+    }
+
+    async saveAnalysis(analysis: SavedAnalysis): Promise<void> {
+        await fs.mkdir(this.docxaDir, { recursive: true });
+        const filePath = path.join(this.docxaDir, 'analysis.json');
+        await fs.writeFile(filePath, JSON.stringify(analysis, null, 2));
+    }
+
+    async loadAnalysis(): Promise<SavedAnalysis | undefined> {
+        const filePath = path.join(this.docxaDir, 'analysis.json');
+        try {
+            const data = await fs.readFile(filePath, 'utf-8');
+            return SavedAnalysisSchema.parse(JSON.parse(data));
+        } catch (e) {
+            return undefined;
         }
     }
 

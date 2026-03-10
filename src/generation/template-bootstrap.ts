@@ -36,19 +36,6 @@ export class TemplateBootstrap {
             // Ignore if internal dir is missing
         }
 
-        // Load from legacy root templates/ (if they were directly in templates/ instead of templates/documents/)
-        if (legacyRootTemplateDir !== officialTemplateDir) {
-            try {
-                const rootTemplates = await loader.loadTemplates(legacyRootTemplateDir);
-                if (rootTemplates.length > 0) {
-                    console.warn(`⚠️  Warning: Loading templates from legacy root directory: ${legacyRootTemplateDir}. Please move templates to templates/documents/`);
-                    templateSystem.registerMany(rootTemplates);
-                }
-            } catch (e) {
-                // Ignore
-            }
-        }
-
         console.log(`✅ Loaded ${templateSystem.listTemplates().length} templates.`);
     }
 }

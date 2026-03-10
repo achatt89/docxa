@@ -13,6 +13,8 @@ import { AnswerNormalizer } from '../../interview/answer-normalizer.js';
 import { QuestionStrategy } from '../../interview/question-strategy.js';
 import { InterviewEngine } from '../../interview/interview-engine.js';
 import { GenerationPlanner, GenerationMode } from '../../generation/generation-planner.js';
+import { SavedAnalysis } from '../../models/analysis-model.js';
+import { deriveAnalysisEvidence } from '../../generation/analysis-evidence.js';
 import path from 'path';
 import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
@@ -100,6 +102,23 @@ program
         const llm = new LLMWrapper();
         const archDetector = new ArchitectureDetector(llm);
         const archInfo = await archDetector.detect(result, frameworkInfo);
+
+        const savedAnalysis: SavedAnalysis = {
+            scannedAt: new Date().toISOString(),
+            repositoryPath: path.resolve(repoPath),
+            languages: Array.from(result.languages),
+            frameworks: frameworkInfo.frameworks,
+            services: frameworkInfo.services,
+            isMonorepo: frameworkInfo.isMonorepo,
+            architecture: {
+                pattern: archInfo.pattern,
+                reasoning: archInfo.reasoning,
+                confidence: archInfo.confidence
+            },
+            configFiles: result.configFiles
+        };
+
+        await store.saveAnalysis(savedAnalysis);
 
         console.log('\n--- Analysis Result ---');
         console.log(`Languages: ${Array.from(result.languages).join(', ')}`);
@@ -197,8 +216,10 @@ program
 
         const existingDocs = await store.listDocuments();
         const sessions = await sessionStore.listSessions();
+        const savedAnalysis = await store.loadAnalysis();
+        const analysisAvailable = savedAnalysis ? deriveAnalysisEvidence(savedAnalysis) : [];
 
-        const plan = planner.plan(docId, existingDocs, sessions, options.mode as GenerationMode);
+        const plan = planner.plan(docId, existingDocs, sessions, options.mode as GenerationMode, analysisAvailable);
 
         if (options.plan || plan.status === 'blocked') {
             console.log('\n--- Readiness Report ---');
@@ -241,7 +262,8 @@ program
         const doc = await generator.generate(docId, {
             projectName: path.basename(process.cwd()),
             upstreamDocs,
-            interviewSessions: sessions.filter(s => s.documentId === docId || plan.availableInputs.includes(s.documentId))
+            interviewSessions: sessions.filter(s => s.documentId === docId || plan.availableInputs.includes(s.documentId)),
+            repositoryAnalysis: savedAnalysis
         });
 
         await store.saveDocument(docId, doc.sections.map(s => `## ${s.title}\n\n${s.content}`).join('\n\n'));

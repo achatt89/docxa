@@ -96,6 +96,17 @@ EVIDENCE FOR GENERATION:
             }
         }
 
+        if (context.repositoryAnalysis) {
+            const ra = context.repositoryAnalysis;
+            prompt += `REPOSITORY ANALYSIS:\n`;
+            prompt += `- Languages: ${ra.languages.join(', ')}\n`;
+            prompt += `- Frameworks: ${ra.frameworks.join(', ')}\n`;
+            prompt += `- Services: ${ra.services.join(', ')}\n`;
+            prompt += `- Monorepo: ${ra.isMonorepo ? 'Yes' : 'No'}\n`;
+            prompt += `- Architecture: ${ra.architecture.pattern}\n`;
+            prompt += `- Architecture Reasoning: ${ra.architecture.reasoning}\n`;
+        }
+
         prompt += `\nPlease generate content for the following sections:\n\n`;
 
         for (const section of template.sections) {

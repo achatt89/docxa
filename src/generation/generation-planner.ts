@@ -104,7 +104,8 @@ export class GenerationPlanner {
                 satisfiesWith: [
                     { sourceType: 'document', sourceId: 'TRD' },
                     { sourceType: 'interview', sourceId: 'solution_architect' },
-                    { sourceType: 'repository_analysis', sourceId: 'frameworks' }
+                    { sourceType: 'repository_analysis', sourceId: 'frameworks' },
+                    { sourceType: 'repository_analysis', sourceId: 'architecture' }
                 ]
             }
         ],
@@ -286,7 +287,7 @@ export class GenerationPlanner {
             if (option.sourceType === 'interview') {
                 suggestions.push(`Start ${documentId} interview with role ${option.sourceId} to satisfy ${requirement.key}`);
             } else if (option.sourceType === 'repository_analysis') {
-                suggestions.push(`Run repository discovery for existing project to satisfy ${requirement.key}`);
+                suggestions.push(`Run 'docxa discover' to collect repository analysis for ${requirement.key} (${option.sourceId})`);
             } else if (option.sourceType === 'document') {
                 suggestions.push(`Generate ${option.sourceId} first to satisfy ${requirement.key}`);
             }
