@@ -1,43 +1,130 @@
 {
     "documentId": "HLD",
     "roleId": "solution_architect",
-    "name": "Solution Architect Interview for HLD",
+    "name": "Solution Architect Interview (HLD)",
     "purpose": "Define high-level architecture, component boundaries, and integration patterns.",
     "questions": [
         {
-            "id": "arch_pattern",
+            "id": "arch_overview",
             "sectionId": "architecture_overview",
-            "question": "What is the primary architectural pattern for this solution?",
+            "question": "What is the primary architectural style (e.g., Microservices, Monolith, Event-driven)?",
             "answerType": "single_select_or_text",
             "options": [
                 "Microservices",
-                "Monolithic",
-                "Event-Driven",
+                "Monolith",
+                "Event-driven",
                 "Serverless",
                 "Layered"
             ],
             "required": true
         },
         {
+            "id": "arch_drivers",
+            "sectionId": "design_drivers",
+            "question": "What are the most critical quality attributes or constraints driving this design?",
+            "answerType": "list",
+            "required": true,
+            "guidance": [
+                "Example: scalability, sub-second latency, strictly zero downtime."
+            ]
+        },
+        {
+            "id": "solution_boundaries",
+            "sectionId": "solution_scope",
+            "question": "What are the defining boundaries and scope for this architecture?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "system_context",
+            "sectionId": "system_context",
+            "question": "Which external systems or platforms does this architecture interact with?",
+            "answerType": "list",
+            "required": true
+        },
+        {
             "id": "major_components",
             "sectionId": "component_view",
-            "question": "What are the major application components or services?",
+            "question": "What are the core application components or services?",
             "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "integration_patterns",
+            "sectionId": "integration_architecture",
+            "question": "Which integration patterns are used (e.g., REST, Async/Message Queue, GraphQL)?",
+            "answerType": "multi_select",
+            "options": [
+                "REST",
+                "Async/MQ",
+                "GraphQL",
+                "gRPC",
+                "Webhooks"
+            ],
             "required": true
         },
         {
             "id": "data_strategy",
             "sectionId": "data_architecture",
-            "question": "How will data be persisted and what is the storage strategy?",
+            "question": "What is the primary data storage and persistence strategy?",
             "answerType": "long_text",
             "required": true
         },
         {
-            "id": "key_integrations",
-            "sectionId": "integration_architecture",
-            "question": "Describe the core integration points between systems.",
+            "id": "security_controls",
+            "sectionId": "security_architecture",
+            "question": "What are the key security controls (AuthN/AuthZ, Data Encryption)?",
             "answerType": "long_text",
             "required": true
+        },
+        {
+            "id": "deployment_model",
+            "sectionId": "deployment_view",
+            "question": "What is the targeted deployment and hosting model?",
+            "answerType": "single_select_or_text",
+            "options": [
+                "AWS",
+                "Azure",
+                "GCP",
+                "On-prem",
+                "Kubernetes"
+            ],
+            "required": true
+        },
+        {
+            "id": "resilience_mechanisms",
+            "sectionId": "availability_and_resilience",
+            "question": "What mechanisms are in place for high availability and disaster recovery?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "observability_approach",
+            "sectionId": "observability_and_operations",
+            "question": "What is the approach to logging, monitoring, and tracing?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "tech_choices",
+            "sectionId": "technology_choices",
+            "question": "What are the primary languages, frameworks, and databases chosen?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "architectural_risks",
+            "sectionId": "risks_and_tradeoffs",
+            "question": "Identify any significant architectural risks or trade-offs made.",
+            "answerType": "long_text",
+            "required": false
+        },
+        {
+            "id": "open_decisions",
+            "sectionId": "open_issues",
+            "question": "Are there any critical architectural decisions still pending?",
+            "answerType": "list",
+            "required": false
         }
     ]
 }

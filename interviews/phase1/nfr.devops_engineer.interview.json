@@ -1,13 +1,13 @@
 {
     "documentId": "NFR",
     "roleId": "devops_engineer",
-    "name": "DevOps Engineer Interview for NFR",
+    "name": "DevOps Engineer Interview (NFR)",
     "purpose": "Define non-functional requirements such as availability, performance, and scalability.",
     "questions": [
         {
-            "id": "availability_targets",
+            "id": "availability_goals",
             "sectionId": "availability_requirements",
-            "question": "What are the target availability and uptime requirements (e.g., 99.9%)?",
+            "question": "What are the target uptime and availability requirements (e.g., 99.9%, 99.99%)?",
             "answerType": "single_select_or_text",
             "options": [
                 "99.0%",
@@ -18,18 +18,60 @@
             "required": true
         },
         {
-            "id": "perf_latency",
+            "id": "perf_benchmarks",
             "sectionId": "performance_requirements",
-            "question": "What are the acceptable response time targets for core journeys?",
+            "question": "What are the throughput and latency targets for core service operations?",
             "answerType": "long_text",
             "required": true
         },
         {
-            "id": "monitoring_strategy",
+            "id": "scaling_strategy",
+            "sectionId": "scalability_requirements",
+            "question": "What are the expected concurrent user loads and vertical/horizontal scaling triggers?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "recovery_objectives",
+            "sectionId": "resilience_requirements",
+            "question": "What are the target RTO (Recovery Time Objective) and RPO (Recovery Point Objective)?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "observability_targets",
             "sectionId": "observability_requirements",
-            "question": "What is the primary monitoring and logging strategy?",
+            "question": "What key metrics and SLIs (Service Level Indicators) must be monitored?",
             "answerType": "list",
             "required": true
+        },
+        {
+            "id": "infra_constraints",
+            "sectionId": "deployment_constraints",
+            "question": "Identify any hard infrastructure or data residency constraints.",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "maintainability_standards",
+            "sectionId": "maintainability_requirements",
+            "question": "What are the standards for automated deployment, CI/CD, and infrastructure-as-code?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "ops_readiness",
+            "sectionId": "validation_expectations",
+            "question": "What are the criteria for operational readiness and go-live approval?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "known_ops_gaps",
+            "sectionId": "operational_risks",
+            "question": "Identify any known gaps in current operations or toolsets.",
+            "answerType": "list",
+            "required": false
         }
     ]
 }

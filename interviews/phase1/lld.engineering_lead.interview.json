@@ -1,29 +1,113 @@
 {
     "documentId": "LLD",
     "roleId": "engineering_lead",
-    "name": "Engineering Lead Interview for LLD",
+    "name": "Engineering Lead Interview (LLD)",
     "purpose": "Define detailed module design, class structures, and database schema.",
     "questions": [
         {
-            "id": "module_breakdown",
+            "id": "design_overview",
+            "sectionId": "design_overview",
+            "question": "What are the core design principles applied at the module level?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "module_mapping",
             "sectionId": "component_view",
-            "question": "What are the core modules or classes for this component?",
+            "question": "How do the high-level components map to specific code modules or packages?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "detailed_module_design",
+            "sectionId": "module_design",
+            "question": "Describe the internal structure and responsibilities of the most complex module.",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "api_design_details",
+            "sectionId": "api_design",
+            "question": "What are the key public APIs or interfaces exposed by these modules?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "db_schema_details",
+            "sectionId": "database_schema",
+            "question": "Describe the core database tables, fields, and relationships in detail.",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "sequence_flows",
+            "sectionId": "workflow_and_sequence",
+            "question": "Describe the sequence of operations for a primary business transaction.",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "business_rules",
+            "sectionId": "validation_and_business_rules",
+            "question": "What are the complex business or validation rules implemented in code?",
             "answerType": "list",
             "required": true
         },
         {
-            "id": "data_schema_details",
-            "sectionId": "data_architecture",
-            "question": "Describe the core database tables and their relationships.",
-            "answerType": "table",
+            "id": "integration_details",
+            "sectionId": "integration_details",
+            "question": "Provide specific details on how external APIs are consumed (endpoints, payload types).",
+            "answerType": "long_text",
             "required": true
         },
         {
-            "id": "concurrency_model",
-            "sectionId": "availability_and_resilience",
-            "question": "How will the solution handle concurrency and locking?",
+            "id": "config_settings",
+            "sectionId": "configuration_and_environment",
+            "question": "What are the key configuration parameters required for each environment?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "security_implementation",
+            "sectionId": "security_controls",
+            "question": "How is authentication and authorization implemented at the code level?",
             "answerType": "long_text",
             "required": true
+        },
+        {
+            "id": "logging_strategy",
+            "sectionId": "logging_and_monitoring",
+            "question": "What is the specific logging and structured data capture approach?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "perf_optimizations",
+            "sectionId": "performance_considerations",
+            "question": "What specific performance optimizations (caching, indexing) are implemented?",
+            "answerType": "list",
+            "required": false
+        },
+        {
+            "id": "error_handling_logic",
+            "sectionId": "error_handling",
+            "question": "What is the global error handling and exception management strategy?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "detailed_testing_plan",
+            "sectionId": "testing_strategy",
+            "question": "What is the unit and integration testing strategy (libraries, coverage targets)?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "known_tech_debt",
+            "sectionId": "technical_debt",
+            "question": "Identify any intentional technical debt or areas requiring future refactoring.",
+            "answerType": "list",
+            "required": false
         }
     ]
 }

@@ -1,37 +1,99 @@
 {
     "documentId": "PRD",
     "roleId": "product_manager",
-    "name": "Product Manager Interview for PRD",
+    "name": "Product Manager Interview",
     "purpose": "Define product features, user personas, and prioritization.",
     "questions": [
         {
-            "id": "target_user_personas",
-            "sectionId": "target_audience",
-            "question": "Who are the core user personas for this product?",
-            "answerType": "list",
+            "id": "product_overview",
+            "sectionId": "product_overview",
+            "question": "What is the core problem this product solves?",
+            "answerType": "long_text",
             "required": true,
             "guidance": [
-                "Define by role and primary pain points."
+                "State the primary value proposition."
             ]
         },
         {
-            "id": "main_features",
-            "sectionId": "product_features",
-            "question": "What are the top 5 key features for the initial release?",
-            "answerType": "list",
-            "required": true
-        },
-        {
-            "id": "user_journeys",
-            "sectionId": "user_experience",
-            "question": "Describe the most critical user journey.",
+            "id": "product_vision",
+            "sectionId": "product_vision",
+            "question": "What is the long-term vision for this product?",
             "answerType": "long_text",
             "required": true
         },
         {
-            "id": "constraints",
-            "sectionId": "constraints",
-            "question": "Are there any hard product or market constraints?",
+            "id": "user_personas",
+            "sectionId": "target_audience",
+            "question": "Who are the primary user personas?",
+            "answerType": "list",
+            "required": true,
+            "guidance": [
+                "List by role or characteristic (e.g., 'Internal Admin', 'End Customer')."
+            ]
+        },
+        {
+            "id": "user_problems",
+            "sectionId": "problem_statement",
+            "question": "What are the top 3 pain points users currently face?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "product_goals",
+            "sectionId": "product_goals",
+            "question": "What are the primary goals for the next 6-12 months?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "key_features",
+            "sectionId": "product_features",
+            "question": "What are the must-have features for the MVP?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "critical_user_journey",
+            "sectionId": "user_experience",
+            "question": "Describe the most critical user journey in detail.",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "mvp_scope",
+            "sectionId": "mvp_scope",
+            "question": "Which features are strictly out of scope for the initial release?",
+            "answerType": "list",
+            "required": false
+        },
+        {
+            "id": "success_metrics",
+            "sectionId": "success_metrics",
+            "question": "How will we measure success for this product?",
+            "answerType": "list",
+            "required": true,
+            "guidance": [
+                "Think about KPIs like engagement, revenue, or efficiency."
+            ]
+        },
+        {
+            "id": "acceptance_criteria",
+            "sectionId": "acceptance_criteria",
+            "question": "What are the key technical or business acceptance criteria?",
+            "answerType": "long_text",
+            "required": false
+        },
+        {
+            "id": "non_goals",
+            "sectionId": "non_goals",
+            "question": "What are the non-goals for this phase?",
+            "answerType": "list",
+            "required": false
+        },
+        {
+            "id": "dependencies",
+            "sectionId": "dependencies",
+            "question": "Are there any hard external dependencies or constraints?",
             "answerType": "long_text",
             "required": false
         }

@@ -179,15 +179,21 @@ program
             console.log(`Status: ${plan.status.toUpperCase()}`);
             console.log(`Confidence: ${plan.confidence.toUpperCase()}`);
             console.log(`Hard Dep Satisfied: ${plan.hardDependenciesSatisfied ? 'YES' : 'NO'}`);
-            if (plan.missingInputs.length > 0) console.log(`Missing Inputs: ${plan.missingInputs.join(', ')}`);
+            if (plan.missingRequiredEvidence.length > 0) console.log(`Missing Required Evidence: ${plan.missingRequiredEvidence.join(', ')}`);
+            if (plan.missingOptionalEvidence.length > 0) console.log(`Missing Optional Evidence: ${plan.missingOptionalEvidence.join(', ')}`);
             if (plan.alternativeEvidenceUsed.length > 0) console.log(`Alternative Evidence: ${plan.alternativeEvidenceUsed.join(', ')}`);
             if (plan.warnings.length > 0) {
                 console.log('\nWarnings:');
                 plan.warnings.forEach(w => console.log(`- ${w}`));
             }
 
+            if (plan.suggestions.length > 0) {
+                console.log('\nSuggestions:');
+                plan.suggestions.forEach(s => console.log(`- ${s}`));
+            }
+
             if (plan.status === 'blocked') {
-                console.log('\n❌ Generation blocked. Satisfy dependencies or use flexible mode.');
+                console.log('\n❌ Generation blocked. Satisfy evidence requirements or use flexible mode.');
                 return;
             }
             if (options.plan) return;
