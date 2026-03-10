@@ -1,0 +1,42 @@
+{
+    "documentId": "LLD",
+    "name": "Low Level Design",
+    "phase": 2,
+    "version": "1.0.0",
+    "description": "Detailed design for specific components or modules.",
+    "dependencies": [
+        "HLD"
+    ],
+    "sections": [
+        {
+            "id": "module_overview",
+            "title": "Module Overview",
+            "purpose": "Provide a high-level overview of the module.",
+            "required": true
+        },
+        {
+            "id": "class_design",
+            "title": "Class and Object Design",
+            "purpose": "Define the detailed class structure and interactions.",
+            "required": true,
+            "subsections": [
+                "Class Diagram",
+                "Public APIs",
+                "Internal State"
+            ]
+        },
+        {
+            "id": "database_schema",
+            "title": "Detailed Database Schema",
+            "purpose": "Define tables, fields, and indexes.",
+            "required": true
+        }
+    ],
+    "promptHints": {
+        "systemIntent": "Generate a detailed low-level design based on the high-level architecture.",
+        "rules": [
+            "Follow SOLID principles.",
+            "Ensure all public methods are documented."
+        ]
+    }
+}

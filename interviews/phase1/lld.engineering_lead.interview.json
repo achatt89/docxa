@@ -1,0 +1,29 @@
+{
+    "documentId": "LLD",
+    "roleId": "engineering_lead",
+    "name": "Engineering Lead Interview for LLD",
+    "purpose": "Define detailed module design, class structures, and database schema.",
+    "questions": [
+        {
+            "id": "module_breakdown",
+            "sectionId": "component_view",
+            "question": "What are the core modules or classes for this component?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "data_schema_details",
+            "sectionId": "data_architecture",
+            "question": "Describe the core database tables and their relationships.",
+            "answerType": "table",
+            "required": true
+        },
+        {
+            "id": "concurrency_model",
+            "sectionId": "availability_and_resilience",
+            "question": "How will the solution handle concurrency and locking?",
+            "answerType": "long_text",
+            "required": true
+        }
+    ]
+}

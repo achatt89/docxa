@@ -1,0 +1,42 @@
+{
+    "documentId": "BRD",
+    "roleId": "business_stakeholder",
+    "name": "Business Stakeholder Interview for BRD",
+    "purpose": "Gather high-level business objectives and success criteria.",
+    "questions": [
+        {
+            "id": "project_vision",
+            "sectionId": "executive_summary",
+            "question": "What is the primary vision and goal for this project?",
+            "answerType": "long_text",
+            "required": true,
+            "guidance": [
+                "Focus on the 'why' and the expected impact."
+            ]
+        },
+        {
+            "id": "business_objectives",
+            "sectionId": "business_objectives",
+            "question": "What are the top 3 business objectives we must achieve?",
+            "answerType": "list",
+            "required": true,
+            "guidance": [
+                "Be specific and measurable if possible."
+            ]
+        },
+        {
+            "id": "target_audience",
+            "sectionId": "target_audience",
+            "question": "Who are the primary users or customers for this solution?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "success_metrics",
+            "sectionId": "success_criteria",
+            "question": "How will we measure the success of this project?",
+            "answerType": "long_text",
+            "required": true
+        }
+    ]
+}

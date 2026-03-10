@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { Command } from 'commander';
 import { WorkspaceStore } from '../../storage/workspace-store.js';
 import { RepositoryScanner } from '../../analysis/repository-scanner.js';
@@ -8,11 +7,26 @@ import { LLMWrapper } from '../../utils/llm-wrapper.js';
 import { ProjectConfig } from '../../models/project-model.js';
 import { TemplateSystem } from '../../generation/template-system.js';
 import { TemplateBootstrap } from '../../generation/template-bootstrap.js';
+import { InterviewLoader } from '../../interview/interview-loader.js';
+import { InterviewSessionStore } from '../../interview/interview-session-store.js';
+import { AnswerNormalizer } from '../../interview/answer-normalizer.js';
+import { QuestionStrategy } from '../../interview/question-strategy.js';
+import { InterviewEngine } from '../../interview/interview-engine.js';
+import { GenerationPlanner, GenerationMode } from '../../generation/generation-planner.js';
 import path from 'path';
+import * as readline from 'readline/promises';
+import { stdin as input, stdout as output } from 'process';
 
 const program = new Command();
 const store = new WorkspaceStore(process.cwd());
 const templateSystem = new TemplateSystem();
+
+const interviewDir = path.join(process.cwd(), 'interviews');
+const loader = new InterviewLoader();
+const sessionStore = new InterviewSessionStore(process.cwd());
+const normalizer = new AnswerNormalizer();
+const strategy = new QuestionStrategy();
+const engine = new InterviewEngine(loader, sessionStore, normalizer, strategy, interviewDir);
 
 program
     .name('docxa')
@@ -37,6 +51,7 @@ program
         };
 
         await store.initWorkspace(config);
+        await sessionStore.init();
         console.log('✅ Docxa workspace initialized in .docxa/');
     });
 
@@ -66,66 +81,151 @@ program
         console.log(`Reasoning: ${archInfo.reasoning}`);
     });
 
-program
-    .command('interview')
-    .description('Conduct a stakeholder interview')
-    .argument('<role>', 'Stakeholder role (pm, architect, developer, etc.)')
-    .argument('<name>', 'Stakeholder name')
-    .action(async (role: any, name: string) => {
-        const { StakeholderManager } = await import('../../interview/stakeholder-manager.js');
-        const { RoleQuestionEngine } = await import('../../interview/role-question-engine.js');
-        const { ConversationEngine } = await import('../../interview/conversation-engine.js');
+const interviewCmd = program.command('interview').description('Stakeholder interview commands');
 
-        console.log(`🎤 Starting interview with ${name} (${role})...`);
+interviewCmd
+    .command('start')
+    .description('Start a new interview session')
+    .requiredOption('-d, --document <document>', 'Document ID (brd, prd, etc.)')
+    .requiredOption('-r, --role <role>', 'Stakeholder role')
+    .option('-n, --name <name>', 'Stakeholder name')
+    .action(async (options) => {
+        const session = await engine.startInterview(options.document, options.role, options.name);
+        console.log(`🎤 Starting interview for ${options.document} with ${options.role}...`);
+        console.log(`Session ID: ${session.sessionId}\n`);
+        await conductInterview(session);
+    });
 
-        const manager = new StakeholderManager(store);
-        const stakeholder = await manager.addStakeholder(name, role);
+interviewCmd
+    .command('continue')
+    .description('Continue an existing interview session')
+    .argument('<sessionId>', 'Session ID')
+    .action(async (sessionId) => {
+        const session = await engine.resumeSession(sessionId);
+        if (!session) {
+            console.error('❌ Session not found');
+            return;
+        }
+        console.log(`🎤 Resuming interview for ${session.documentId}...`);
+        await conductInterview(session);
+    });
 
-        const llm = new LLMWrapper();
-        const qEngine = new RoleQuestionEngine(llm);
-        const questions = await qEngine.generateQuestions(role, "Generic software project");
+interviewCmd
+    .command('list')
+    .description('List all interview sessions')
+    .action(async () => {
+        const sessions = await sessionStore.listSessions();
+        if (sessions.length === 0) {
+            console.log('No interview sessions found.');
+            return;
+        }
+        console.log('\n--- Interview Sessions ---');
+        sessions.forEach(s => {
+            console.log(`${s.sessionId} | ${s.documentId} | ${s.roleId} | ${s.status} | ${new Date(s.updatedAt).toLocaleDateString()}`);
+        });
+    });
 
-        console.log('\nPlease answer the following questions (Phase 1 placeholder - auto-responding):');
-        const conversation = new ConversationEngine(llm);
-        const session = conversation.startSession(stakeholder, questions);
+async function conductInterview(session: any) {
+    const rl = readline.createInterface({ input, output });
+    try {
+        let question;
+        while ((question = await engine.getNextQuestion(session))) {
+            console.log(`\n[${question.id}] ${question.question}`);
+            if (question.guidance) {
+                console.log(`💡 Guidance: ${question.guidance.join(' ')}`);
+            }
+            if (question.options) {
+                console.log(`Options: ${question.options.join(', ')}`);
+            }
 
-        for (const q of questions) {
-            console.log(`Q: ${q}`);
-            session.answers.set(q, "Sample answer for Phase 1 simulation.");
+            const answer = await rl.question('> ');
+            if (answer.toLowerCase() === 'quit' || answer.toLowerCase() === 'exit') {
+                console.log('Saving progress and exiting...');
+                break;
+            }
+
+            session = await engine.registerAnswer(session, question.id, answer);
         }
 
-        const summary = await conversation.summarizeInterview(session);
-        console.log('\n--- Interview Summary ---');
-        console.log(summary);
-    });
+        if (session.status === 'completed') {
+            console.log('\n✅ Interview completed! Answers have been normalized and stored.');
+        }
+    } finally {
+        rl.close();
+    }
+}
 
 program
     .command('generate')
     .description('Generate documentation')
     .argument('<document>', 'Document type (prd, brd, hld, etc.)')
-    .action(async (docType: string) => {
+    .option('--plan', 'Show readiness report only')
+    .option('--mode <mode>', 'Generation mode (strict, flexible, assisted)', 'flexible')
+    .action(async (docType: string, options) => {
         const { DocumentGenerator } = await import('../../generation/document-generator.js');
+        const planner = new GenerationPlanner();
 
         await TemplateBootstrap.initialize(templateSystem);
+        const docId = docType.toUpperCase();
 
-        console.log(`📄 Generating ${docType.toUpperCase()}...`);
+        const existingDocs = await store.listDocuments();
+        const sessions = await sessionStore.listSessions();
+
+        const plan = planner.plan(docId, existingDocs, sessions, options.mode as GenerationMode);
+
+        if (options.plan || plan.status === 'blocked') {
+            console.log('\n--- Readiness Report ---');
+            console.log(`Document: ${docId}`);
+            console.log(`Status: ${plan.status.toUpperCase()}`);
+            console.log(`Confidence: ${plan.confidence.toUpperCase()}`);
+            console.log(`Hard Dep Satisfied: ${plan.hardDependenciesSatisfied ? 'YES' : 'NO'}`);
+            if (plan.missingInputs.length > 0) console.log(`Missing Inputs: ${plan.missingInputs.join(', ')}`);
+            if (plan.alternativeEvidenceUsed.length > 0) console.log(`Alternative Evidence: ${plan.alternativeEvidenceUsed.join(', ')}`);
+            if (plan.warnings.length > 0) {
+                console.log('\nWarnings:');
+                plan.warnings.forEach(w => console.log(`- ${w}`));
+            }
+
+            if (plan.status === 'blocked') {
+                console.log('\n❌ Generation blocked. Satisfy dependencies or use flexible mode.');
+                return;
+            }
+            if (options.plan) return;
+        }
+
+        console.log(`📄 Generating ${docId}...`);
 
         const llm = new LLMWrapper();
         const generator = new DocumentGenerator(llm, templateSystem, store);
 
-        const doc = await generator.generate(docType.toUpperCase(), {
+        // Gather evidence
+        const upstreamDocs: Record<string, string> = {};
+        for (const depId of plan.availableInputs) {
+            const content = await store.loadDocument(depId);
+            if (content) upstreamDocs[depId] = content;
+        }
+
+        const doc = await generator.generate(docId, {
             projectName: path.basename(process.cwd()),
-            interviewSummaries: "Simulated interview summaries."
+            upstreamDocs,
+            interviewSessions: sessions.filter(s => s.documentId === docId || plan.availableInputs.includes(s.documentId))
         });
 
-        console.log(`✅ Generated ${docType.toUpperCase()} version ${doc.version}`);
+        await store.saveDocument(docId, doc.sections.map(s => `## ${s.title}\n\n${s.content}`).join('\n\n'));
+        console.log(`✅ Generated ${docId} version ${doc.version}`);
     });
 
 program
     .command('list-documents')
     .description('List available documents')
     .action(async () => {
-        console.log('Listing documents...');
+        const docs = await store.listDocuments();
+        if (docs.length === 0) {
+            console.log('No documents found in workspace.');
+            return;
+        }
+        console.log('--- Workspace Documents ---');
+        docs.forEach(d => console.log(`- ${d}`));
     });
 
 program

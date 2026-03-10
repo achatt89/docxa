@@ -71,19 +71,39 @@ Do not include a table of contents or introductory text. Start directly with the
     private buildUserPrompt(template: DocumentTemplate, context: any): string {
         let prompt = `PROJECT CONTEXT:
 Project Name: ${context.projectName}
-Interview Summaries: ${context.interviewSummaries}
-Additional Context: ${JSON.stringify(context.additionalContext || {}, null, 2)}
+${context.interviewSummaries ? `Interview Summaries: ${context.interviewSummaries}` : ''}
+${context.additionalContext ? `Additional Context: ${JSON.stringify(context.additionalContext, null, 2)}` : ''}
 
-Please generate content for the following sections:
-
+EVIDENCE FOR GENERATION:
 `;
+
+        if (context.upstreamDocs && Object.keys(context.upstreamDocs).length > 0) {
+            prompt += `UPSTREAM DOCUMENTS:\n`;
+            for (const [id, content] of Object.entries(context.upstreamDocs)) {
+                prompt += `--- ${id} ---\n${content}\n`;
+            }
+        }
+
+        if (context.interviewSessions && context.interviewSessions.length > 0) {
+            prompt += `INTERVIEW SESSIONS:\n`;
+            for (const session of context.interviewSessions) {
+                prompt += `Role: ${session.roleId}\nAnswers:\n`;
+                for (const answer of session.answers) {
+                    if (answer.normalizedAnswer !== undefined) {
+                        prompt += `- QuestionId: ${answer.questionId}\n  Answer: ${JSON.stringify(answer.normalizedAnswer)}\n`;
+                    }
+                }
+            }
+        }
+
+        prompt += `\nPlease generate content for the following sections:\n\n`;
 
         for (const section of template.sections) {
             prompt += `## ${section.title}\n`;
             prompt += `ID: ${section.id}\n`;
             prompt += `PURPOSE: ${section.purpose || section.description || ''}\n`;
             if (section.guidance?.length) {
-                prompt += `GUIDANCE:\n${section.guidance.map(g => `- ${g}`).join('\n')}\n`;
+                prompt += `GUIDANCE:\n${section.guidance.map((g: string) => `- ${g}`).join('\n')}\n`;
             }
             prompt += `\n`;
         }

@@ -1,0 +1,259 @@
+{
+    "documentId": "NFR",
+    "name": "Non Functional Requirements",
+    "phase": 1,
+    "version": "1.0",
+    "metadata": {
+        "description": "Defines the quality attributes, operational expectations, and cross-cutting system requirements that the solution must satisfy beyond core functional behavior.",
+        "primaryOwner": "Solution Architect",
+        "contributors": [
+            "Engineering Lead",
+            "DevOps Engineer",
+            "Security Engineer",
+            "QA Lead",
+            "Product Manager"
+        ]
+    },
+    "documentControl": {
+        "sections": [
+            "Document Version",
+            "Author",
+            "Reviewers",
+            "Approvers",
+            "Change History"
+        ]
+    },
+    "dependencies": [
+        "TRD",
+        "HLD"
+    ],
+    "sections": [
+        {
+            "id": "nfr_overview",
+            "title": "NFR Overview",
+            "purpose": "Provide a concise overview of the non functional requirements and explain why they are critical to the solution.",
+            "required": true
+        },
+        {
+            "id": "scope_and_applicability",
+            "title": "Scope and Applicability",
+            "purpose": "Define which systems, components, integrations, environments, and user journeys these non functional requirements apply to.",
+            "required": true,
+            "subsections": [
+                "In Scope",
+                "Out of Scope",
+                "Applicability by Environment"
+            ]
+        },
+        {
+            "id": "availability_requirements",
+            "title": "Availability Requirements",
+            "purpose": "Define uptime, service continuity, maintenance window expectations, and acceptable service interruption levels.",
+            "required": true,
+            "subsections": [
+                "Target Availability",
+                "Planned Downtime",
+                "Service Windows",
+                "Recovery Expectations"
+            ]
+        },
+        {
+            "id": "performance_requirements",
+            "title": "Performance Requirements",
+            "purpose": "Define response time, latency, throughput, concurrency, and workload expectations for the solution.",
+            "required": true,
+            "subsections": [
+                "Response Time Targets",
+                "Throughput Targets",
+                "Concurrent Usage Expectations",
+                "Peak Load Conditions"
+            ]
+        },
+        {
+            "id": "scalability_requirements",
+            "title": "Scalability Requirements",
+            "purpose": "Describe how the solution should scale with increasing data volume, transaction load, user count, or integration traffic.",
+            "required": true,
+            "subsections": [
+                "Horizontal and Vertical Scaling",
+                "Growth Assumptions",
+                "Capacity Planning Considerations"
+            ]
+        },
+        {
+            "id": "resilience_and_recovery",
+            "title": "Resilience and Recovery Requirements",
+            "purpose": "Define expectations for fault tolerance, graceful degradation, failover, disaster recovery, and restoration targets.",
+            "required": true,
+            "subsections": [
+                "Failure Handling",
+                "Failover Expectations",
+                "Recovery Time Objective",
+                "Recovery Point Objective"
+            ]
+        },
+        {
+            "id": "security_requirements",
+            "title": "Security Requirements",
+            "purpose": "Define non functional security expectations for access control, protection of data, secure communication, auditability, and compliance.",
+            "required": true,
+            "subsections": [
+                "Authentication and Authorization Expectations",
+                "Data Protection Expectations",
+                "Encryption Expectations",
+                "Audit and Traceability",
+                "Compliance and Regulatory Considerations"
+            ]
+        },
+        {
+            "id": "privacy_requirements",
+            "title": "Privacy Requirements",
+            "purpose": "Define expectations related to personal data handling, minimization, retention, masking, consent, and privacy compliance.",
+            "required": false,
+            "subsections": [
+                "Data Classification",
+                "Retention and Deletion",
+                "Masking and Minimization",
+                "Privacy Compliance"
+            ]
+        },
+        {
+            "id": "observability_requirements",
+            "title": "Observability Requirements",
+            "purpose": "Define requirements for logging, monitoring, tracing, alerting, and operational visibility.",
+            "required": true,
+            "subsections": [
+                "Logging Expectations",
+                "Metrics and Monitoring",
+                "Distributed Tracing",
+                "Alerting and Notification"
+            ]
+        },
+        {
+            "id": "maintainability_requirements",
+            "title": "Maintainability Requirements",
+            "purpose": "Define expectations for supportability, modularity, diagnosability, code maintainability, and ease of enhancement.",
+            "required": true,
+            "subsections": [
+                "Modularity",
+                "Supportability",
+                "Diagnosability",
+                "Ease of Change"
+            ]
+        },
+        {
+            "id": "usability_and_accessibility",
+            "title": "Usability and Accessibility Requirements",
+            "purpose": "Define non functional expectations related to ease of use, accessibility standards, and inclusiveness.",
+            "required": false,
+            "subsections": [
+                "Usability Expectations",
+                "Accessibility Standards",
+                "Device and Platform Considerations"
+            ]
+        },
+        {
+            "id": "compatibility_requirements",
+            "title": "Compatibility and Interoperability Requirements",
+            "purpose": "Define expectations for browser, device, OS, API, protocol, and platform compatibility where relevant.",
+            "required": false,
+            "subsections": [
+                "Browser and Client Compatibility",
+                "Platform Compatibility",
+                "Interoperability Constraints"
+            ]
+        },
+        {
+            "id": "deployment_and_environment_constraints",
+            "title": "Deployment and Environment Constraints",
+            "purpose": "Describe environmental or deployment-related non functional constraints such as hosting model, region, network, and release requirements.",
+            "required": true,
+            "subsections": [
+                "Environment Constraints",
+                "Hosting Constraints",
+                "Release and Deployment Constraints",
+                "Network and Connectivity Constraints"
+            ]
+        },
+        {
+            "id": "data_and_retention_requirements",
+            "title": "Data Volume, Retention, and Archival Requirements",
+            "purpose": "Define non functional expectations related to data growth, retention periods, archival, purge, and storage lifecycle.",
+            "required": false,
+            "subsections": [
+                "Data Volume Expectations",
+                "Retention Periods",
+                "Archival Strategy",
+                "Purge and Deletion Requirements"
+            ]
+        },
+        {
+            "id": "testing_and_validation_requirements",
+            "title": "Testing and Validation Requirements",
+            "purpose": "Define how non functional requirements will be verified, measured, and validated.",
+            "required": true,
+            "subsections": [
+                "Performance Testing",
+                "Security Testing",
+                "Resilience Testing",
+                "Accessibility Validation",
+                "Operational Readiness Checks"
+            ]
+        },
+        {
+            "id": "assumptions_and_constraints",
+            "title": "Assumptions and Constraints",
+            "purpose": "Capture assumptions and constraints that affect the interpretation or feasibility of the non functional requirements.",
+            "required": true
+        },
+        {
+            "id": "risks_and_gaps",
+            "title": "Risks and Gaps",
+            "purpose": "Capture known non functional risks, shortfalls, unresolved gaps, or areas needing further validation.",
+            "required": false
+        },
+        {
+            "id": "acceptance_criteria",
+            "title": "NFR Acceptance Criteria",
+            "purpose": "Define measurable acceptance criteria for validating the non functional requirements.",
+            "required": true
+        },
+        {
+            "id": "approval",
+            "title": "Approval and Sign Off",
+            "purpose": "Capture formal review and approval of the non functional requirements.",
+            "required": false
+        }
+    ],
+    "validationRules": [
+        "Performance, availability, and resilience targets must be measurable where practical.",
+        "Security requirements must align with stated security constraints and compliance needs.",
+        "Observability requirements must support operational monitoring and incident diagnosis.",
+        "Testing and validation requirements must map to the non functional categories they verify.",
+        "Non functional expectations must not contradict technical constraints defined in the TRD or HLD."
+    ],
+    "downstreamDependencies": [
+        "HLD",
+        "LLD",
+        "ADR"
+    ],
+    "promptHints": {
+        "systemIntent": "Generate a structured non functional requirements document suitable for architecture design, delivery planning, quality assurance, and operational readiness.",
+        "rules": [
+            "Do not invent performance targets, SLAs, recovery metrics, or compliance obligations that are not supported by the inputs.",
+            "State measurable expectations where known and clearly mark unknown or pending items.",
+            "Ensure the NFRs are technology-aware but not implementation-specific.",
+            "Keep the document focused on quality attributes and cross-cutting concerns rather than functional behavior."
+        ],
+        "mustDo": [
+            "Use exact section titles from the template.",
+            "Express non functional expectations clearly and testably where possible.",
+            "Document risks, constraints, and unresolved gaps honestly."
+        ],
+        "mustNotDo": [
+            "Do not restate functional requirements as non functional requirements.",
+            "Do not invent compliance standards or service levels.",
+            "Do not omit verification expectations for critical NFR categories."
+        ]
+    }
+}

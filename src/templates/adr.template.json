@@ -1,0 +1,142 @@
+{
+    "documentId": "ADR",
+    "name": "Architecture Decision Record",
+    "phase": 1,
+    "version": "1.0",
+    "metadata": {
+        "description": "Captures important architectural and technical decisions made during system design, including the context, options considered, rationale, and consequences of the decision.",
+        "primaryOwner": "Solution Architect",
+        "contributors": [
+            "Engineering Lead",
+            "Software Engineers",
+            "DevOps Engineer",
+            "Security Engineer"
+        ]
+    },
+    "documentControl": {
+        "sections": [
+            "Decision ID",
+            "Author",
+            "Date",
+            "Reviewers",
+            "Approvers",
+            "Status"
+        ]
+    },
+    "dependencies": [
+        "HLD",
+        "LLD",
+        "NFR"
+    ],
+    "sections": [
+        {
+            "id": "decision_summary",
+            "title": "Decision Summary",
+            "purpose": "Provide a concise description of the architectural decision being recorded.",
+            "required": true
+        },
+        {
+            "id": "context",
+            "title": "Context",
+            "purpose": "Explain the background, constraints, and problem that led to the need for this decision.",
+            "required": true
+        },
+        {
+            "id": "decision_statement",
+            "title": "Decision",
+            "purpose": "Clearly state the architectural or technical decision that has been made.",
+            "required": true
+        },
+        {
+            "id": "options_considered",
+            "title": "Options Considered",
+            "purpose": "Describe the alternative approaches that were evaluated before reaching the final decision.",
+            "required": true,
+            "subsections": [
+                "Option 1",
+                "Option 2",
+                "Option 3"
+            ]
+        },
+        {
+            "id": "decision_rationale",
+            "title": "Decision Rationale",
+            "purpose": "Explain why the selected option was chosen over other alternatives.",
+            "required": true
+        },
+        {
+            "id": "tradeoffs",
+            "title": "Trade-offs",
+            "purpose": "Document the trade-offs, compromises, and limitations associated with the chosen decision.",
+            "required": true
+        },
+        {
+            "id": "impact_analysis",
+            "title": "Impact Analysis",
+            "purpose": "Describe how this decision affects architecture, development, operations, security, and maintainability.",
+            "required": true,
+            "subsections": [
+                "Impact on Architecture",
+                "Impact on Development",
+                "Impact on Operations",
+                "Impact on Security"
+            ]
+        },
+        {
+            "id": "risks",
+            "title": "Risks",
+            "purpose": "Document risks introduced by this decision and potential mitigation strategies.",
+            "required": false
+        },
+        {
+            "id": "assumptions",
+            "title": "Assumptions",
+            "purpose": "Capture assumptions made while making the decision.",
+            "required": false
+        },
+        {
+            "id": "follow_up_actions",
+            "title": "Follow-up Actions",
+            "purpose": "Describe actions required to implement or validate this decision.",
+            "required": false
+        },
+        {
+            "id": "references",
+            "title": "References",
+            "purpose": "Provide links to related architecture documents, diagrams, or external resources.",
+            "required": false
+        },
+        {
+            "id": "status_history",
+            "title": "Decision Status History",
+            "purpose": "Track the lifecycle of the decision such as proposed, accepted, deprecated, or superseded.",
+            "required": false
+        }
+    ],
+    "validationRules": [
+        "Each ADR must capture a single architectural decision.",
+        "The decision must include at least one alternative option that was considered.",
+        "The rationale must clearly justify the selected option.",
+        "Trade-offs must be explicitly documented.",
+        "Impacts on architecture or system behavior must be described."
+    ],
+    "downstreamDependencies": [],
+    "promptHints": {
+        "systemIntent": "Generate a structured architecture decision record capturing a single architectural decision and its reasoning.",
+        "rules": [
+            "Focus on one architectural decision at a time.",
+            "Clearly describe the problem context and constraints.",
+            "Explain the reasoning behind the selected decision."
+        ],
+        "mustDo": [
+            "Use exact section titles from the template.",
+            "Clearly distinguish between options considered and the final decision.",
+            "Document consequences and trade-offs."
+        ],
+        "mustNotDo": [
+            "Do not record multiple unrelated decisions in a single ADR.",
+            "Do not omit the rationale behind the decision.",
+            "Do not invent technical constraints not present in the context."
+        ]
+    }
+}

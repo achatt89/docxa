@@ -1,0 +1,36 @@
+{
+    "documentId": "ADR",
+    "roleId": "solution_architect",
+    "name": "Solution Architect Interview for ADR",
+    "purpose": "Capture architectural decisions and their evaluation.",
+    "questions": [
+        {
+            "id": "decison_context",
+            "sectionId": "context",
+            "question": "What is the problem or context that led to this decision?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "options_evaluated",
+            "sectionId": "options_considered",
+            "question": "What other options were evaluated and what were their pros/cons?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "chosen_decision",
+            "sectionId": "decision_statement",
+            "question": "What is the final architectural decision?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "tradeoffs_made",
+            "sectionId": "tradeoffs",
+            "question": "What are the significant trade-offs associated with this decision?",
+            "answerType": "long_text",
+            "required": true
+        }
+    ]
+}

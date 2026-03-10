@@ -1,0 +1,43 @@
+{
+    "documentId": "HLD",
+    "roleId": "solution_architect",
+    "name": "Solution Architect Interview for HLD",
+    "purpose": "Define high-level architecture, component boundaries, and integration patterns.",
+    "questions": [
+        {
+            "id": "arch_pattern",
+            "sectionId": "architecture_overview",
+            "question": "What is the primary architectural pattern for this solution?",
+            "answerType": "single_select_or_text",
+            "options": [
+                "Microservices",
+                "Monolithic",
+                "Event-Driven",
+                "Serverless",
+                "Layered"
+            ],
+            "required": true
+        },
+        {
+            "id": "major_components",
+            "sectionId": "component_view",
+            "question": "What are the major application components or services?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "data_strategy",
+            "sectionId": "data_architecture",
+            "question": "How will data be persisted and what is the storage strategy?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "key_integrations",
+            "sectionId": "integration_architecture",
+            "question": "Describe the core integration points between systems.",
+            "answerType": "long_text",
+            "required": true
+        }
+    ]
+}

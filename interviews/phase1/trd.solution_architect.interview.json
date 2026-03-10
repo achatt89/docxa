@@ -1,0 +1,46 @@
+{
+    "documentId": "TRD",
+    "roleId": "solution_architect",
+    "name": "Solution Architect Interview for TRD",
+    "purpose": "Define technical constraints, system boundaries, and architectural drivers.",
+    "questions": [
+        {
+            "id": "tech_stack",
+            "sectionId": "technology_choices",
+            "question": "What are the core technologies and frameworks for this solution?",
+            "answerType": "list",
+            "required": true,
+            "guidance": [
+                "Mention languages, databases, and key library choices."
+            ]
+        },
+        {
+            "id": "system_boundaries",
+            "sectionId": "system_context",
+            "question": "Which external systems and services will the solution interact with?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "scaling_needs",
+            "sectionId": "architectural_drivers",
+            "question": "What are the anticipated scaling and throughput requirements?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "infrastructure",
+            "sectionId": "deployment_view",
+            "question": "Which infrastructure and hosting provider is targeted?",
+            "answerType": "single_select_or_text",
+            "options": [
+                "AWS",
+                "Azure",
+                "Google Cloud",
+                "On-Prem",
+                "Hybrid"
+            ],
+            "required": true
+        }
+    ]
+}

@@ -1,0 +1,194 @@
+{
+    "documentId": "HLD",
+    "name": "High Level Design",
+    "phase": 1,
+    "version": "1.0",
+    "metadata": {
+        "description": "Defines the high-level architecture of the solution, including system boundaries, major components, integrations, data flow, deployment view, and key design decisions.",
+        "primaryOwner": "Solution Architect",
+        "contributors": [
+            "Engineering Lead",
+            "Product Manager",
+            "DevOps Engineer",
+            "Security Engineer",
+            "Delivery Manager"
+        ]
+    },
+    "documentControl": {
+        "sections": [
+            "Document Version",
+            "Author",
+            "Reviewers",
+            "Approvers",
+            "Change History"
+        ]
+    },
+    "dependencies": [
+        "TRD"
+    ],
+    "sections": [
+        {
+            "id": "architecture_overview",
+            "title": "Architecture Overview",
+            "purpose": "Provide a concise overview of the proposed solution architecture and how it satisfies the business, product, functional, and technical requirements.",
+            "required": true
+        },
+        {
+            "id": "design_drivers",
+            "title": "Architectural Drivers",
+            "purpose": "Describe the key requirements, constraints, quality attributes, and assumptions that drive the architecture.",
+            "required": true
+        },
+        {
+            "id": "solution_scope",
+            "title": "Solution Scope and Boundaries",
+            "purpose": "Define the boundaries of the solution, what is included within the architecture, and what remains outside the scope.",
+            "required": true,
+            "subsections": [
+                "In Scope",
+                "Out of Scope",
+                "External Dependencies"
+            ]
+        },
+        {
+            "id": "system_context",
+            "title": "System Context",
+            "purpose": "Describe how the solution interacts with users, upstream systems, downstream systems, third-party services, and enterprise platforms.",
+            "required": true
+        },
+        {
+            "id": "component_view",
+            "title": "High Level Component View",
+            "purpose": "Define the major application components, services, modules, or domains and explain their responsibilities.",
+            "required": true
+        },
+        {
+            "id": "integration_architecture",
+            "title": "Integration Architecture",
+            "purpose": "Describe how the solution communicates with internal and external systems.",
+            "required": true,
+            "subsections": [
+                "Integration Points",
+                "Protocols and Interfaces",
+                "Synchronous and Asynchronous Communication",
+                "Error and Retry Strategy"
+            ]
+        },
+        {
+            "id": "data_architecture",
+            "title": "Data Architecture",
+            "purpose": "Describe the high-level data model, data ownership, storage approach, and movement of data through the system.",
+            "required": true,
+            "subsections": [
+                "Core Data Domains",
+                "Data Ownership",
+                "Persistence Strategy",
+                "Data Flow"
+            ]
+        },
+        {
+            "id": "security_architecture",
+            "title": "Security Architecture",
+            "purpose": "Describe the high-level security model of the solution.",
+            "required": true,
+            "subsections": [
+                "Authentication",
+                "Authorization",
+                "Data Protection",
+                "Secrets and Key Management",
+                "Audit and Compliance"
+            ]
+        },
+        {
+            "id": "deployment_view",
+            "title": "Deployment View",
+            "purpose": "Describe the runtime topology and the environments in which the solution will operate.",
+            "required": true,
+            "subsections": [
+                "Environment Strategy",
+                "Runtime Topology",
+                "Hosting Model",
+                "Network Boundaries"
+            ]
+        },
+        {
+            "id": "availability_and_resilience",
+            "title": "Availability, Resilience, and Scalability",
+            "purpose": "Describe how the architecture addresses uptime, failure handling, recovery, and scaling expectations.",
+            "required": true
+        },
+        {
+            "id": "observability_and_operations",
+            "title": "Observability and Operational Considerations",
+            "purpose": "Describe the high-level approach to monitoring, logging, tracing, alerting, and supportability.",
+            "required": true
+        },
+        {
+            "id": "technology_choices",
+            "title": "Technology Choices and Rationale",
+            "purpose": "Summarize the major technology choices and the reasoning behind them.",
+            "required": true
+        },
+        {
+            "id": "risks_and_tradeoffs",
+            "title": "Architectural Risks and Trade-offs",
+            "purpose": "Capture key architectural risks, compromises, and trade-offs made in the proposed design.",
+            "required": true
+        },
+        {
+            "id": "open_issues",
+            "title": "Open Issues and Decisions Pending",
+            "purpose": "List unresolved architecture questions and decisions that must be closed before implementation progresses.",
+            "required": false
+        },
+        {
+            "id": "appendices",
+            "title": "Appendices and Reference Material",
+            "purpose": "Capture supporting references, linked documents, and related architecture artifacts.",
+            "required": false,
+            "subsections": [
+                "Related Documents",
+                "Referenced Standards",
+                "Diagram Index"
+            ]
+        },
+        {
+            "id": "approval",
+            "title": "Approval and Sign Off",
+            "purpose": "Capture formal review and approval of the high-level design.",
+            "required": false
+        }
+    ],
+    "validationRules": [
+        "The HLD must align with technical requirements defined in the TRD.",
+        "Major architectural components must map to functional areas described in the FRD where applicable.",
+        "Integration architecture must identify all relevant external or enterprise interfaces.",
+        "Security architecture must align with stated security requirements.",
+        "Deployment view must not contradict the hosting or environment strategy.",
+        "Technology choices must include rationale rather than only listing tools.",
+        "Architectural risks and trade-offs must be explicitly documented."
+    ],
+    "downstreamDependencies": [
+        "LLD",
+        "ADR"
+    ],
+    "promptHints": {
+        "systemIntent": "Generate a structured high level design document suitable for architecture review, delivery planning, and downstream low level design.",
+        "rules": [
+            "Do not invent systems, integrations, technologies, environments, or constraints not supported by inputs.",
+            "Keep the document at architecture level and avoid detailed implementation design.",
+            "Ensure architecture decisions trace back to requirements and constraints.",
+            "State unknowns and pending decisions clearly instead of guessing."
+        ],
+        "mustDo": [
+            "Use exact section titles from the template.",
+            "Explain component responsibilities and boundaries clearly.",
+            "Document trade-offs and unresolved issues honestly."
+        ],
+        "mustNotDo": [
+            "Do not collapse the HLD into a low-level module breakdown.",
+            "Do not omit security, deployment, or resilience considerations.",
+            "Do not present assumptions as confirmed facts."
+        ]
+    }
+}

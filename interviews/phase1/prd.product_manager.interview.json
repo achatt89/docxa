@@ -1,0 +1,39 @@
+{
+    "documentId": "PRD",
+    "roleId": "product_manager",
+    "name": "Product Manager Interview for PRD",
+    "purpose": "Define product features, user personas, and prioritization.",
+    "questions": [
+        {
+            "id": "target_user_personas",
+            "sectionId": "target_audience",
+            "question": "Who are the core user personas for this product?",
+            "answerType": "list",
+            "required": true,
+            "guidance": [
+                "Define by role and primary pain points."
+            ]
+        },
+        {
+            "id": "main_features",
+            "sectionId": "product_features",
+            "question": "What are the top 5 key features for the initial release?",
+            "answerType": "list",
+            "required": true
+        },
+        {
+            "id": "user_journeys",
+            "sectionId": "user_experience",
+            "question": "Describe the most critical user journey.",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "constraints",
+            "sectionId": "constraints",
+            "question": "Are there any hard product or market constraints?",
+            "answerType": "long_text",
+            "required": false
+        }
+    ]
+}

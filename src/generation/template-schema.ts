@@ -1,6 +1,17 @@
 import { z } from 'zod';
 
-export const TemplateSectionSchema = z.object({
+export type TemplateSection = {
+    id: string;
+    title: string;
+    description?: string;
+    purpose?: string;
+    required?: boolean;
+    recommendedSources?: string[];
+    guidance?: string[];
+    subsections?: (TemplateSection | string)[];
+};
+
+export const TemplateSectionSchema: z.ZodType<TemplateSection> = z.lazy(() => z.object({
     id: z.string(),
     title: z.string(),
     description: z.string().optional(),
@@ -8,8 +19,8 @@ export const TemplateSectionSchema = z.object({
     required: z.boolean().default(true),
     recommendedSources: z.array(z.string()).default([]),
     guidance: z.array(z.string()).default([]),
-    subsections: z.array(z.lazy(() => TemplateSectionSchema)).optional(),
-});
+    subsections: z.array(z.union([z.string(), TemplateSectionSchema])).optional(),
+}));
 
 export const TemplateMetadataSchema = z.object({
     description: z.string().optional(),
@@ -49,5 +60,4 @@ export const DocumentTemplateSchema = z.object({
     }).optional(),
 });
 
-export type TemplateSection = z.infer<typeof TemplateSectionSchema>;
 export type DocumentTemplate = z.infer<typeof DocumentTemplateSchema>;

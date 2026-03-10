@@ -1,0 +1,35 @@
+{
+    "documentId": "NFR",
+    "roleId": "devops_engineer",
+    "name": "DevOps Engineer Interview for NFR",
+    "purpose": "Define non-functional requirements such as availability, performance, and scalability.",
+    "questions": [
+        {
+            "id": "availability_targets",
+            "sectionId": "availability_requirements",
+            "question": "What are the target availability and uptime requirements (e.g., 99.9%)?",
+            "answerType": "single_select_or_text",
+            "options": [
+                "99.0%",
+                "99.9%",
+                "99.99%",
+                "99.999%"
+            ],
+            "required": true
+        },
+        {
+            "id": "perf_latency",
+            "sectionId": "performance_requirements",
+            "question": "What are the acceptable response time targets for core journeys?",
+            "answerType": "long_text",
+            "required": true
+        },
+        {
+            "id": "monitoring_strategy",
+            "sectionId": "observability_requirements",
+            "question": "What is the primary monitoring and logging strategy?",
+            "answerType": "list",
+            "required": true
+        }
+    ]
+}
