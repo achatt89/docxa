@@ -6,7 +6,6 @@ import { ArchitectureDetector } from '../../analysis/architecture-detector.js';
 import { LLMWrapper } from '../../utils/llm-wrapper.js';
 import { ProjectConfig } from '../../models/project-model.js';
 import { TemplateSystem } from '../../generation/template-system.js';
-import { TemplateBootstrap } from '../../generation/template-bootstrap.js';
 import { InterviewLoader } from '../../interview/interview-loader.js';
 import { InterviewSessionStore } from '../../interview/interview-session-store.js';
 import { AnswerNormalizer } from '../../interview/answer-normalizer.js';
@@ -15,64 +14,72 @@ import { InterviewEngine } from '../../interview/interview-engine.js';
 import { GenerationPlanner, GenerationMode } from '../../generation/generation-planner.js';
 import { SavedAnalysis } from '../../models/analysis-model.js';
 import { deriveAnalysisEvidence } from '../../generation/analysis-evidence.js';
+import { initializeRuntime, DocxaRuntime } from '../../runtime/initialize-runtime.js';
 import path from 'path';
+import fs from 'fs/promises';
 import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
 
 const program = new Command();
-const store = new WorkspaceStore(process.cwd());
-const templateSystem = new TemplateSystem();
-
-// 1. Primary and official source: templates/interviews/
-let interviewDir = path.join(process.cwd(), 'templates', 'interviews');
-const legacyInterviewDir = path.join(process.cwd(), 'interviews');
-
-// Check for legacy directory if official one doesn't exist or is empty
-import fs from 'fs/promises';
-try {
-    const officialEntries = await fs.readdir(interviewDir);
-    if (officialEntries.length === 0) {
-        const legacyEntries = await fs.readdir(legacyInterviewDir);
-        if (legacyEntries.length > 0) {
-            console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
-            interviewDir = legacyInterviewDir;
-        }
-    }
-} catch (e) {
-    try {
-        const legacyEntries = await fs.readdir(legacyInterviewDir);
-        if (legacyEntries.length > 0) {
-            console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
-            interviewDir = legacyInterviewDir;
-        }
-    } catch (le) {
-        // Neither exists, InterviewLoader will handle it
-    }
-}
-
-const loader = new InterviewLoader(templateSystem);
-const sessionStore = new InterviewSessionStore(process.cwd());
-const normalizer = new AnswerNormalizer();
-const strategy = new QuestionStrategy();
-const engine = new InterviewEngine(loader, sessionStore, normalizer, strategy, interviewDir);
-
-// Initialize templates at startup to enable alignment validation
-await TemplateBootstrap.initialize(templateSystem);
 
 program
     .name('docxa')
     .description('AI-powered documentation intelligence system')
-    .version('0.1.0');
+    .version('0.1.0')
+    .option('--env-file <path>', 'Path to custom .env file');
+
+/**
+ * Shared runtime initialization for CLI commands.
+ */
+async function getRuntime(): Promise<DocxaRuntime> {
+    const opts = program.opts();
+    return await initializeRuntime({
+        cwd: process.cwd(),
+        envFile: opts.envFile,
+        interface: 'cli'
+    });
+}
+
+/**
+ * Helper to get the canonical interview directory.
+ */
+async function getInterviewDir(cwd: string): Promise<string> {
+    let interviewDir = path.join(cwd, 'templates', 'interviews');
+    const legacyInterviewDir = path.join(cwd, 'interviews');
+
+    try {
+        const officialEntries = await fs.readdir(interviewDir);
+        if (officialEntries.length === 0) {
+            const legacyEntries = await fs.readdir(legacyInterviewDir);
+            if (legacyEntries.length > 0) {
+                console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
+                return legacyInterviewDir;
+            }
+        }
+    } catch (e) {
+        try {
+            const legacyEntries = await fs.readdir(legacyInterviewDir);
+            if (legacyEntries.length > 0) {
+                console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
+                return legacyInterviewDir;
+            }
+        } catch (le) {
+            // Neither exists, Loader will handle it
+        }
+    }
+    return interviewDir;
+}
 
 program
     .command('init')
     .description('Initialize a new Docxa workspace')
     .option('-m, --mode <mode>', 'Project mode (greenfield or existing)', 'greenfield')
     .action(async (options: { mode: string }) => {
+        const runtime = await getRuntime();
         const config: ProjectConfig = {
-            name: path.basename(process.cwd()),
+            name: path.basename(runtime.cwd),
             mode: options.mode as 'greenfield' | 'existing',
-            rootPath: process.cwd(),
+            rootPath: runtime.cwd,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             analysisPath: '.docxa/analysis.json',
@@ -81,8 +88,7 @@ program
             stakeholdersPath: '.docxa/stakeholders.json',
         };
 
-        await store.initWorkspace(config);
-        await sessionStore.init();
+        await runtime.store.initWorkspace(config);
         console.log('✅ Docxa workspace initialized in .docxa/');
     });
 
@@ -91,6 +97,7 @@ program
     .description('Discover architecture and frameworks in a repository')
     .argument('[path]', 'Path to the repository', '.')
     .action(async (repoPath: string) => {
+        const runtime = await getRuntime();
         console.log(`🔍 Scanning repository at ${repoPath}...`);
 
         const scanner = new RepositoryScanner();
@@ -99,8 +106,7 @@ program
         const detector = new FrameworkDetector();
         const frameworkInfo = await detector.detect(path.resolve(repoPath), result);
 
-        const llm = new LLMWrapper();
-        const archDetector = new ArchitectureDetector(llm);
+        const archDetector = new ArchitectureDetector(runtime.llm);
         const archInfo = await archDetector.detect(result, frameworkInfo);
 
         const savedAnalysis: SavedAnalysis = {
@@ -118,7 +124,7 @@ program
             configFiles: result.configFiles
         };
 
-        await store.saveAnalysis(savedAnalysis);
+        await runtime.store.saveAnalysis(savedAnalysis);
 
         console.log('\n--- Analysis Result ---');
         console.log(`Languages: ${Array.from(result.languages).join(', ')}`);
@@ -138,10 +144,20 @@ interviewCmd
     .requiredOption('-r, --role <role>', 'Stakeholder role')
     .option('-n, --name <name>', 'Stakeholder name')
     .action(async (options) => {
+        const runtime = await getRuntime();
+        const interviewDir = await getInterviewDir(runtime.cwd);
+        const engine = new InterviewEngine(
+            runtime.interviewLoader,
+            runtime.sessionStore,
+            new AnswerNormalizer(),
+            new QuestionStrategy(),
+            interviewDir
+        );
+
         const session = await engine.startInterview(options.document, options.role, options.name);
         console.log(`🎤 Starting interview for ${options.document} with ${options.role}...`);
         console.log(`Session ID: ${session.sessionId}\n`);
-        await conductInterview(session);
+        await conductInterview(engine, session);
     });
 
 interviewCmd
@@ -149,20 +165,31 @@ interviewCmd
     .description('Continue an existing interview session')
     .argument('<sessionId>', 'Session ID')
     .action(async (sessionId) => {
+        const runtime = await getRuntime();
+        const interviewDir = await getInterviewDir(runtime.cwd);
+        const engine = new InterviewEngine(
+            runtime.interviewLoader,
+            runtime.sessionStore,
+            new AnswerNormalizer(),
+            new QuestionStrategy(),
+            interviewDir
+        );
+
         const session = await engine.resumeSession(sessionId);
         if (!session) {
             console.error('❌ Session not found');
             return;
         }
         console.log(`🎤 Resuming interview for ${session.documentId}...`);
-        await conductInterview(session);
+        await conductInterview(engine, session);
     });
 
 interviewCmd
     .command('list')
     .description('List all interview sessions')
     .action(async () => {
-        const sessions = await sessionStore.listSessions();
+        const runtime = await getRuntime();
+        const sessions = await runtime.sessionStore.listSessions();
         if (sessions.length === 0) {
             console.log('No interview sessions found.');
             return;
@@ -173,7 +200,7 @@ interviewCmd
         });
     });
 
-async function conductInterview(session: any) {
+async function conductInterview(engine: InterviewEngine, session: any) {
     const rl = readline.createInterface({ input, output });
     try {
         let question;
@@ -210,13 +237,14 @@ program
     .option('--plan', 'Show readiness report only')
     .option('--mode <mode>', 'Generation mode (strict, flexible, assisted)', 'flexible')
     .action(async (docType: string, options) => {
+        const runtime = await getRuntime();
         const { DocumentGenerator } = await import('../../generation/document-generator.js');
         const planner = new GenerationPlanner();
         const docId = docType.toUpperCase();
 
-        const existingDocs = await store.listDocuments();
-        const sessions = await sessionStore.listSessions();
-        const savedAnalysis = await store.loadAnalysis();
+        const existingDocs = await runtime.store.listDocuments();
+        const sessions = await runtime.sessionStore.listSessions();
+        const savedAnalysis = await runtime.store.loadAnalysis();
         const analysisAvailable = savedAnalysis ? deriveAnalysisEvidence(savedAnalysis) : [];
 
         const plan = planner.plan(docId, existingDocs, sessions, options.mode as GenerationMode, analysisAvailable);
@@ -249,24 +277,23 @@ program
 
         console.log(`📄 Generating ${docId}...`);
 
-        const llm = new LLMWrapper();
-        const generator = new DocumentGenerator(llm, templateSystem, store);
+        const generator = new DocumentGenerator(runtime.llm, runtime.templateSystem, runtime.store);
 
         // Gather evidence
         const upstreamDocs: Record<string, string> = {};
         for (const depId of plan.availableInputs) {
-            const content = await store.loadDocument(depId);
+            const content = await runtime.store.loadDocument(depId);
             if (content) upstreamDocs[depId] = content;
         }
 
         const doc = await generator.generate(docId, {
-            projectName: path.basename(process.cwd()),
+            projectName: path.basename(runtime.cwd),
             upstreamDocs,
             interviewSessions: sessions.filter(s => s.documentId === docId || plan.availableInputs.includes(s.documentId)),
             repositoryAnalysis: savedAnalysis
         });
 
-        await store.saveDocument(docId, doc.sections.map(s => `## ${s.title}\n\n${s.content}`).join('\n\n'));
+        await runtime.store.saveDocument(docId, doc.sections.map(s => `## ${s.title}\n\n${s.content}`).join('\n\n'));
         console.log(`✅ Generated ${docId} version ${doc.version}`);
     });
 
@@ -274,7 +301,8 @@ program
     .command('list-documents')
     .description('List available documents')
     .action(async () => {
-        const docs = await store.listDocuments();
+        const runtime = await getRuntime();
+        const docs = await runtime.store.listDocuments();
         if (docs.length === 0) {
             console.log('No documents found in workspace.');
             return;
@@ -287,6 +315,7 @@ program
     .command('validate')
     .description('Validate document consistency')
     .action(async () => {
+        await getRuntime(); // Just to load env/templates
         const { ConsistencyChecker } = await import('../../generation/consistency-checker.js');
         console.log('Running consistency checks...');
         const checker = new ConsistencyChecker();

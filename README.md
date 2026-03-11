@@ -90,7 +90,44 @@ To add a new document type (e.g., `HLD`):
 3. Add `promptHints` to ensure the AI follows specific architectural standards.
 4. The system will automatically detect and load the template on the next run.
 
-## Environment Variables
+## LLM Configuration
+
+Docxa uses real LLM providers through [Ax-LLM](https://github.com/ax-llm/ax).
+
+### Supported Providers
+
+| Provider | Environment Variable | Default Model |
+| :--- | :--- | :--- |
+| **OpenAI** | `OPENAI_API_KEY` | `gpt-4o` |
+| **Anthropic** | `ANTHROPIC_API_KEY` | `claude-3-5-sonnet-20240620` |
+| **Google** | `GEMINI_API_KEY` or `GOOGLE_API_KEY` | `gemini-1.5-pro` |
+
+### Environment Variables
+
+You can configure Docxa using the following environment variables:
+
+- `DOCXA_PROVIDER`: The LLM provider to use (`openai`, `anthropic`, `google`). Defaults to `openai`.
+- `DOCXA_MODEL`: The specific model to use (e.g., `gpt-4-turbo`, `claude-3-opus-20240229`).
+- `DOCXA_API_KEY`: A generic override for the API key (if set, takes priority over provider-specific variables).
+
+### Environment Files
+
+Docxa supports loading environment variables from `.env` files. It follows this priority:
+
+1.  Explicitly provided file via `--env-file <path>`
+2.  Pre-set environment variables in your shell
+3.  `.env.local` in the project root
+4.  `.env` in the project root
+
+Example usage:
+
+```bash
+# Using a specific env file
+docxa generate prd --env-file .env.prod
+
+# Using default .env auto-discovery
+docxa discover .
+```
 
 ---
 Built with ❤️ for AI-native engineering teams.

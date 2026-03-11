@@ -1,57 +1,38 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-export type LLMProvider = 'openai' | 'anthropic' | 'google';
-
-export interface LLMConfig {
-    provider: LLMProvider;
-    model: string;
-    apiKey: string;
-}
-
-/**
- * Placeholder for Ax-LLM since the package is currently unavailable in the registry.
- * This ensures the project builds and provides a clear integration point.
- */
-class AxLLMMock {
-    constructor(config: any) {
-        console.log('LLM Initialized with:', config.provider, config.model);
-    }
-
-    async chat(params: any): Promise<{ content: string }> {
-        return { content: `Simulated response from ${params.messages[params.messages.length - 1].content.slice(0, 50)}...` };
-    }
-}
+import { AxAI } from '@ax-llm/ax';
+import { LLMConfig } from '../llm/llm-config.js';
 
 export class LLMWrapper {
-    private client: any;
+    private client: AxAI;
 
-    constructor(config?: LLMConfig) {
-        const provider = config?.provider || (process.env.DOCXA_PROVIDER as LLMProvider) || 'openai';
-        const model = config?.model || process.env.DOCXA_MODEL || 'gpt-4';
-        const apiKey = config?.apiKey || process.env.DOCXA_API_KEY;
+    constructor(config: LLMConfig) {
+        const { provider, model, apiKey } = config;
 
-        if (!apiKey && process.env.NODE_ENV !== 'test') {
-            console.warn(`API Key for ${provider} is missing. Set DOCXA_API_KEY for real LLM calls.`);
-        }
-
-        this.client = new AxLLMMock({
-            provider,
-            model,
+        // Initialize AxAI for the specific provider
+        // Note: AxAI construction might depend on version-specific registration
+        // We assume standard initialization here.
+        this.client = new AxAI({
+            name: provider as any,
             apiKey,
+            config: { model }
         });
+
+        console.log(`LLM Initialized with provider: ${provider}, model: ${model}`);
     }
 
     async generate(prompt: string, systemPrompt?: string): Promise<string> {
         try {
             const response = await this.client.chat({
-                messages: [
-                    ...(systemPrompt ? [{ role: 'system', content: systemPrompt }] : []),
-                    { role: 'user', content: prompt }
+                chatPrompt: [
+                    ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
+                    { role: 'user' as const, content: prompt }
                 ]
             });
-            return response.content;
+
+            if (response instanceof ReadableStream) {
+                throw new Error('Streaming not supported in generate()');
+            }
+
+            return response.results[0]?.content || '';
         } catch (error) {
             console.error('LLM Generation Error:', error);
             throw error;
@@ -61,13 +42,24 @@ export class LLMWrapper {
     async generateStructured<T>(prompt: string, schema: any, systemPrompt?: string): Promise<T> {
         try {
             const response = await this.client.chat({
-                messages: [
-                    ...(systemPrompt ? [{ role: 'system', content: systemPrompt }] : []),
-                    { role: 'user', content: prompt }
+                chatPrompt: [
+                    ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
+                    { role: 'user' as const, content: prompt }
                 ],
-                schema,
+                responseFormat: {
+                    type: 'json_schema',
+                    schema
+                }
             });
-            return response.content;
+
+            if (response instanceof ReadableStream) {
+                throw new Error('Streaming not supported in generateStructured()');
+            }
+
+            const content = response.results[0]?.content;
+            if (!content) return {} as T;
+
+            return JSON.parse(content) as T;
         } catch (error) {
             console.error('LLM Structured Generation Error:', error);
             throw error;
