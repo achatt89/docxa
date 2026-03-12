@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { InterviewSession, InterviewSessionSchema, InterviewAnswer } from './interview-schema.js';
+import { InterviewSession, InterviewSessionSchema } from './interview-schema.js';
 
 export class InterviewSessionStore {
     private sessionsDir: string;
@@ -27,7 +27,7 @@ export class InterviewSessionStore {
             const content = await fs.readFile(filePath, 'utf-8');
             const json = JSON.parse(content);
             return InterviewSessionSchema.parse(json);
-        } catch (error) {
+        } catch (_error) {
             return undefined;
         }
     }
@@ -46,7 +46,7 @@ export class InterviewSessionStore {
                 }
             }
             return sessions;
-        } catch (error) {
+        } catch (_error) {
             return [];
         }
     }
@@ -55,7 +55,7 @@ export class InterviewSessionStore {
         const filePath = path.join(this.sessionsDir, `${sessionId}.json`);
         try {
             await fs.unlink(filePath);
-        } catch (error) {
+        } catch (_error) {
             // Ignore if doesn't exist
         }
     }

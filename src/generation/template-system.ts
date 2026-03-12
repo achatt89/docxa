@@ -1,4 +1,3 @@
-import { DocumentType } from '../models/document-model.js';
 import { DocumentTemplate } from './template-schema.js';
 
 export class TemplateSystem {

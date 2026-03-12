@@ -1,9 +1,7 @@
 import {
-    InterviewDefinition,
     InterviewSession,
     InterviewQuestion,
-    InterviewAnswer,
-    InterviewStatus
+    InterviewAnswer
 } from './interview-schema.js';
 import { InterviewLoader } from './interview-loader.js';
 import { InterviewSessionStore } from './interview-session-store.js';

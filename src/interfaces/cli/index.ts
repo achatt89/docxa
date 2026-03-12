@@ -1,13 +1,8 @@
 import { Command } from 'commander';
-import { WorkspaceStore } from '../../storage/workspace-store.js';
 import { RepositoryScanner } from '../../analysis/repository-scanner.js';
 import { FrameworkDetector } from '../../analysis/framework-detector.js';
 import { ArchitectureDetector } from '../../analysis/architecture-detector.js';
-import { LLMWrapper } from '../../utils/llm-wrapper.js';
 import { ProjectConfig } from '../../models/project-model.js';
-import { TemplateSystem } from '../../generation/template-system.js';
-import { InterviewLoader } from '../../interview/interview-loader.js';
-import { InterviewSessionStore } from '../../interview/interview-session-store.js';
 import { AnswerNormalizer } from '../../interview/answer-normalizer.js';
 import { QuestionStrategy } from '../../interview/question-strategy.js';
 import { InterviewEngine } from '../../interview/interview-engine.js';
@@ -44,7 +39,7 @@ async function getRuntime(): Promise<DocxaRuntime> {
  * Helper to get the canonical interview directory.
  */
 async function getInterviewDir(cwd: string): Promise<string> {
-    let interviewDir = path.join(cwd, 'templates', 'interviews');
+    const interviewDir = path.join(cwd, 'templates', 'interviews');
     const legacyInterviewDir = path.join(cwd, 'interviews');
 
     try {
@@ -56,14 +51,14 @@ async function getInterviewDir(cwd: string): Promise<string> {
                 return legacyInterviewDir;
             }
         }
-    } catch (e) {
+    } catch {
         try {
             const legacyEntries = await fs.readdir(legacyInterviewDir);
             if (legacyEntries.length > 0) {
                 console.warn(`⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`);
                 return legacyInterviewDir;
             }
-        } catch (le) {
+        } catch {
             // Neither exists, Loader will handle it
         }
     }

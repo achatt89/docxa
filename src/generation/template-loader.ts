@@ -27,7 +27,7 @@ export class TemplateLoader {
                     } catch (error: any) {
                         console.error(`Failed to load template at ${fullPath}: ${error.message}`);
                         // In recruitment of "fail loudly", we rethrow or handle specifically
-                        throw new Error(`Template validation failed for ${fullPath}: ${error.message}`);
+                        throw new Error(`Template validation failed for ${fullPath}: ${error.message}`, { cause: error });
                     }
                 }
             }

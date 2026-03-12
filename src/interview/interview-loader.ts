@@ -45,7 +45,7 @@ export class InterviewLoader {
                         interviews.push(validated);
                     } catch (error: any) {
                         console.error(`Failed to load interview definition at ${fullPath}: ${error.message}`);
-                        throw new Error(`Interview definition validation failed for ${fullPath}: ${error.message}`);
+                        throw new Error(`Interview definition validation failed for ${fullPath}: ${error.message}`, { cause: error });
                     }
                 }
             }

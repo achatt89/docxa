@@ -21,9 +21,11 @@ export class DocumentGenerator {
         if (!template) throw new Error(`Template for ${type} not found`);
 
         // Check dependencies (soft check for now)
+        /*
         for (const dep of template.dependencies) {
             // Future: check if dependency document exists in store
         }
+        */
 
         const systemPrompt = this.buildSystemPrompt(template);
         const userPrompt = this.buildUserPrompt(template, context);
@@ -47,7 +49,7 @@ export class DocumentGenerator {
 
     private buildSystemPrompt(template: DocumentTemplate): string {
         const hints = template.promptHints;
-        let prompt = `You are a professional documentation architect. 
+        const prompt = `You are a professional documentation architect. 
 Your goal is to generate a ${template.name} (${template.documentId}) based on the provided project context.
 
 SYSTEM INTENT:

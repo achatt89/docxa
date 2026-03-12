@@ -221,18 +221,15 @@ export class GenerationPlanner {
 
         for (const req of requirements) {
             let satisfied = false;
-            let usedAlternative = false;
 
             for (const option of req.satisfiesWith) {
                 if (option.sourceType === 'document' && existingDocs.includes(option.sourceId)) {
                     satisfied = true;
                 } else if (option.sourceType === 'interview' && sessions.some(s => s.roleId === option.sourceId && s.status === 'completed')) {
                     satisfied = true;
-                    usedAlternative = true;
                     alternativeEvidenceUsed.push(`${req.key} (Interview: ${option.sourceId})`);
                 } else if (option.sourceType === 'repository_analysis' && analysisAvailable.includes(option.sourceId)) {
                     satisfied = true;
-                    usedAlternative = true;
                     alternativeEvidenceUsed.push(`${req.key} (Repo Analysis: ${option.sourceId})`);
                 }
             }

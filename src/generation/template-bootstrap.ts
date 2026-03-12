@@ -16,8 +16,6 @@ export class TemplateBootstrap {
         // 2. Legacy support: src/templates (internal)
         const legacySrcTemplateDir = path.resolve(__dirname, '..', 'templates');
 
-        // 3. Root templates/ (backward compatibility)
-        const legacyRootTemplateDir = path.resolve(process.cwd(), 'templates');
 
         console.log(`🚀 Initializing templates...`);
 
@@ -32,7 +30,7 @@ export class TemplateBootstrap {
                 console.warn(`⚠️  Warning: Loading templates from legacy internal directory: ${legacySrcTemplateDir}. Please move templates to templates/documents/`);
                 templateSystem.registerMany(srcTemplates);
             }
-        } catch (e) {
+        } catch {
             // Ignore if internal dir is missing
         }
 

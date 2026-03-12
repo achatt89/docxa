@@ -59,7 +59,7 @@ export class FrameworkDetector {
             if (deps['vue']) info.frameworks.push('Vue');
             if (deps['@nestjs/core']) info.frameworks.push('NestJS');
             if (pkg.workspaces) info.isMonorepo = true;
-        } catch (e) {
+        } catch {
             // Ignore parsing errors
         }
     }

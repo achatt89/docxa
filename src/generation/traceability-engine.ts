@@ -1,4 +1,4 @@
-import { Document, DocumentType } from '../models/document-model.js';
+import { DocumentType } from '../models/document-model.js';
 
 export interface TraceLink {
     sourceDoc: DocumentType;
@@ -19,7 +19,7 @@ export class TraceabilityEngine {
         return this.links.filter(l => l.targetDoc === targetDoc);
     }
 
-    async autoTrace(documents: Document[]): Promise<void> {
+    async autoTrace(_documents: any[]): Promise<void> {
         // Logic to automatically link sections based on keywords or LLM analysis
         // For Phase 1, this is a placeholder
     }

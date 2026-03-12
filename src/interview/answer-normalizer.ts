@@ -1,4 +1,4 @@
-import { InterviewAnswer, InterviewQuestion } from './interview-schema.js';
+import { InterviewQuestion } from './interview-schema.js';
 
 export class AnswerNormalizer {
     normalize(question: InterviewQuestion, rawAnswer: any): any {

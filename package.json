@@ -12,7 +12,7 @@
     "start": "node dist/interfaces/cli/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src"
   },
   "keywords": [
     "documentation",
@@ -31,9 +31,12 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^20.10.4",
     "@types/uuid": "^10.0.0",
+    "eslint": "^10.0.3",
     "typescript": "^5.3.3",
+    "typescript-eslint": "^8.57.0",
     "vitest": "^1.0.4"
   }
 }

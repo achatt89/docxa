@@ -11,9 +11,11 @@ export interface EvidenceGap {
 export class GapDetector {
     detectGaps(template: DocumentTemplate, sessions: InterviewSession[]): EvidenceGap[] {
         const gaps: EvidenceGap[] = [];
+        /*
         const answeredQuestionIds = new Set(
             sessions.flatMap(s => s.answers.map(a => a.questionId))
         );
+        */
 
         // Simple strategy for Phase 1: 
         // Check if each template section has at least one corresponding interview answer
@@ -23,7 +25,7 @@ export class GapDetector {
 
         for (const section of template.sections) {
             const hasAnswerForSection = sessions.some(s =>
-                s.answers.some(a => {
+                s.answers.some(_a => {
                     // This is a placeholder for more advanced section-to-question mapping
                     // For now, we'll assume if there's any answer in a session matching 
                     // the documentId, it's progress. 

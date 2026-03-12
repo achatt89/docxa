@@ -44,7 +44,7 @@ export class WorkspaceStore {
         try {
             const data = await fs.readFile(filePath, 'utf-8');
             return JSON.parse(data).map((s: any) => StakeholderSchema.parse(s));
-        } catch (e) {
+        } catch {
             return [];
         }
     }
@@ -60,7 +60,7 @@ export class WorkspaceStore {
         try {
             const data = await fs.readFile(filePath, 'utf-8');
             return SavedAnalysisSchema.parse(JSON.parse(data));
-        } catch (e) {
+        } catch {
             return undefined;
         }
     }

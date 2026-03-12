@@ -1,4 +1,3 @@
-import { AxAI } from '@ax-llm/ax';
 
 export type SupportedProvider = 'openai' | 'anthropic' | 'google-gemini' | 'google' | 'ollama';
 
@@ -29,7 +28,7 @@ export const DEFAULT_MODELS: Record<string, string> = {
  * Conceptually follows the Sylva pattern.
  */
 export function resolveLLMConfig(): LLMConfig {
-    let providerInput = (process.env.DOCXA_PROVIDER as SupportedProvider) || 'openai';
+    const providerInput = (process.env.DOCXA_PROVIDER as SupportedProvider) || 'openai';
 
     // Map 'google' to 'google-gemini' for Ax compatibility
     const provider: any = providerInput === 'google' ? 'google-gemini' : providerInput;

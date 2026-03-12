@@ -32,6 +32,6 @@ Format: A simple list of questions, one per line.
             .split('\n')
             .map(q => q.trim())
             .filter(q => q.length > 0 && (q.startsWith('-') || q.match(/^\d\./)))
-            .map(q => q.replace(/^[-\d\.]+\s*/, ''));
+            .map(q => q.replace(/^[-\d.]+\s*/, ''));
     }
 }
