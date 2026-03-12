@@ -2,7 +2,7 @@
 
 Docxa is an AI-powered documentation intelligence system designed to help teams maintain up-to-date business and technical documentation effortlessly. It uses **TypeScript**, **Node.js**, and **Ax-LLM** to generate or reverse-engineer documentation from source code or stakeholder interviews.
 
-📖 **[Full Documentation](https://achatt89.github.io/doxa/)**
+📖 **[Full Documentation](https://achatt89.github.io/docxa/)**
 
 ### Features
 
