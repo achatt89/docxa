@@ -37,12 +37,12 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/achatt89/doxa.git"
+    "url": "git+https://github.com/achatt89/docxa.git"
   },
   "bugs": {
-    "url": "https://github.com/achatt89/doxa/issues"
+    "url": "https://github.com/achatt89/docxa/issues"
   },
-  "homepage": "https://achatt89.github.io/doxa/",
+  "homepage": "https://achatt89.github.io/docxa/",
   "license": "MIT",
   "dependencies": {
     "@ax-llm/ax": "^19.0.15",
