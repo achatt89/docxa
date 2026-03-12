@@ -1,63 +1,119 @@
-# Docxa
+# Docxa 📄
 
-Docxa is an AI-powered documentation intelligence system designed to help teams maintain up-to-date business and technical documentation effortlessly. 
+Docxa is an AI-powered documentation intelligence system designed to help teams maintain up-to-date business and technical documentation effortlessly. It uses **TypeScript**, **Node.js**, and **Ax-LLM** to generate or reverse-engineer documentation from source code or stakeholder interviews.
 
-## 🚀 Quick Start
+📖 **[Full Documentation](https://achatt89.github.io/doxa/)**
 
+### Features
+
+- **Greenfield Mode**: Generate documentation through guided stakeholder interviews.
+- **Existing Project Mode**: Analyze existing repositories to reverse-engineer documentation.
+- **Support for Multiple Document Types**:
+  - Business Requirements Document (BRD)
+  - Product Requirements Document (PRD)
+  - Functional Requirements Document (FRD)
+  - Technical Requirements Document (TRD)
+  - High Level Design (HLD)
+  - Low Level Design (LLD)
+  - Non-Functional Requirements (NFR)
+  - Architecture Decision Records (ADR)
+- **Agentic Workflows**: Powered by Ax-LLM agents (PM, Architect, Developer, etc.).
+- **Workspace-Driven**: Maintains state in a `.docxa/` directory.
+- **Local-First AI**: Support for local Ollama models (Llama 3.1, Mistral, etc.).
+
+### Setup
+
+Install dependencies:
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Build the project
-npm run build
-
-# 3. Initialize workspace
-./bin/docxa init
-
-# 4. Discover architecture
-./bin/docxa discover .
-
-# 5. Generate documentation
-./bin/docxa generate prd --plan
 ```
 
-## 🛠️ Installation
-
-Docxa requires **Node.js v20+**.
-
+Configure your environment variables:
 ```bash
-git clone https://github.com/achatt89/doxa.git
-cd doxa
-npm install
+# Set your preferred provider and API keys
+export DOCXA_PROVIDER=openai
+export OPENAI_API_KEY=sk-proj-xxxxxx
+```
+*Docxa also supports `.env` and `.env.local` files for automatic configuration.*
+
+Build the project:
+```bash
 npm run build
-npm link # Optional: available globally as 'docxa'
 ```
 
-## 🧠 LLM Configuration
+### Execution
 
-Docxa supports OpenAI, Anthropic, Gemini, and local **Ollama** models.
+The project is published to the NPM registry and can be executed natively anywhere!
 
-### Local Ollama Setup
-1. Install [Ollama](https://ollama.com).
-2. Run `ollama pull llama3.1`.
-3. Configure Docxa:
-   ```bash
-   export DOCXA_PROVIDER=ollama
-   export DOCXA_MODEL=llama3.1
-   ```
+**Option 1: Run seamlessly without installing**
+```bash
+# Initialize a new Docxa workspace
+npx @thelogicatelier/docxa init
 
-### Other Providers
-Configure via environment variables or a `.env` file:
-- `DOCXA_PROVIDER`: `openai` (default), `anthropic`, `google-gemini`, `ollama`
-- `OPENAI_API_KEY`: Required for OpenAI
-- `ANTHROPIC_API_KEY`: Required for Anthropic
-- `GEMINI_API_KEY`: Required for Gemini
+# Discover architecture and frameworks in a repository
+npx @thelogicatelier/docxa discover .
 
-## 📚 Documentation
+# Start a stakeholder interview
+npx @thelogicatelier/docxa interview start -d PRD -r product_manager
 
-For comprehensive guides, architecture deep-dives, and CLI reference, visit our documentation site:
+# Generate documentation with planning
+npx @thelogicatelier/docxa generate prd --plan
+```
 
-**[Docxa Documentation Site](https://achatt89.github.io/doxa)** (Built with Honkit)
+**Option 2: Install globally on your system**
+```bash
+npm install -g @thelogicatelier/docxa
+
+# Once installed globally, you can execute it anywhere!
+docxa init
+docxa discover .
+docxa generate prd --plan
+```
+
+### Evidence-Based Planning
+
+Docxa uses an intelligent **Generation Planner** to evaluate document readiness. Instead of simple file checks, it maps documents to **Evidence Requirements** (e.g., `business_context`, `architecture_context`).
+
+- **Multi-Source Evidence**: Requirements can be satisfied by existing documents, interview sessions, or repository analysis.
+- **Generation Modes**:
+  - `strict`: Blocks generation if any required evidence is missing.
+  - `flexible`: Allows generation with warnings if minimum context exists.
+  - `assisted`: Provides specific role-aware suggestions to gather missing context.
+
+### Structured Stakeholder Interviews
+
+Docxa bridges the "information gap" between business stakeholders and technical teams through guided, role-aware interviews.
+- **Roles Registry**: `product_manager`, `solution_architect`, `engineering_lead`, `devops_engineer`, `business_stakeholder`.
+- **Consistency**: Ensures that stakeholder answers are accurately traced to the correct sections during document generation.
+
+### Repository Analysis Persistence
+
+Docxa can analyze your repository to automatically satisfy technical evidence requirements.
+- **Persistence**: Running `docxa discover` saves analysis results to `.docxa/analysis.json`.
+- **Workflow**: If critical technical context is missing, Docxa will suggest running `docxa discover` first.
+
+### Environment Overrides
+
+- `DOCXA_PROVIDER`: `openai` (default), `anthropic`, `google-gemini`, `ollama`.
+- `DOCXA_MODEL`: Specific model to use (e.g., `gpt-4o`, `llama3.1`).
+- `DOCXA_API_KEY`: Generic override for any provider.
+- `DOCXA_OLLAMA_URL`: Custom endpoint for Ollama (defaults to `http://localhost:11434/v1`).
+
+### Test Structure
+Unit tests are located at `tests/` which mirror the `/src` folder structure.
+Execute tests by running:
+```bash
+npm test
+```
+
+## Contributing
+
+We strictly follow a feature-branch workflow.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes
+4. Push to the Branch
+5. Open a Pull Request
 
 ---
-Built with ❤️ for AI-native engineering teams.
+Built by [The Logic Atelier](https://thelogicatelier.com)

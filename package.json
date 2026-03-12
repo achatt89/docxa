@@ -1,5 +1,5 @@
 {
-  "name": "docxa",
+  "name": "@thelogicatelier/docxa",
   "version": "0.1.0",
   "description": "AI-powered documentation intelligence system",
   "main": "dist/index.js",

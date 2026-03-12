@@ -1,14 +1,40 @@
 # Installation
 
-Docxa is currently available as a developer tool. To install it in your project:
+Docxa is currently available as a developer tool. You can run it seamlessly using `npx` or install it globally.
 
 ## Prerequisites
 
-- **Node.js**: Version 20 or higher.
+- **Node.js**: Version 22 or higher.
 - **npm**: Version 8 or higher.
 - **Ax-LLM**: Docxa relies on Ax-LLM for its intelligence layer.
 
-## Setup
+## Setup & Execution
+
+### Option 1: Using npx (Recommended)
+
+The easiest way to use Docxa is via `npx`. This ensures you always have the latest version without manual installation.
+
+```bash
+# Initialize a new Docxa workspace
+npx @thelogicatelier/docxa init
+
+# Analyze a repository
+npx @thelogicatelier/docxa discover .
+```
+
+### Option 2: Global Installation
+
+If you prefer to have the `docxa` command available globally:
+
+```bash
+npm install -g @thelogicatelier/docxa
+
+# Now you can run it directly:
+docxa init
+docxa discover .
+```
+
+### Option 3: From Source (For Contributors)
 
 1.  **Clone the Repository**:
     ```bash
@@ -26,16 +52,15 @@ Docxa is currently available as a developer tool. To install it in your project:
     npm run build
     ```
 
-4.  **Link for Development** (optional):
+4.  **Link for Development**:
     ```bash
     npm link
     ```
-    This allows you to run `docxa` from anywhere in your terminal.
 
 ## Verifying Installation
 
 Run the following command to check if Docxa is correctly installed:
 
 ```bash
-docxa --version
+npx @thelogicatelier/docxa --version
 ```

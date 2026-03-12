@@ -1,6 +1,6 @@
 # CLI Commands Reference
 
-Docxa provides a powerful command-line interface for managing the documentation lifecycle.
+Docxa provides a powerful command-line interface for managing the documentation lifecycle. You can run these commands via `npx @thelogicatelier/docxa`.
 
 ## Core Commands
 
