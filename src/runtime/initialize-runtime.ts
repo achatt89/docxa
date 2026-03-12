@@ -8,18 +8,18 @@ import { InterviewLoader } from '../interview/interview-loader.js';
 import { InterviewSessionStore } from '../interview/interview-session-store.js';
 
 export interface RuntimeOptions {
-    cwd: string;
-    envFile?: string;
-    interface?: 'cli' | 'vscode' | 'teams';
+  cwd: string;
+  envFile?: string;
+  interface?: 'cli' | 'vscode' | 'teams';
 }
 
 export interface DocxaRuntime {
-    templateSystem: TemplateSystem;
-    store: WorkspaceStore;
-    llm: LLMWrapper;
-    sessionStore: InterviewSessionStore;
-    interviewLoader: InterviewLoader;
-    cwd: string;
+  templateSystem: TemplateSystem;
+  store: WorkspaceStore;
+  llm: LLMWrapper;
+  sessionStore: InterviewSessionStore;
+  interviewLoader: InterviewLoader;
+  cwd: string;
 }
 
 /**
@@ -27,31 +27,31 @@ export interface DocxaRuntime {
  * Reusable by CLI, VSCode, and Teams Copilot.
  */
 export async function initializeRuntime(options: RuntimeOptions): Promise<DocxaRuntime> {
-    const { cwd, envFile } = options;
+  const { cwd, envFile } = options;
 
-    // 1. Load environment
-    loadEnv(envFile);
+  // 1. Load environment
+  loadEnv(envFile);
 
-    // 2. Initialize Core Services
-    const templateSystem = new TemplateSystem();
-    await TemplateBootstrap.initialize(templateSystem);
+  // 2. Initialize Core Services
+  const templateSystem = new TemplateSystem();
+  await TemplateBootstrap.initialize(templateSystem);
 
-    const store = new WorkspaceStore(cwd);
-    const sessionStore = new InterviewSessionStore(cwd);
-    await sessionStore.init();
+  const store = new WorkspaceStore(cwd);
+  const sessionStore = new InterviewSessionStore(cwd);
+  await sessionStore.init();
 
-    const interviewLoader = new InterviewLoader(templateSystem);
+  const interviewLoader = new InterviewLoader(templateSystem);
 
-    // 3. Initialize LLM with resolved config
-    const llmConfig = resolveLLMConfig();
-    const llm = new LLMWrapper(llmConfig);
+  // 3. Initialize LLM with resolved config
+  const llmConfig = resolveLLMConfig();
+  const llm = new LLMWrapper(llmConfig);
 
-    return {
-        templateSystem,
-        store,
-        llm,
-        sessionStore,
-        interviewLoader,
-        cwd
-    };
+  return {
+    templateSystem,
+    store,
+    llm,
+    sessionStore,
+    interviewLoader,
+    cwd,
+  };
 }
