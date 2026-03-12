@@ -34,7 +34,7 @@ Configure your environment variables:
 export DOCXA_PROVIDER=openai
 export OPENAI_API_KEY=sk-proj-xxxxxx
 ```
-*Docxa also supports `.env` and `.env.local` files for automatic configuration.*
+*Docxa also supports `.env` and `.env.local` files for automatic configuration. Note that LLM credentials are only mandatory for commands that use AI (like `discover` or full `generate`). Basic commands like `init`, `list-documents`, and `generate --plan` work without API keys.*
 
 Build the project:
 ```bash

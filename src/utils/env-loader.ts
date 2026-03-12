@@ -14,12 +14,16 @@ export interface EnvLoadResult {
  * 3. .env.local in the current project root
  * 4. .env in the current project root
  */
-export function loadEnv(customPath?: string): EnvLoadResult {
+export interface LoadEnvOptions {
+  cwd: string;
+  envFile?: string;
+}
+
+export function loadEnv(options: LoadEnvOptions): EnvLoadResult {
+  const { cwd, envFile: customPath } = options;
   const result: EnvLoadResult = {
     filesAttempted: [],
   };
-
-  const cwd = process.cwd();
 
   // 1. Explicit path
   if (customPath) {

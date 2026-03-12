@@ -18,19 +18,21 @@ describe('Env Loader', () => {
   });
 
   it('should throw error if custom path is provided but does not exist', () => {
-    expect(() => loadEnv('/non/existent/path')).toThrow(/Environment file not found/);
+    expect(() => loadEnv({ cwd: process.cwd(), envFile: '/non/existent/path' })).toThrow(
+      /Environment file not found/,
+    );
   });
 
   it('should load environment from custom path if it exists', () => {
     fs.writeFileSync(testEnvFile, 'CUSTOM_VAR=hello');
-    const result = loadEnv(testEnvFile);
+    const result = loadEnv({ cwd: process.cwd(), envFile: testEnvFile });
     expect(result.loadedFile).toBe(testEnvFile);
     expect(process.env.CUSTOM_VAR).toBe('hello');
     delete process.env.CUSTOM_VAR;
   });
 
   it('should return attempted files even if none found', () => {
-    const result = loadEnv();
+    const result = loadEnv({ cwd: process.cwd() });
     expect(result.loadedFile).toBeUndefined();
     expect(result.filesAttempted.length).toBeGreaterThanOrEqual(2); // .env.local, .env
   });

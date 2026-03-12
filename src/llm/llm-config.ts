@@ -44,7 +44,8 @@ export function resolveLLMConfig(): LLMConfig {
   if (apiKey === undefined) {
     const vars = PROVIDER_ENV_VARS[provider].join(' or ');
     throw new Error(
-      `API key missing for provider ${provider}. Please set ${vars} or DOCXA_API_KEY.`,
+      `LLM configuration is required for this command. \n` +
+        `API key missing for provider "${provider}". Please set ${vars} or DOCXA_API_KEY environment variable, or provide an environment file via --env-file.`,
     );
   }
 

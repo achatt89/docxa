@@ -105,7 +105,7 @@ program
     const detector = new FrameworkDetector();
     const frameworkInfo = await detector.detect(path.resolve(repoPath), result);
 
-    const archDetector = new ArchitectureDetector(runtime.llm);
+    const archDetector = new ArchitectureDetector(runtime.getLLM());
     const archInfo = await archDetector.detect(result, frameworkInfo);
 
     const savedAnalysis: SavedAnalysis = {
@@ -287,7 +287,11 @@ program
 
     console.log(`📄 Generating ${docId}...`);
 
-    const generator = new DocumentGenerator(runtime.llm, runtime.templateSystem, runtime.store);
+    const generator = new DocumentGenerator(
+      runtime.getLLM(),
+      runtime.templateSystem,
+      runtime.store,
+    );
 
     // Gather evidence
     const upstreamDocs: Record<string, string> = {};

@@ -16,10 +16,10 @@ export interface RuntimeOptions {
 export interface DocxaRuntime {
   templateSystem: TemplateSystem;
   store: WorkspaceStore;
-  llm: LLMWrapper;
   sessionStore: InterviewSessionStore;
   interviewLoader: InterviewLoader;
   cwd: string;
+  getLLM: () => LLMWrapper;
 }
 
 /**
@@ -30,7 +30,7 @@ export async function initializeRuntime(options: RuntimeOptions): Promise<DocxaR
   const { cwd, envFile } = options;
 
   // 1. Load environment
-  loadEnv(envFile);
+  loadEnv({ cwd, envFile });
 
   // 2. Initialize Core Services
   const templateSystem = new TemplateSystem();
@@ -42,16 +42,23 @@ export async function initializeRuntime(options: RuntimeOptions): Promise<DocxaR
 
   const interviewLoader = new InterviewLoader(templateSystem);
 
-  // 3. Initialize LLM with resolved config
-  const llmConfig = resolveLLMConfig();
-  const llm = new LLMWrapper(llmConfig);
+  // 3. Lazy LLM initialization
+  let llmInstance: LLMWrapper | undefined;
+
+  const getLLM = (): LLMWrapper => {
+    if (!llmInstance) {
+      const llmConfig = resolveLLMConfig();
+      llmInstance = new LLMWrapper(llmConfig);
+    }
+    return llmInstance;
+  };
 
   return {
     templateSystem,
     store,
-    llm,
     sessionStore,
     interviewLoader,
     cwd,
+    getLLM,
   };
 }
