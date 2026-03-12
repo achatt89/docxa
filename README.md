@@ -1,133 +1,63 @@
 # Docxa
 
-Docxa is an AI-powered documentation intelligence system designed to help teams maintain up-to-date business and technical documentation effortlessly. It uses **TypeScript**, **Node.js**, and **Ax-LLM** to generate or reverse-engineer documentation from source code or stakeholder interviews.
+Docxa is an AI-powered documentation intelligence system designed to help teams maintain up-to-date business and technical documentation effortlessly. 
 
-## Features
-
-- **Greenfield Mode**: Generate documentation through guided stakeholder interviews.
-- **Existing Project Mode**: Analyze existing repositories to reverse-engineer documentation.
-- **Support for Multiple Document Types**:
-  - Business Requirements Document (BRD)
-  - Product Requirements Document (PRD)
-  - Functional Requirements Document (FRD)
-  - Technical Requirements Document (TRD)
-  - High Level Design (HLD)
-  - Low Level Design (LLD)
-  - Non-Functional Requirements (NFR)
-  - Architecture Decision Records (ADR)
-- **Agentic Workflows**: Powered by Ax-LLM agents (PM, Architect, Developer, etc.).
-- **Workspace-Driven**: Maintains state in a `.docxa/` directory.
-
-## CLI Usage
+## 🚀 Quick Start
 
 ```bash
-# Initialize a new Docxa workspace
-docxa init
+# 1. Install dependencies
+npm install
 
-# Discover architecture and frameworks in a repository
-docxa discover ./repo
+# 2. Build the project
+npm run build
 
-# List available interview sessions
-docxa interview list
+# 3. Initialize workspace
+./bin/docxa init
 
-# Start a stakeholder interview
-docxa interview start -d PRD -r product_manager
+# 4. Discover architecture
+./bin/docxa discover .
 
-# Continue an existing interview session
-docxa interview continue <sessionId>
-
-# Generate documentation with planning
-docxa generate hld --plan
-docxa generate hld --mode flexible
+# 5. Generate documentation
+./bin/docxa generate prd --plan
 ```
 
-## Evidence-Based Planning
+## 🛠️ Installation
 
-Docxa uses an intelligent **Generation Planner** to evaluate document readiness. Instead of simple file checks, it maps documents to **Evidence Requirements** (e.g., `business_context`, `architecture_context`).
-
-- **Multi-Source Evidence**: Requirements can be satisfied by existing documents, interview sessions, or repository analysis.
-- **Generation Modes**:
-  - `strict`: Blocks generation if any required evidence is missing.
-  - `flexible`: Allows generation with warnings if minimum context exists.
-  - `assisted`: Provides specific role-aware suggestions to gather missing context.
-
-## Structured Stakeholder Interviews
-
-Docxa provides role-aware interview definitions to bridge information gaps.
-- **Location**: Interview definitions are stored in `templates/interviews/*.json`.
-- **Available Roles**: `product_manager`, `solution_architect`, `engineering_lead`, `devops_engineer`, `business_stakeholder`.
-- **Consistency**: This ensures that stakeholder answers are accurately traced to the correct sections during document generation.
-
-## Repository Analysis Persistence
-
-Docxa can analyze your repository to automatically satisfy technical evidence requirements.
-- **Persistence**: Running `docxa discover` saves analysis results to `.docxa/analysis.json`.
-- **Evidence-Based Planning**: `docxa generate` loads this analysis to satisfy requirements like `frameworks` or `architecture`.
-- **Technical Docs**: This strengthens readiness planning for technical documents (TRD, HLD, LLD) even when upstream documentation is missing.
-- **Workflow**: If critical technical context is missing, Docxa will suggest running `docxa discover` first.
-
-## Architecture
-
-Docxa follows a modular architecture:
-- `core/`: Document engine, graph, and template library.
-- `agents/`: AI agents for different roles.
-- `analysis/`: Code analysis and framework detection.
-- `interview/`: Conversation and role engines.
-- `generation/`: Document generators and validators.
-- `interfaces/`: CLI, Teams Copilot, and VSCode extension.
-
-Docxa uses a rich JSON-based template system to define the structure and guidance for generated documents. 
-
-- **Location**: Templates are stored in `templates/documents/*.json`.
-- **Validation**: Every template is validated against a strict Zod schema (`src/generation/template-schema.ts`) on startup.
-- **Hierarchical Sections**: Supports nested sections with specific purposes, guidance, and required flags.
-- **Prompt Hints**: Templates include `systemIntent`, `rules`, `mustDo`, and `mustNotDo` to guide the LLM precisely.
-
-### Adding a New Template
-To add a new document type (e.g., `HLD`):
-1. Create `templates/documents/hld.template.json`.
-2. Define the `documentId`, `name`, and `sections`.
-3. Add `promptHints` to ensure the AI follows specific architectural standards.
-4. The system will automatically detect and load the template on the next run.
-
-## LLM Configuration
-
-Docxa uses real LLM providers through [Ax-LLM](https://github.com/ax-llm/ax).
-
-### Supported Providers
-
-| Provider | Environment Variable | Default Model |
-| :--- | :--- | :--- |
-| **OpenAI** | `OPENAI_API_KEY` | `gpt-4o` |
-| **Anthropic** | `ANTHROPIC_API_KEY` | `claude-3-5-sonnet-20240620` |
-| **Google** | `GEMINI_API_KEY` or `GOOGLE_API_KEY` | `gemini-1.5-pro` |
-
-### Environment Variables
-
-You can configure Docxa using the following environment variables:
-
-- `DOCXA_PROVIDER`: The LLM provider to use (`openai`, `anthropic`, `google`). Defaults to `openai`.
-- `DOCXA_MODEL`: The specific model to use (e.g., `gpt-4-turbo`, `claude-3-opus-20240229`).
-- `DOCXA_API_KEY`: A generic override for the API key (if set, takes priority over provider-specific variables).
-
-### Environment Files
-
-Docxa supports loading environment variables from `.env` files. It follows this priority:
-
-1.  Explicitly provided file via `--env-file <path>`
-2.  Pre-set environment variables in your shell
-3.  `.env.local` in the project root
-4.  `.env` in the project root
-
-Example usage:
+Docxa requires **Node.js v20+**.
 
 ```bash
-# Using a specific env file
-docxa generate prd --env-file .env.prod
-
-# Using default .env auto-discovery
-docxa discover .
+git clone https://github.com/achatt89/doxa.git
+cd doxa
+npm install
+npm run build
+npm link # Optional: available globally as 'docxa'
 ```
+
+## 🧠 LLM Configuration
+
+Docxa supports OpenAI, Anthropic, Gemini, and local **Ollama** models.
+
+### Local Ollama Setup
+1. Install [Ollama](https://ollama.com).
+2. Run `ollama pull llama3.1`.
+3. Configure Docxa:
+   ```bash
+   export DOCXA_PROVIDER=ollama
+   export DOCXA_MODEL=llama3.1
+   ```
+
+### Other Providers
+Configure via environment variables or a `.env` file:
+- `DOCXA_PROVIDER`: `openai` (default), `anthropic`, `google-gemini`, `ollama`
+- `OPENAI_API_KEY`: Required for OpenAI
+- `ANTHROPIC_API_KEY`: Required for Anthropic
+- `GEMINI_API_KEY`: Required for Gemini
+
+## 📚 Documentation
+
+For comprehensive guides, architecture deep-dives, and CLI reference, visit our documentation site:
+
+**[Docxa Documentation Site](https://achatt89.github.io/doxa)** (Built with Honkit)
 
 ---
 Built with ❤️ for AI-native engineering teams.

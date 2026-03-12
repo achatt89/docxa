@@ -8,11 +8,12 @@ export class LLMWrapper {
         const { provider, model, apiKey } = config;
 
         // Initialize AxAI for the specific provider
-        // Note: AxAI construction might depend on version-specific registration
-        // We assume standard initialization here.
+        const apiURL = provider === 'ollama' ? process.env.DOCXA_OLLAMA_URL || 'http://localhost:11434/v1' : undefined;
+
         this.client = new AxAI({
             name: provider as any,
             apiKey,
+            apiURL,
             config: { model }
         });
 

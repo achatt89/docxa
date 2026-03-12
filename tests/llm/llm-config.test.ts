@@ -63,4 +63,12 @@ describe('LLM Config Resolution', () => {
         const config = resolveLLMConfig();
         expect(config.apiKey).toBe('goo-test');
     });
+
+    it('should resolve Ollama config without API key', () => {
+        process.env.DOCXA_PROVIDER = 'ollama';
+        const config = resolveLLMConfig();
+        expect(config.provider).toBe('ollama');
+        expect(config.model).toBe('llama3.1');
+        expect(config.apiKey).toBe('');
+    });
 });

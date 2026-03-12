@@ -1,0 +1,21 @@
+# Summary
+
+- [Introduction](README.md)
+- [Getting Started]
+  - [Installation](getting-started/installation.md)
+  - [Configuration](getting-started/configuration.md)
+  - [Quick Start](getting-started/quickstart.md)
+- [Core Concepts]
+  - [What is Docxa?](concepts/what-is-docxa.md)
+  - [Evidence-Based Planning](concepts/evidence-planning.md)
+  - [Stakeholder Interviews](concepts/interviews.md)
+  - [Architecture](concepts/architecture.md)
+- [Models & Providers]
+  - [Supported Providers](models/providers.md)
+  - [Using Local Ollama](models/ollama.md)
+- [CLI Reference]
+  - [Commands & Flags](cli/commands.md)
+  - [Environment Variables](cli/environment.md)
+- [Contributing]
+  - [Development Setup](contributing/setup.md)
+  - [Pull Request Guidelines](contributing/pr-guidelines.md)
