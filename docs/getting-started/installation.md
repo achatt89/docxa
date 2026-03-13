@@ -1,40 +1,74 @@
 # Installation
 
-Docxa is currently available as a developer tool. You can run it seamlessly using `npx` or install it globally.
+Docxa runs as a **Claude Code skill** (no Node.js required) or as a standalone **CLI** via npm.
 
-## Prerequisites
+## Option 1: Claude Code Skill (Recommended)
+
+Install Docxa directly into Claude Code with a single command. No Node.js or npm required.
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/install.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/achatt89/docxa/main/install.ps1 | iex
+```
+
+**Manual install:**
+```bash
+git clone https://github.com/achatt89/docxa.git
+cd docxa
+./install.sh        # macOS/Linux
+.\install.ps1       # Windows
+```
+
+After installing, reload Claude Code. Docxa is available immediately as `/docxa`.
+
+**To uninstall:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/uninstall.sh | bash
+```
+
+---
+
+## Option 2: CLI via npm
+
+Use Docxa as a standalone CLI. Requires Node.js 22+ and npm 8+.
+
+### Prerequisites
 
 - **Node.js**: Version 22 or higher.
 - **npm**: Version 8 or higher.
-- **Ax-LLM**: Docxa relies on Ax-LLM for its intelligence layer.
 
-## Setup & Execution
+### Option 2a: Using npx
 
-### Option 1: Using npx (Recommended)
-
-The easiest way to use Docxa is via `npx`. This ensures you always have the latest version without manual installation.
+The easiest npm-based approach. Always uses the latest published version.
 
 ```bash
-# Initialize a new Docxa workspace
 npx @thelogicatelier/docxa init
-
-# Analyze a repository
 npx @thelogicatelier/docxa discover .
 ```
 
-### Option 2: Global Installation
-
-If you prefer to have the `docxa` command available globally:
+### Option 2b: Global Installation
 
 ```bash
 npm install -g @thelogicatelier/docxa
 
-# Now you can run it directly:
 docxa init
 docxa discover .
 ```
 
-### Option 3: From Source (For Contributors)
+You can also install the skill from the CLI after a global install:
+
+```bash
+docxa skill install    # installs to ~/.claude/skills/docxa/
+docxa skill status     # verify
+docxa skill uninstall  # remove
+```
+
+### Option 2c: From Source (For Contributors)
 
 1.  **Clone the Repository**:
     ```bash
@@ -59,8 +93,15 @@ docxa discover .
 
 ## Verifying Installation
 
-Run the following command to check if Docxa is correctly installed:
+**Skill install:**
+```bash
+# Check the skill file exists
+docxa skill status
+# or
+ls ~/.claude/skills/docxa/SKILL.md
+```
 
+**CLI install:**
 ```bash
 npx @thelogicatelier/docxa --version
 ```

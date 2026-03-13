@@ -15,6 +15,7 @@
   - [Using Local Ollama](models/ollama.md)
 - [CLI Reference]
   - [Commands & Flags](cli/commands.md)
+  - [Skill Commands](cli/commands.md#skill-commands)
   - [Environment Variables](cli/environment.md)
 - [Technical Architecture]
   - [Architecture Proposal](technical/proposal.md)

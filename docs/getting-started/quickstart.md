@@ -1,18 +1,31 @@
 # Quick Start
 
-Get your first Docxa documentation generated in minutes using `npx`.
+Get your first Docxa documentation generated in minutes. Choose the path that matches how you installed Docxa.
 
-## 1. Initialize Workspace
+## Via Claude Code Skill (`/docxa`)
 
-Run this inside your project repository to set up the Docxa state directory.
+If you installed via `curl | bash` or `irm | iex`, use `/docxa` commands directly in Claude Code:
+
+```
+/docxa init
+/docxa discover .
+/docxa interview
+/docxa generate prd
+```
+
+Claude guides you through each step interactively — no terminal required.
+
+---
+
+## Via CLI (`npx` / global install)
+
+### 1. Initialize Workspace
 
 ```bash
 npx @thelogicatelier/docxa init
 ```
 
-## 2. Analyze Your Codebase
-
-Let Docxa analyze your repository to understand your frameworks and architecture patterns.
+### 2. Analyze Your Codebase
 
 ```bash
 npx @thelogicatelier/docxa discover .
@@ -20,17 +33,13 @@ npx @thelogicatelier/docxa discover .
 
 This generates `.docxa/analysis.json`, which serves as "technical evidence" for future document generation.
 
-## 3. Start a Stakeholder Interview
-
-Need to write a PRD? Doxa can interview you (or your PM) to gather the necessary business context.
+### 3. Start a Stakeholder Interview
 
 ```bash
 npx @thelogicatelier/docxa interview start -d PRD -r product_manager
 ```
 
-## 4. Generate Documentation
-
-Once you have enough evidence (from analysis or interviews), generate your document.
+### 4. Generate Documentation
 
 ```bash
 npx @thelogicatelier/docxa generate prd --plan
