@@ -1,6 +1,6 @@
 {
   "name": "@thelogicatelier/docxa",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "AI-powered documentation intelligence system",
   "main": "dist/index.js",
   "type": "module",
