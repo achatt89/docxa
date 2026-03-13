@@ -2,9 +2,10 @@
 
 - [Introduction](README.md)
 - [Getting Started]
-  - [Installation](getting-started/installation.md)
+  - [Installation: Claude Skill](getting-started/installation-claude.md)
+  - [Installation: CLI](getting-started/installation-cli.md)
+  - [Quick Start Guide](getting-started/quickstart.md)
   - [Configuration](getting-started/configuration.md)
-  - [Quick Start](getting-started/quickstart.md)
 - [Core Concepts]
   - [What is Docxa?](concepts/what-is-docxa.md)
   - [Evidence-Based Planning](concepts/evidence-planning.md)
