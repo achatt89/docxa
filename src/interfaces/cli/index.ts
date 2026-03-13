@@ -78,23 +78,72 @@ async function getInterviewDir(cwd: string): Promise<string> {
 program
   .command('init')
   .description('Initialize a new Docxa workspace')
-  .option('-m, --mode <mode>', 'Project mode (greenfield or existing)', 'greenfield')
-  .action(async (options: { mode: string }) => {
+  .option('-m, --mode <mode>', 'Project mode (greenfield or existing)')
+  .action(async (options: { mode?: string }) => {
     const runtime = await getRuntime();
+
+    // 1. Smart Mode Detection
+    let detectedMode: 'greenfield' | 'existing' = 'greenfield';
+    const indicators = ['src', 'package.json', '.git', 'requirements.txt', 'go.mod'];
+    for (const indicator of indicators) {
+      try {
+        await fs.access(path.join(runtime.cwd, indicator));
+        detectedMode = 'existing';
+        break;
+      } catch {
+        // Continue checking
+      }
+    }
+
+    const finalMode = (options.mode || detectedMode) as 'greenfield' | 'existing';
+
     const config: ProjectConfig = {
       name: path.basename(runtime.cwd),
-      mode: options.mode as 'greenfield' | 'existing',
+      mode: finalMode,
       rootPath: runtime.cwd,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      analysisPath: '.docxa/analysis.json',
+      analysisPath: '.docxa/analysis/repo-analysis.json',
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',
     };
 
     await runtime.store.initWorkspace(config);
-    console.log('✅ Docxa workspace initialized in .docxa/');
+
+    // 2. Rich Status Output
+    console.log('\n=========================================');
+    console.log('      DOCXA WORKSPACE INITIALIZED      ');
+    console.log('=========================================\n');
+    console.log(`Project: ${config.name}`);
+    console.log(`Mode:    ${finalMode.toUpperCase()}${options.mode ? '' : ' (Auto-detected)'}`);
+    console.log(`Path:    ${runtime.cwd}\n`);
+
+    console.log('📂 Workspace Structure:');
+    const dirs = ['analysis', 'interviews', 'evidence', 'documents', 'adr', 'metadata'];
+    dirs.forEach((d) => console.log(`  [✓] .docxa/${d}/`));
+    console.log('  [✓] .docxa/project.json');
+    console.log('  [✓] .docxa/stakeholders.json\n');
+
+    console.log('📊 Evidence Status:');
+    if (finalMode === 'existing') {
+      console.log('  [ ] technical_context  - (Run `docxa discover` to satisfy)');
+      console.log('  [ ] business_intent    - (Interviews required)');
+    } else {
+      console.log('  [ ] product_vision     - (Interviews required)');
+      console.log('  [ ] roadmap_alignment  - (Interviews required)');
+    }
+
+    console.log('\n🚀 Recommended Next Steps:');
+    if (finalMode === 'existing') {
+      console.log('  1. Run `docxa discover` to analyze existing codebase.');
+      console.log('  2. Run `docxa interview -d PRD -r product` to fill the "Intent Gap".');
+      console.log('  3. Run `docxa generate PRD` once evidence is satisfied.');
+    } else {
+      console.log('  1. Run `docxa interview -d BRD -r founder` to define vision.');
+      console.log('  2. Run `docxa generate BRD`.');
+    }
+    console.log('\n-----------------------------------------\n');
   });
 
 program
