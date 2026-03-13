@@ -46,7 +46,7 @@ curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/uninstall.sh | 
 
 ---
 
-### Features
+## Features
 
 - **Greenfield Mode**: Generate documentation through guided stakeholder interviews.
 - **Existing Project Mode**: Analyze existing repositories to reverse-engineer documentation.
@@ -65,56 +65,40 @@ curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/uninstall.sh | 
 
 ---
 
-## CLI Setup
+## CLI
 
-Install dependencies:
+Docxa is published to npm and runs anywhere without cloning the repo.
+
+**Run without installing:**
 ```bash
-npm install
-```
-
-Configure your environment variables:
-```bash
-# Set your preferred provider and API keys
-export DOCXA_PROVIDER=openai
-export OPENAI_API_KEY=sk-proj-xxxxxx
-```
-*Docxa also supports `.env` and `.env.local` files for automatic configuration. Note that LLM credentials are only mandatory for commands that use AI (like `discover` or full `generate`). Basic commands like `init`, `list-documents`, and `generate --plan` work without API keys.*
-
-Build the project:
-```bash
-npm run build
-```
-
-### Execution
-
-The project is published to the NPM registry and can be executed natively anywhere!
-
-**Option 1: Run seamlessly without installing**
-```bash
-# Initialize a new Docxa workspace
 npx @thelogicatelier/docxa init
-
-# Discover architecture and frameworks in a repository
 npx @thelogicatelier/docxa discover .
-
-# Start a stakeholder interview
 npx @thelogicatelier/docxa interview start -d PRD -r product_manager
-
-# Generate documentation with planning
 npx @thelogicatelier/docxa generate prd --plan
 ```
 
-**Option 2: Install globally on your system**
+**Install globally:**
 ```bash
 npm install -g @thelogicatelier/docxa
 
-# Once installed globally, you can execute it anywhere!
 docxa init
 docxa discover .
 docxa generate prd --plan
+
+# Manage the Claude Code skill from the CLI too:
+docxa skill install    # installs to ~/.claude/skills/docxa/
+docxa skill status
+docxa skill uninstall
 ```
 
-### Evidence-Based Planning
+**Configure your LLM provider:**
+```bash
+export DOCXA_PROVIDER=openai        # openai | anthropic | google-gemini | ollama
+export OPENAI_API_KEY=sk-proj-xxxx
+```
+*`.env` and `.env.local` files are loaded automatically. LLM credentials are only needed for AI commands (`discover`, full `generate`). Commands like `init`, `list-documents`, and `generate --plan` work without them.*
+
+## Evidence-Based Planning
 
 Docxa uses an intelligent **Generation Planner** to evaluate document readiness. Instead of simple file checks, it maps documents to **Evidence Requirements** (e.g., `business_context`, `architecture_context`).
 
@@ -124,33 +108,33 @@ Docxa uses an intelligent **Generation Planner** to evaluate document readiness.
   - `flexible`: Allows generation with warnings if minimum context exists.
   - `assisted`: Provides specific role-aware suggestions to gather missing context.
 
-### Structured Stakeholder Interviews
+## Structured Stakeholder Interviews
 
 Docxa bridges the "information gap" between business stakeholders and technical teams through guided, role-aware interviews.
 - **Roles Registry**: `product_manager`, `solution_architect`, `engineering_lead`, `devops_engineer`, `business_stakeholder`.
 - **Consistency**: Ensures that stakeholder answers are accurately traced to the correct sections during document generation.
 
-### Repository Analysis Persistence
+## Repository Analysis Persistence
 
 Docxa can analyze your repository to automatically satisfy technical evidence requirements.
 - **Persistence**: Running `docxa discover` saves analysis results to `.docxa/analysis.json`.
 - **Workflow**: If critical technical context is missing, Docxa will suggest running `docxa discover` first.
 
-### Environment Overrides
+## Environment Overrides
 
 - `DOCXA_PROVIDER`: `openai` (default), `anthropic`, `google-gemini`, `ollama`.
 - `DOCXA_MODEL`: Specific model to use (e.g., `gpt-4o`, `llama3.1`).
 - `DOCXA_API_KEY`: Generic override for any provider.
 - `DOCXA_OLLAMA_URL`: Custom endpoint for Ollama (defaults to `http://localhost:11434/v1`).
 
-### Test Structure
+## Test Structure
 Unit tests are located at `tests/` which mirror the `/src` folder structure.
 Execute tests by running:
 ```bash
 npm test
 ```
 
-### Technical Architecture & CI/CD Integration
+## Technical Architecture & CI/CD Integration
 
 Docxa is built for enterprise-grade automation. Our architecture is decoupled into specialized engines (Interview, Analysis, Planning, and Generation) to support complex, multi-source evidence gathering.
 
