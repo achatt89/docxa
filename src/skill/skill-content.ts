@@ -79,8 +79,8 @@ docxa generate frd --mode flexible
 ### Documenting an Existing Repository
 
 \`\`\`bash
-# 1. Initialize in existing mode
-docxa init -m existing
+# 1. Initialize in existing mode (auto-detected if src/ exists)
+docxa init
 
 # 2. Analyze codebase (satisfies technical evidence automatically)
 docxa discover .
@@ -96,7 +96,7 @@ docxa generate lld
 
 **Key advice:**
 - Always run \`docxa discover\` first on existing projects
-- \`docxa discover\` saves results to \`.docxa/analysis.json\` and satisfies
+- \`docxa discover\` saves results to \`.docxa/analysis/repo-analysis.json\` and satisfies
   \`technical_context\` and \`architecture_context\` evidence requirements
 - Use \`--mode assisted\` for specific suggestions on missing evidence
 
@@ -119,12 +119,12 @@ docxa generate prd --plan
 ## CLI Commands Reference
 
 ### \`docxa init\`
-Initialize a new Docxa workspace. Creates \`.docxa/\` directory.
+Initialize a new Docxa workspace with smart mode detection.
 
 \`\`\`bash
-docxa init                    # defaults to greenfield mode
-docxa init -m existing        # for existing projects
-docxa init -m greenfield      # for new projects
+docxa init                    # auto-detects greenfield vs existing
+docxa init -m existing        # force existing mode
+docxa init -m greenfield      # force greenfield mode
 \`\`\`
 
 ### \`docxa discover [path]\`
@@ -134,7 +134,7 @@ Scan repository and detect languages, frameworks, and architecture.
 docxa discover .              # analyze current directory
 docxa discover /path/to/repo  # analyze another path
 \`\`\`
-Output saved to \`.docxa/analysis.json\`.
+Output saved to \`.docxa/analysis/repo-analysis.json\`.
 
 ### \`docxa interview start\`
 Start a role-aware stakeholder interview for a document type.
@@ -287,21 +287,27 @@ Run \`docxa init\` before any other commands.
 
 ---
 
+---
+
+## Critical Instructions for AI Agents (Claude Code)
+
+To ensure the "Docxa Project Story" is consistently executed:
+
+1. **Prioritize CLI Engine**: ALWAYS execute \`docxa\` CLI commands via the terminal instead of manually creating \`.docxa\` files or analyzing codebases agentically. The CLI engine handles specialized dependency hoisting and hallucination-prevention constraints.
+2. **Sequential Flow**: Never skip \`docxa init\` and \`docxa discover\`. These populate the evidence model used for all subsequent document generation.
+3. **Intent-Gap Interviews**: On existing projects, recognize that while \`docxa discover\` fills the technical evidence, you MUST still run \`docxa interview\` to capture the business and product intent from the user.
+
+---
+
 ## How to Assist Users
 
 When a user invokes \`/docxa\`:
 
 1. **Understand their goal** — new project vs existing, which doc type
 2. **Check prerequisites** — is a workspace initialized? Is the LLM configured?
-3. **Recommend the right workflow** — greenfield or existing project path
-4. **Guide through evidence gathering** — suggest interviews or \`discover\`
-5. **Help interpret readiness reports** — explain blocked vs ready status
+3. **Recommend the right workflow** — existing projects *require* \`discover\` first
+4. **Guide through evidence gathering** — explain that \`discover\` + \`interview\` = complete story
+5. **Help interpret readiness reports** — focus on the "Intent Gap" Suggestion
 6. **Offer command construction** — compose the exact CLI command for them
-
-When users ask about a specific document type, recommend the appropriate
-stakeholder role for the interview phase.
-
-When users encounter generation failures, check evidence requirements and
-suggest the fastest path to satisfy them.
 `;
 }

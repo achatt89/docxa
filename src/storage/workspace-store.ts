@@ -17,10 +17,22 @@ export class WorkspaceStore {
 
   async initWorkspace(config: ProjectConfig): Promise<void> {
     await fs.mkdir(this.docxaDir, { recursive: true });
-    await fs.mkdir(path.join(this.docxaDir, 'documents'), { recursive: true });
-    await fs.mkdir(path.join(this.docxaDir, 'adr'), { recursive: true });
+
+    // Create standard HLD v1.0 directory structure
+    const dirs = ['analysis', 'interviews', 'evidence', 'documents', 'adr', 'metadata'];
+    for (const dir of dirs) {
+      await fs.mkdir(path.join(this.docxaDir, dir), { recursive: true });
+    }
 
     await this.saveProjectConfig(config);
+
+    // Initialize empty stakeholders if it doesn't exist
+    const stakeholdersPath = path.join(this.docxaDir, 'stakeholders.json');
+    try {
+      await fs.access(stakeholdersPath);
+    } catch {
+      await fs.writeFile(stakeholdersPath, JSON.stringify([], null, 2));
+    }
   }
 
   async saveProjectConfig(config: ProjectConfig): Promise<void> {
@@ -50,13 +62,13 @@ export class WorkspaceStore {
   }
 
   async saveAnalysis(analysis: SavedAnalysis): Promise<void> {
-    await fs.mkdir(this.docxaDir, { recursive: true });
-    const filePath = path.join(this.docxaDir, 'analysis.json');
+    await fs.mkdir(path.join(this.docxaDir, 'analysis'), { recursive: true });
+    const filePath = path.join(this.docxaDir, 'analysis', 'repo-analysis.json');
     await fs.writeFile(filePath, JSON.stringify(analysis, null, 2));
   }
 
   async loadAnalysis(): Promise<SavedAnalysis | undefined> {
-    const filePath = path.join(this.docxaDir, 'analysis.json');
+    const filePath = path.join(this.docxaDir, 'analysis', 'repo-analysis.json');
     try {
       const data = await fs.readFile(filePath, 'utf-8');
       return SavedAnalysisSchema.parse(JSON.parse(data));
