@@ -22,6 +22,18 @@ Generates a document.
 - `--mode <strict|flexible>`: Control how missing evidence is handled.
 - `--env-file <path>`: Load environment variables from a specific file.
 
+## Skill Commands
+
+### `docxa skill install`
+Install the Docxa skill into Claude Code (`~/.claude/skills/docxa/`). After
+installation, reload Claude Code and invoke with `/docxa`.
+
+### `docxa skill uninstall`
+Remove the Docxa skill from Claude Code.
+
+### `docxa skill status`
+Show whether the Docxa skill is installed and its file path.
+
 ## Shared Flags
 
 - `--help`: Show usage information.

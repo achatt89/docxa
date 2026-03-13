@@ -10,10 +10,16 @@ import { GenerationPlanner, GenerationMode } from '../../generation/generation-p
 import { SavedAnalysis } from '../../models/analysis-model.js';
 import { deriveAnalysisEvidence } from '../../generation/analysis-evidence.js';
 import { initializeRuntime, DocxaRuntime } from '../../runtime/initialize-runtime.js';
+import { installSkill, uninstallSkill, getSkillStatus } from '../../skill/skill-installer.js';
+import { generateSkillContent } from '../../skill/skill-content.js';
 import path from 'path';
 import fs from 'fs/promises';
 import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const pkg = require('../../../package.json') as { version: string };
 
 const program = new Command();
 
@@ -340,6 +346,48 @@ program
     const checker = new ConsistencyChecker();
     const issues = await checker.check([]);
     if (issues.length === 0) console.log('✅ No consistency issues found.');
+  });
+
+const skillCmd = program.command('skill').description('Manage the Docxa Claude Code skill');
+
+skillCmd
+  .command('install')
+  .description('Install the Docxa skill into Claude Code (~/.claude/skills/docxa/)')
+  .action(async () => {
+    const content = generateSkillContent(pkg.version);
+    const skillPath = await installSkill(content);
+    console.log(`✅ Docxa skill installed at: ${skillPath}`);
+    console.log('   Reload Claude Code and invoke with /docxa');
+  });
+
+skillCmd
+  .command('uninstall')
+  .description('Remove the Docxa skill from Claude Code')
+  .action(async () => {
+    const { installed, skillPath } = await getSkillStatus();
+    if (!installed) {
+      console.log('ℹ️  Docxa skill is not installed.');
+      return;
+    }
+    const removed = await uninstallSkill();
+    if (removed) {
+      console.log(`✅ Docxa skill removed from: ${skillPath}`);
+    } else {
+      console.error('❌ Failed to remove skill. Check permissions and try again.');
+    }
+  });
+
+skillCmd
+  .command('status')
+  .description('Show whether the Docxa skill is installed')
+  .action(async () => {
+    const { installed, skillPath, claudeDir } = await getSkillStatus();
+    console.log(`Claude skills directory: ${claudeDir}`);
+    console.log(`Skill path:              ${skillPath}`);
+    console.log(`Status:                  ${installed ? '✅ Installed' : '❌ Not installed'}`);
+    if (!installed) {
+      console.log('\nRun `docxa skill install` to install it.');
+    }
   });
 
 program.parse();
