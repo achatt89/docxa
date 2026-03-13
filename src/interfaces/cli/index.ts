@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Command } from 'commander';
 import { RepositoryScanner } from '../../analysis/repository-scanner.js';
 import { FrameworkDetector } from '../../analysis/framework-detector.js';
