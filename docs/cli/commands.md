@@ -24,6 +24,13 @@ Generates a document.
 
 ## Skill Commands
 
+These commands manage the Docxa Claude Code skill installation. Alternatively,
+use the one-line shell installer (no npm required):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/install.sh | bash
+```
+
 ### `docxa skill install`
 Install the Docxa skill into Claude Code (`~/.claude/skills/docxa/`). After
 installation, reload Claude Code and invoke with `/docxa`.

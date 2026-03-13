@@ -1,8 +1,50 @@
 # Docxa 📄
 
-Docxa is an AI-powered documentation intelligence system designed to help teams maintain up-to-date business and technical documentation effortlessly. It uses **TypeScript**, **Node.js**, and **Ax-LLM** to generate or reverse-engineer documentation from source code or stakeholder interviews.
+Docxa is an AI-powered documentation intelligence system that generates structured software project documentation (BRD, PRD, FRD, TRD, HLD, LLD, NFR, ADR) through evidence-based planning, stakeholder interviews, and repository analysis. It runs as a **Claude Code skill** and a standalone **CLI**.
 
 📖 **[Full Documentation](https://achatt89.github.io/docxa/)**
+
+---
+
+## Install the Claude Code Skill
+
+**One-command install (macOS/Linux):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/install.sh | bash
+```
+
+**One-command install (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/achatt89/docxa/main/install.ps1 | iex
+```
+
+**Manual install:**
+```bash
+git clone https://github.com/achatt89/docxa.git
+cd docxa
+./install.sh          # macOS/Linux
+.\install.ps1         # Windows PowerShell
+```
+
+After installing, reload Claude Code and use `/docxa` to start generating documentation.
+
+**To uninstall:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/uninstall.sh | bash
+```
+
+---
+
+## Quick Start (Skill)
+
+```
+/docxa init
+/docxa discover .
+/docxa interview
+/docxa generate prd
+```
+
+---
 
 ### Features
 
@@ -21,7 +63,9 @@ Docxa is an AI-powered documentation intelligence system designed to help teams 
 - **Workspace-Driven**: Maintains state in a `.docxa/` directory.
 - **Local-First AI**: Support for local Ollama models (Llama 3.1, Mistral, etc.).
 
-### Setup
+---
+
+## CLI Setup
 
 Install dependencies:
 ```bash
@@ -79,32 +123,6 @@ Docxa uses an intelligent **Generation Planner** to evaluate document readiness.
   - `strict`: Blocks generation if any required evidence is missing.
   - `flexible`: Allows generation with warnings if minimum context exists.
   - `assisted`: Provides specific role-aware suggestions to gather missing context.
-
-### Claude Code Skill
-
-Docxa ships as a first-class **Claude Code skill**. Once installed, you can invoke it directly inside any Claude Code session with `/docxa`.
-
-**Install the skill:**
-```bash
-npx @thelogicatelier/docxa skill install
-# or, if installed globally:
-docxa skill install
-```
-
-This writes the skill to `~/.claude/skills/docxa/SKILL.md`. Reload Claude Code and then:
-```
-/docxa generate prd
-/docxa interview
-/docxa discover
-```
-
-Claude will guide you through the full documentation workflow without leaving your editor.
-
-**Manage the skill:**
-```bash
-docxa skill status     # Check if installed
-docxa skill uninstall  # Remove from Claude Code
-```
 
 ### Structured Stakeholder Interviews
 
