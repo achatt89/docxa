@@ -80,6 +80,32 @@ Docxa uses an intelligent **Generation Planner** to evaluate document readiness.
   - `flexible`: Allows generation with warnings if minimum context exists.
   - `assisted`: Provides specific role-aware suggestions to gather missing context.
 
+### Claude Code Skill
+
+Docxa ships as a first-class **Claude Code skill**. Once installed, you can invoke it directly inside any Claude Code session with `/docxa`.
+
+**Install the skill:**
+```bash
+npx @thelogicatelier/docxa skill install
+# or, if installed globally:
+docxa skill install
+```
+
+This writes the skill to `~/.claude/skills/docxa/SKILL.md`. Reload Claude Code and then:
+```
+/docxa generate prd
+/docxa interview
+/docxa discover
+```
+
+Claude will guide you through the full documentation workflow without leaving your editor.
+
+**Manage the skill:**
+```bash
+docxa skill status     # Check if installed
+docxa skill uninstall  # Remove from Claude Code
+```
+
 ### Structured Stakeholder Interviews
 
 Docxa bridges the "information gap" between business stakeholders and technical teams through guided, role-aware interviews.
