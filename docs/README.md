@@ -17,4 +17,4 @@ Whether you're starting a new project (Greenfield) or documenting a large existi
 - **Local-First AI**: Support for local Ollama models for security and cost efficiency.
 - **Extensible Templates**: Define your own document standards via JSON templates.
 
-Ready to start? Head over to the [Installation](getting-started/installation.md) guide.
+Ready to start? Docxa is available as a **Claude Code skill** (install with a single `curl` command) or as a standalone **CLI** via npm. Head over to the [Installation](getting-started/installation.md) guide.
