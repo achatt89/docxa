@@ -7,7 +7,7 @@ The Docxa Claude Code Skill is the most interactive and guided way to use the pl
 Run the following command in your terminal to install the Docxa skill:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/achatt89/docxa/main/install-skill.sh | bash
+curl -fsSL https://raw.githubusercontent.com/achatt89/docxa/main/install.sh | bash
 ```
 
 ## Usage
