@@ -1,4 +1,4 @@
-# Document Generator Engine
+# Docxa
 
 ## Productivity Impact & Business Value Analysis
 
@@ -11,9 +11,9 @@
 # 1. Purpose of This Document
 
 This document evaluates the **potential productivity impact and business
-value of Document Generator Engine**.
+value of Docxa**.
 
-Document Generator Engine is an AI-assisted documentation intelligence platform designed to
+Docxa is an AI-assisted documentation intelligence platform designed to
 generate structured software project documentation by combining
 stakeholder knowledge and technical project artifacts.
 
@@ -22,7 +22,7 @@ The goal of this document is to:
 -   Understand the current cost of documentation workflows
 -   Present industry research on developer productivity and knowledge
     discovery
--   Identify how Document Generator Engine could improve documentation workflows
+-   Identify how Docxa could improve documentation workflows
 -   Provide a data‑supported justification for investment in the
     platform
 
@@ -193,16 +193,16 @@ iterations.
 
 ------------------------------------------------------------------------
 
-# 5. How Document Generator Engine Improves Productivity
+# 5. How Docxa Improves Productivity
 
-Document Generator Engine introduces several mechanisms that improve documentation
+Docxa introduces several mechanisms that improve documentation
 workflows.
 
 ------------------------------------------------------------------------
 
 ## Structured Knowledge Capture
 
-Document Generator Engine conducts guided interviews with stakeholders to capture structured
+Docxa conducts guided interviews with stakeholders to capture structured
 knowledge rather than relying on unstructured meetings.
 
 Benefits include:
@@ -215,7 +215,7 @@ Benefits include:
 
 ## Automated Documentation Synthesis
 
-Document Generator Engine converts captured knowledge and technical signals into structured
+Docxa converts captured knowledge and technical signals into structured
 documentation.
 
 This reduces the manual effort required to draft initial documentation
@@ -242,7 +242,7 @@ This helps prevent documentation drift as systems evolve.
 
 # 6. Productivity Impact Areas
 
-Document Generator Engine improves productivity in several measurable areas.
+Docxa improves productivity in several measurable areas.
 
 ------------------------------------------------------------------------
 
@@ -258,7 +258,7 @@ full documents manually.
 Stakeholders provide structured answers instead of writing full
 documents from scratch.
 
-Document Generator Engine synthesizes these inputs into structured artifacts.
+Docxa synthesizes these inputs into structured artifacts.
 
 ------------------------------------------------------------------------
 
@@ -282,7 +282,7 @@ Standardized documentation improves collaboration between:
 
 # 7. Long‑Term Organizational Benefits
 
-Over time, Document Generator Engine can help organizations achieve:
+Over time, Docxa can help organizations achieve:
 
 -   better knowledge retention
 -   faster onboarding of new engineers
@@ -300,12 +300,12 @@ Industry research shows that a significant portion of engineering time
 is spent locating information, understanding systems, and managing
 project knowledge.
 
-Document Generator Engine addresses these challenges by:
+Docxa addresses these challenges by:
 
 -   capturing stakeholder knowledge through structured interviews
 -   analyzing technical artifacts within repositories
 -   automatically generating structured documentation
 
-By reducing documentation friction and improving knowledge access, Document Generator Engine
+By reducing documentation friction and improving knowledge access, Docxa
 has the potential to significantly improve software development
 productivity.

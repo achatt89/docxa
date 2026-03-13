@@ -16,6 +16,9 @@
 - [CLI Reference]
   - [Commands & Flags](cli/commands.md)
   - [Environment Variables](cli/environment.md)
+- [Technical Architecture]
+  - [Architecture Proposal](technical/proposal.md)
+  - [High Level Design](technical/hld.md)
 - [Contributing]
   - [Development Setup](contributing/setup.md)
   - [Pull Request Guidelines](contributing/pr-guidelines.md)

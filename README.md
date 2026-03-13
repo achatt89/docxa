@@ -106,6 +106,14 @@ Execute tests by running:
 npm test
 ```
 
+### Technical Architecture & CI/CD Integration
+
+Docxa is built for enterprise-grade automation. Our architecture is decoupled into specialized engines (Interview, Analysis, Planning, and Generation) to support complex, multi-source evidence gathering.
+
+For power users and contributors looking to integrate Docxa into CI/CD pipelines or extend its capabilities:
+- **[Architecture Proposal](docs/technical/proposal.md)**: Deep dive into our core design principles (Evidence-Driven, Role-Aware, Local-First).
+- **[High Level Design (HLD)](docs/technical/hld.md)**: Detailed C4 diagrams and system flows for the generation pipeline.
+
 ## Contributing
 
 We strictly follow a feature-branch workflow.

@@ -1,4 +1,4 @@
-# Document Generator Engine
+# Docxa
 
 ## Architecture Proposal
 
@@ -10,11 +10,11 @@
 
 # 1. Purpose of This Document
 
-This document defines the **architectural direction for Document Generator Engine**.
+This document defines the **architectural direction for Docxa**.
 
 Following the ideation phase, this proposal introduces the key
 architectural principles, core system capabilities, and conceptual
-system structure required to build Document Generator Engine.
+system structure required to build Docxa.
 
 The goal of this document is to:
 
@@ -30,14 +30,14 @@ will be addressed in later design phases.
 
 # 2. System Overview
 
-Document Generator Engine is an **AI-assisted documentation intelligence platform** designed
+Docxa is an **AI-assisted documentation intelligence platform** designed
 to generate structured software project documentation.
 
 The platform captures knowledge from both **stakeholders and technical
 artifacts**, then synthesizes that knowledge into standardized
 engineering and business documentation.
 
-Document Generator Engine focuses on generating artifacts such as:
+Docxa focuses on generating artifacts such as:
 
 -   Product Requirements Documents (PRD)
 -   Business Requirements Documents (BRD)
@@ -57,7 +57,7 @@ The system ensures that documentation reflects both:
 
 # 3. Architectural Principles
 
-The architecture of Document Generator Engine follows several guiding principles.
+The architecture of Docxa follows several guiding principles.
 
 ## Evidence-Driven Documentation
 
@@ -78,7 +78,7 @@ This ensures generated documents remain grounded in project context.
 
 Different project roles hold different knowledge.
 
-Document Generator Engine captures knowledge using **role-aware interactions**, ensuring the
+Docxa captures knowledge using **role-aware interactions**, ensuring the
 right questions are asked to the right stakeholders.
 
 Examples:
@@ -106,7 +106,7 @@ This ensures documentation remains consistent across projects.
 
 ## Multi-Interface Accessibility
 
-Document Generator Engine must be accessible through multiple interaction interfaces,
+Docxa must be accessible through multiple interaction interfaces,
 allowing stakeholders across the organization to contribute.
 
 Supported interfaces include:
@@ -119,7 +119,7 @@ Supported interfaces include:
 
 ## Local-First Operation
 
-Document Generator Engine should support **local execution within project repositories**.
+Docxa should support **local execution within project repositories**.
 
 This approach ensures:
 
@@ -131,7 +131,7 @@ This approach ensures:
 
 # 4. Core System Capabilities
 
-Document Generator Engine provides several core capabilities.
+Docxa provides several core capabilities.
 
 ## Knowledge Capture
 
@@ -149,7 +149,7 @@ Knowledge may include:
 
 ## Repository Analysis
 
-Document Generator Engine analyzes project repositories to detect:
+Docxa analyzes project repositories to detect:
 
 -   Programming languages
 -   Frameworks and libraries
@@ -190,7 +190,7 @@ This planning stage ensures:
 
 ## Documentation Generation
 
-Once the required evidence is available, Document Generator Engine generates structured
+Once the required evidence is available, Docxa generates structured
 documentation using:
 
 -   Document templates
@@ -203,7 +203,7 @@ Generated documents are delivered as structured markdown artifacts.
 
 ## Documentation Lifecycle Management
 
-Document Generator Engine enables teams to maintain documentation over time.
+Docxa enables teams to maintain documentation over time.
 
 When project knowledge changes, documentation can be regenerated or
 updated to reflect the latest state.
@@ -233,7 +233,7 @@ documentation artifacts.
 
 # 6. Core System Concepts
 
-Several key concepts underpin the Document Generator Engine architecture.
+Several key concepts underpin the Docxa architecture.
 
 ## Evidence
 
@@ -307,7 +307,7 @@ If required evidence is missing, the system recommends actions such as:
 
 # 7. Interface Strategy
 
-Document Generator Engine is designed to support multiple interaction interfaces.
+Docxa is designed to support multiple interaction interfaces.
 
 ## Command Line Interface
 
@@ -316,16 +316,16 @@ users.
 
 Example commands:
 
-    Document Generator Engine init
-    Document Generator Engine discover
-    Document Generator Engine interview start
-    Document Generator Engine generate prd
+    Docxa init
+    Docxa discover
+    Docxa interview start
+    Docxa generate prd
 
 ------------------------------------------------------------------------
 
 ## IDE Integration
 
-IDE integrations allow developers to interact with Document Generator Engine directly within
+IDE integrations allow developers to interact with Docxa directly within
 their development environment.
 
 Possible capabilities include:
@@ -337,12 +337,12 @@ Possible capabilities include:
 
 ## Collaboration Interfaces
 
-Future integrations may allow stakeholders to interact with Document Generator Engine
+Future integrations may allow stakeholders to interact with Docxa
 through collaboration platforms such as Microsoft Teams.
 
 Example interaction:
 
-    @Document Generator Engine generate the PRD for Project X
+    @Docxa generate the PRD for Project X
 
 This allows non‑technical stakeholders to participate in documentation
 workflows.
@@ -351,11 +351,11 @@ workflows.
 
 # 8. Conceptual Storage Model
 
-Document Generator Engine maintains project state within a workspace directory.
+Docxa maintains project state within a workspace directory.
 
 Example structure:
 
-    .Document Generator Engine/
+    .Docxa/
       analysis/
       interviews/
       documents/
@@ -395,7 +395,7 @@ The architecture must support future extensions including:
 
 ## Model Flexibility
 
-Document Generator Engine should support multiple AI model providers to ensure flexibility
+Docxa should support multiple AI model providers to ensure flexibility
 across environments.
 
 ------------------------------------------------------------------------
