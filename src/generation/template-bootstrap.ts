@@ -10,29 +10,31 @@ export class TemplateBootstrap {
   static async initialize(templateSystem: TemplateSystem): Promise<void> {
     const loader = new TemplateLoader();
 
-    // 1. Primary and official source: templates/documents/
-    const officialTemplateDir = path.resolve(process.cwd(), 'templates', 'documents');
+    // 1. Custom/local templates (if user provides them in their cwd)
+    const customTemplateDir = path.resolve(process.cwd(), 'templates', 'documents');
 
-    // 2. Legacy support: src/templates (internal)
-    const legacySrcTemplateDir = path.resolve(__dirname, '..', 'templates');
+    // 2. Built-in templates (bundled with the package)
+    // __dirname is either src/generation or dist/generation, so ../../ goes to package root
+    const packageTemplateDir = path.resolve(__dirname, '..', '..', 'templates', 'documents');
 
     console.log(`🚀 Initializing templates...`);
 
-    // Load from official source
-    const officialTemplates = await loader.loadTemplates(officialTemplateDir);
-    templateSystem.registerMany(officialTemplates);
-
-    // Load from legacy src/templates if it exists and contains templates (internal developer support)
+    // Load from custom source if it exists
     try {
-      const srcTemplates = await loader.loadTemplates(legacySrcTemplateDir);
-      if (srcTemplates.length > 0) {
-        console.warn(
-          `⚠️  Warning: Loading templates from legacy internal directory: ${legacySrcTemplateDir}. Please move templates to templates/documents/`,
-        );
-        templateSystem.registerMany(srcTemplates);
+      const customTemplates = await loader.loadTemplates(customTemplateDir);
+      if (customTemplates.length > 0) {
+        templateSystem.registerMany(customTemplates);
       }
     } catch {
-      // Ignore if internal dir is missing
+      // Ignore if user doesn't have custom templates
+    }
+
+    // Load from package source
+    try {
+      const packageTemplates = await loader.loadTemplates(packageTemplateDir);
+      templateSystem.registerMany(packageTemplates);
+    } catch (_e) {
+      console.warn(`⚠️  Warning: Failed to load built-in templates from ${packageTemplateDir}`);
     }
 
     console.log(`✅ Loaded ${templateSystem.listTemplates().length} templates.`);
