@@ -37,6 +37,7 @@ describe('LLMWrapper', () => {
     expect(result).toBe('Hello World');
     expect(mockClient.chat).toHaveBeenCalledWith({
       chatPrompt: [{ role: 'user', content: 'Hi' }],
+      stream: false,
     });
   });
 
@@ -58,6 +59,7 @@ describe('LLMWrapper', () => {
         type: 'json_schema',
         schema,
       },
+      stream: false,
     });
   });
 });

@@ -40,7 +40,7 @@ Commands that analyze code or generate documentation require LLM access:
 You must set a provider and an API key:
 - `DOCXA_PROVIDER="openai" | "anthropic" | "google-gemini" | "ollama"`
 - `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or `GEMINI_API_KEY`. (Alternatively, use a generic `DOCXA_API_KEY`).
-- *(Optional)* `DOCXA_MODEL`
+- `DOCXA_MODEL` — *(Recommended)* Set your preferred model ID. If unset, Docxa defaults to the latest stable flagships (e.g. `gpt-5.4`, `claude-sonnet-4-6`, `gemini-2.5-flash`).
 
 **Environment File Priority:**
 Docxa resolves variables in the following order:

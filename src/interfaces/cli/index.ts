@@ -10,7 +10,7 @@ import { InterviewEngine } from '../../interview/interview-engine.js';
 import { GenerationPlanner, GenerationMode } from '../../generation/generation-planner.js';
 import { SavedAnalysis } from '../../models/analysis-model.js';
 import { initializeRuntime, DocxaRuntime } from '../../runtime/initialize-runtime.js';
-import { LLMConfigError } from '../../llm/llm-config.js';
+import { LLMConfigError, LLMRuntimeError } from '../../llm/llm-config.js';
 import { EvidenceResolver } from '../../generation/evidence-resolver.js';
 import { getSkillStatus, installSkill, uninstallSkill } from '../../skill/skill-installer.js';
 import { generateSkillContent } from '../../skill/skill-content.js';
@@ -54,6 +54,14 @@ function getLLMSafe(runtime: DocxaRuntime) {
   } catch (err: any) {
     if (err instanceof LLMConfigError) {
       console.error(`\n❌ ${err.message}\n`);
+      process.exit(1);
+    }
+    if (err instanceof LLMRuntimeError) {
+      console.error(`\n❌ LLM Runtime Error:`);
+      console.error(err.message);
+      if (err.originalError) {
+        console.error(`Details: ${err.originalError.message}`);
+      }
       process.exit(1);
     }
     throw err;

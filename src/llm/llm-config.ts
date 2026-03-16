@@ -7,6 +7,16 @@ export class LLMConfigError extends Error {
   }
 }
 
+export class LLMRuntimeError extends Error {
+  constructor(
+    message: string,
+    public readonly originalError?: any,
+  ) {
+    super(message);
+    this.name = 'LLMRuntimeError';
+  }
+}
+
 export interface LLMConfig {
   provider: Exclude<SupportedProvider, 'google'> | 'google-gemini';
   model: string;
@@ -21,11 +31,12 @@ export const PROVIDER_ENV_VARS: Record<string, string[]> = {
   ollama: [], // Ollama usually doesn't need an API key locally
 };
 
+// Fallback defaults if no model is explicitly provided by the consumer
 export const DEFAULT_MODELS: Record<string, string> = {
-  openai: 'gpt-4o',
-  anthropic: 'claude-3-5-sonnet-20240620',
-  google: 'gemini-1.5-pro',
-  'google-gemini': 'gemini-1.5-pro',
+  openai: 'gpt-5.4',
+  anthropic: 'claude-sonnet-4-6',
+  google: 'gemini-2.5-flash',
+  'google-gemini': 'gemini-2.5-flash',
   ollama: 'llama3.1',
 };
 

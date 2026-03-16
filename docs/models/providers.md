@@ -5,19 +5,19 @@ Docxa is built on top of [Ax-LLM](https://github.com/ax-llm/ax), giving it suppo
 ## OpenAI
 
 - **Provider Key**: `openai`
-- **Recommended Model**: `gpt-4o` (Default)
+- **Recommended Model**: `gpt-5.4` (Default)
 - **Configuration**: Set `OPENAI_API_KEY` or `DOCXA_API_KEY`.
 
 ## Anthropic
 
 - **Provider Key**: `anthropic`
-- **Recommended Model**: `claude-3-5-sonnet-20240620` (Default)
+- **Recommended Model**: `claude-sonnet-4-6` (Default)
 - **Configuration**: Set `ANTHROPIC_API_KEY` or `DOCXA_API_KEY`.
 
 ## Google Gemini
 
 - **Provider Key**: `google-gemini` (or `google`)
-- **Recommended Model**: `gemini-1.5-pro` (Default)
+- **Recommended Model**: `gemini-2.5-flash` (Default)
 - **Configuration**: Set `GEMINI_API_KEY`, `GOOGLE_API_KEY`, or `DOCXA_API_KEY`.
 
 ## Ollama (Local)

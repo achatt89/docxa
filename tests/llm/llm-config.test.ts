@@ -25,7 +25,7 @@ describe('LLM Config Resolution', () => {
     process.env.OPENAI_API_KEY = 'sk-test';
     const config = resolveLLMConfig();
     expect(config.provider).toBe('openai');
-    expect(config.model).toBe('gpt-4o');
+    expect(config.model).toBe('gpt-5.4');
     expect(config.apiKey).toBe('sk-test');
   });
 
