@@ -49,4 +49,4 @@ The `--plan` flag shows you a "Readiness Plan" before generation starts, identif
 
 ---
 
-Explore the [Core Concepts](../concepts/what-is-docxa.md) to understand how Doxa uses "Evidence" to ensure high-quality documentation.
+Explore the [Core Concepts](../concepts/what-is-docxa.md) to understand how Docxa uses "Evidence" to ensure high-quality documentation.

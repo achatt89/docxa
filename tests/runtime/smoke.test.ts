@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { initializeRuntime } from '../../src/runtime/initialize-runtime.js';
 import { loadEnv } from '../../src/utils/env-loader.js';
+import { LLMConfigError } from '../../src/llm/llm-config.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -53,6 +54,7 @@ describe('Docxa Phase 1 Smoke Tests', () => {
     it('throws clear error when getLLM() is called and config is missing', async () => {
       const runtime = await initializeRuntime({ cwd: __dirname });
 
+      expect(() => runtime.getLLM()).toThrow(LLMConfigError);
       expect(() => runtime.getLLM()).toThrow(/LLM configuration is required for this command/);
     });
 
@@ -96,6 +98,25 @@ describe('Docxa Phase 1 Smoke Tests', () => {
       const result = loadEnv({ cwd: mockCwd });
       expect(result.loadedFile).toBe(localEnv);
       expect(process.env.LOCAL_VAR).toBe('success');
+    });
+  });
+
+  describe('Analysis Path Verification', () => {
+    it('uses the canonical analysis path by default', async () => {
+      const runtime = await initializeRuntime({ cwd: __dirname });
+      // We check WorkspaceStore's internal path resolution if possible
+      // or just verify the SaveAnalysis writes to the right place.
+      const mockAnalysis: any = { scannedAt: new Date().toISOString(), repositoryPath: __dirname };
+
+      const expectedPath = path.join(__dirname, '.docxa', 'analysis', 'repo-analysis.json');
+
+      await runtime.store.saveAnalysis(mockAnalysis);
+      expect(fs.existsSync(expectedPath)).toBe(true);
+
+      // Cleanup
+      if (fs.existsSync(path.join(__dirname, '.docxa'))) {
+        fs.rmSync(path.join(__dirname, '.docxa'), { recursive: true, force: true });
+      }
     });
   });
 });

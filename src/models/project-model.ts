@@ -8,7 +8,7 @@ export const ProjectConfigSchema = z.object({
   mode: ProjectModeSchema,
   rootPath: z.string(),
   repositoryPath: z.string().optional(),
-  analysisPath: z.string().default('.docxa/analysis.json'),
+  analysisPath: z.string().default('.docxa/analysis/repo-analysis.json'),
   documentsDir: z.string().default('.docxa/documents/'),
   adrDir: z.string().default('.docxa/adr/'),
   stakeholdersPath: z.string().default('.docxa/stakeholders.json'),

@@ -12,7 +12,7 @@ Evidence is simply structured context that the AI needs to write a specific sect
 
 ## The Readiness Check
 
-When you run `docxa generate --plan`, Doxa evaluates every section of the target template against its **Evidence Requirements**.
+When you run `docxa generate --plan`, Docxa evaluates every section of the target template against its **Evidence Requirements**.
 
 | Requirement | Satisfied By | Status |
 | :---------- | :----------- | :----- |

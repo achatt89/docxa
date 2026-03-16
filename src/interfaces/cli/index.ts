@@ -11,6 +11,7 @@ import { GenerationPlanner, GenerationMode } from '../../generation/generation-p
 import { SavedAnalysis } from '../../models/analysis-model.js';
 import { deriveAnalysisEvidence } from '../../generation/analysis-evidence.js';
 import { initializeRuntime, DocxaRuntime } from '../../runtime/initialize-runtime.js';
+import { LLMConfigError } from '../../llm/llm-config.js';
 import { getSkillStatus, installSkill, uninstallSkill } from '../../skill/skill-installer.js';
 import { generateSkillContent } from '../../skill/skill-content.js';
 import { resolveInterviewTemplateDir } from '../../runtime/runtime-paths.js';
@@ -51,7 +52,7 @@ function getLLMSafe(runtime: DocxaRuntime) {
   try {
     return runtime.getLLM();
   } catch (err: any) {
-    if (err.message.includes('LLM configuration is required')) {
+    if (err instanceof LLMConfigError) {
       console.error(`\n❌ ${err.message}\n`);
       process.exit(1);
     }
@@ -121,10 +122,14 @@ program
     console.log('\n🚀 Recommended Next Steps:');
     if (finalMode === 'existing') {
       console.log('  1. Run `docxa discover` to analyze existing codebase.');
-      console.log('  2. Run `docxa interview -d PRD -r product` to fill the "Intent Gap".');
+      console.log(
+        '  2. Run `docxa interview start -d PRD -r product_manager` to fill the "Intent Gap".',
+      );
       console.log('  3. Run `docxa generate PRD` once evidence is satisfied.');
     } else {
-      console.log('  1. Run `docxa interview -d BRD -r founder` to define vision.');
+      console.log(
+        '  1. Run `docxa interview start -d BRD -r business_stakeholder` to define vision.',
+      );
       console.log('  2. Run `docxa generate BRD`.');
     }
     console.log('\n-----------------------------------------\n');

@@ -1,5 +1,12 @@
 export type SupportedProvider = 'openai' | 'anthropic' | 'google-gemini' | 'google' | 'ollama';
 
+export class LLMConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'LLMConfigError';
+  }
+}
+
 export interface LLMConfig {
   provider: Exclude<SupportedProvider, 'google'> | 'google-gemini';
   model: string;
@@ -33,7 +40,7 @@ export function resolveLLMConfig(): LLMConfig {
   const provider: any = providerInput === 'google' ? 'google-gemini' : providerInput;
 
   if (!['openai', 'anthropic', 'google-gemini', 'ollama'].includes(provider)) {
-    throw new Error(
+    throw new LLMConfigError(
       `Unsupported provider: ${providerInput}. Supported providers: openai, anthropic, google, ollama`,
     );
   }
@@ -42,7 +49,7 @@ export function resolveLLMConfig(): LLMConfig {
   const apiKey = resolveApiKey(provider);
 
   if (apiKey === undefined) {
-    throw new Error(
+    throw new LLMConfigError(
       `LLM configuration is required for this command.\n` +
         `Set DOCXA_PROVIDER and the appropriate API key (e.g. OPENAI_API_KEY / ANTHROPIC_API_KEY / GEMINI_API_KEY), or pass --env-file.`,
     );

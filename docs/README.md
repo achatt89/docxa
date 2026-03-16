@@ -7,8 +7,8 @@ Whether you're starting a new project (Greenfield) or documenting a large existi
 ## Why Docxa?
 
 1.  **Stop Stale Docs**: Docxa reverse-engineers technical documentation directly from your repository analysis.
-2.  **Role-Aware Interviews**: Use Doxa's stakeholder interview engine to gather business requirements from PMs, Architects, and Leads without manual transcription.
-3.  **Evidence-Based Readiness**: Doxa's unique Generation Planner ensures you have enough "evidence" (context) before generating a document, preventing "AI hallucinations" caused by missing data.
+2.  **Role-Aware Interviews**: Use Docxa's stakeholder interview engine to gather business requirements from PMs, Architects, and Leads without manual transcription.
+3.  **Evidence-Based Readiness**: Docxa's unique Generation Planner ensures you have enough "evidence" (context) before generating a document, preventing "AI hallucinations" caused by missing data.
 
 ## Key Features
 
