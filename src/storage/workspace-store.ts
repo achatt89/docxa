@@ -46,6 +46,16 @@ export class WorkspaceStore {
     return ProjectConfigSchema.parse(JSON.parse(data));
   }
 
+  async updateDocumentMetadata(
+    type: string,
+    metadata: { path: string; generated: string; status: 'draft' | 'review' | 'finalized' },
+  ): Promise<void> {
+    const config = await this.loadProjectConfig();
+    config.documents = config.documents || {};
+    config.documents[type.toLowerCase()] = metadata;
+    await this.saveProjectConfig(config);
+  }
+
   async saveStakeholders(stakeholders: Stakeholder[]): Promise<void> {
     const filePath = path.join(this.docxaDir, 'stakeholders.json');
     await fs.writeFile(filePath, JSON.stringify(stakeholders, null, 2));

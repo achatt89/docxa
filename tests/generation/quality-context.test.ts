@@ -1,0 +1,53 @@
+import { describe, it, expect, vi } from 'vitest';
+import { DocumentGenerator } from '../../src/generation/document-generator.js';
+import { TemplateSystem } from '../../src/generation/template-system.js';
+import { LLMWrapper } from '../../src/utils/llm-wrapper.js';
+import { WorkspaceStore } from '../../src/storage/workspace-store.js';
+
+describe('DocumentGenerator Quality Context', () => {
+  it('includes config file contents in the user prompt', async () => {
+    const mockLlm = {
+      generate: vi.fn().mockResolvedValue('## Section\nContent'),
+    } as unknown as LLMWrapper;
+
+    const mockTemplateSystem = {
+      getTemplate: vi.fn().mockReturnValue({
+        name: 'TRD',
+        documentId: 'TRD',
+        version: '1.0',
+        sections: [{ title: 'Section', id: 'sec1' }],
+        dependencies: [],
+        promptHints: {},
+      }),
+    } as unknown as TemplateSystem;
+
+    const mockStore = {} as WorkspaceStore;
+
+    const generator = new DocumentGenerator(mockLlm, mockTemplateSystem, mockStore);
+
+    const context = {
+      projectName: 'test-project',
+      repositoryAnalysis: {
+        languages: ['TypeScript'],
+        frameworks: ['Next.js'],
+        services: [],
+        isMonorepo: false,
+        architecture: { pattern: 'monolith', reasoning: 'test' },
+        configFiles: ['package.json'],
+        configContents: {
+          'package.json': '{ "version": "1.2.3", "dependencies": { "next": "14.2.0" } }',
+        },
+      },
+    };
+
+    await generator.generate('TRD', context);
+
+    const [userPrompt, systemPrompt] = mockLlm.generate.mock.calls[0];
+
+    expect(userPrompt).toContain('CONFIGURATION FILES EVIDENCE:');
+    expect(userPrompt).toContain('--- package.json ---');
+    expect(userPrompt).toContain('"version": "1.2.3"');
+
+    expect(systemPrompt).toContain('elite Staff Software Engineer');
+  });
+});

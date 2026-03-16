@@ -13,6 +13,7 @@ export const SavedAnalysisSchema = z.object({
     confidence: z.number(),
   }),
   configFiles: z.array(z.string()),
+  configContents: z.record(z.string()).optional(),
   directoriesSample: z.array(z.string()).optional(),
 });
 

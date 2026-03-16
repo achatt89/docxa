@@ -49,8 +49,15 @@ export class DocumentGenerator {
 
   private buildSystemPrompt(template: DocumentTemplate): string {
     const hints = template.promptHints;
-    const prompt = `You are a professional documentation architect. 
-Your goal is to generate a ${template.name} (${template.documentId}) based on the provided project context.
+    const prompt = `You are an elite Staff Software Engineer and Documentation Architect.
+Your goal is to generate a comprehensive, professional ${template.name} (${template.documentId}) based on deep project context.
+
+CRITICAL QUALITY REQUIREMENTS:
+1. Be specific. Use actual technology names, versions, and architectural patterns found in the evidence.
+2. If evidence contains configuration files (like package.json), extract specific versions and build scripts.
+3. Maintain a formal, technical tone. 
+4. Ensure cross-consistency between related sections.
+5. Do not hallucinate data; if context is missing for a required detail, state the requirement clearly or use placeholders like "[TBD]".
 
 SYSTEM INTENT:
 ${hints?.systemIntent || `Generate a high-quality ${template.name}.`}
@@ -64,8 +71,8 @@ ${hints?.mustDo?.map((r) => `- ${r}`).join('\n') || ''}
 MUST NOT DO:
 ${hints?.mustNotDo?.map((r) => `- ${r}`).join('\n') || ''}
 
-Format your response as markdown. Use the exact section titles provided in the instructions as H2 headers (## Title).
-Do not include a table of contents or introductory text. Start directly with the first section header.
+Format your response as clean markdown. Use ## Section Title exactly as provided.
+Do not include a table of contents, intro or outro text. Start directly with the first section.
 `;
     return prompt;
   }
@@ -107,6 +114,13 @@ EVIDENCE FOR GENERATION:
       prompt += `- Monorepo: ${ra.isMonorepo ? 'Yes' : 'No'}\n`;
       prompt += `- Architecture: ${ra.architecture.pattern}\n`;
       prompt += `- Architecture Reasoning: ${ra.architecture.reasoning}\n`;
+
+      if (ra.configContents && Object.keys(ra.configContents).length > 0) {
+        prompt += `\nCONFIGURATION FILES EVIDENCE:\n`;
+        for (const [file, content] of Object.entries(ra.configContents)) {
+          prompt += `--- ${file} ---\n${content}\n`;
+        }
+      }
     }
 
     prompt += `\nPlease generate content for the following sections:\n\n`;

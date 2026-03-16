@@ -92,6 +92,7 @@ program
 
     const config: ProjectConfig = {
       name: path.basename(runtime.cwd),
+      version: '0.0.1',
       mode: finalMode,
       rootPath: runtime.cwd,
       createdAt: new Date().toISOString(),
@@ -100,6 +101,9 @@ program
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',
+      documents: {},
+      interviews: [],
+      stakeholders: [],
     };
 
     await runtime.store.initWorkspace(config);
@@ -160,6 +164,17 @@ program
     const archDetector = new ArchitectureDetector(getLLMSafe(runtime));
     const archInfo = await archDetector.detect(result, frameworkInfo);
 
+    const configContents: Record<string, string> = {};
+    for (const configFile of result.configFiles) {
+      try {
+        const fullPath = path.resolve(repoPath, configFile);
+        const data = await fs.readFile(fullPath, 'utf-8');
+        configContents[configFile] = data;
+      } catch {
+        // Skip unreadable files
+      }
+    }
+
     const savedAnalysis: SavedAnalysis = {
       scannedAt: new Date().toISOString(),
       repositoryPath: path.resolve(repoPath),
@@ -173,6 +188,7 @@ program
         confidence: archInfo.confidence,
       },
       configFiles: result.configFiles,
+      configContents,
     };
 
     await runtime.store.saveAnalysis(savedAnalysis);
@@ -353,6 +369,11 @@ program
       if (content) upstreamDocs[depId] = content;
     }
 
+    process.stdout.write(`📄 Generating ${docId}... `);
+    const generationInterval = setInterval(() => {
+      process.stdout.write('.');
+    }, 2000);
+
     const doc = await generator.generate(docId, {
       projectName: path.basename(runtime.cwd),
       upstreamDocs,
@@ -362,10 +383,22 @@ program
       repositoryAnalysis: savedAnalysis,
     });
 
+    clearInterval(generationInterval);
+    process.stdout.write(' Done!\n');
+
+    const relativeDocPath = path.join('documents', `${docId.toLowerCase()}.md`);
     await runtime.store.saveDocument(
       docId,
       doc.sections.map((s) => `## ${s.title}\n\n${s.content}`).join('\n\n'),
     );
+
+    // Update project metadata
+    await runtime.store.updateDocumentMetadata(docId, {
+      path: relativeDocPath,
+      generated: new Date().toISOString().split('T')[0],
+      status: 'draft',
+    });
+
     console.log(`✅ Generated ${docId} version ${doc.version}`);
   });
 

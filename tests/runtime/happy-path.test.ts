@@ -31,6 +31,7 @@ describe('Docxa Happy Path E2E', () => {
     // 2. Init
     const config: ProjectConfig = {
       name: 'test-project',
+      version: '0.0.1',
       mode: 'existing',
       rootPath: tempDir,
       createdAt: new Date().toISOString(),
@@ -39,6 +40,9 @@ describe('Docxa Happy Path E2E', () => {
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',
+      documents: {},
+      interviews: [],
+      stakeholders: [],
     };
     await runtime.store.initWorkspace(config);
 
