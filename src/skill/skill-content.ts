@@ -31,7 +31,7 @@ agents, stakeholder interviews, and repository analysis.
 | \`/docxa discover\` | Analyze codebase for architecture and tech stack |
 | \`/docxa interview\` | Run a stakeholder interview for a document type |
 | \`/docxa generate\` | Generate a documentation artifact |
-| \`/docxa validate\` | Check document consistency |
+| \`/docxa validate\` | Check workspace integrity and document consistency |
 | \`/docxa status\` | Show workspace state and readiness |
 
 ---
@@ -97,7 +97,7 @@ docxa generate lld
 **Key advice:**
 - Always run \`docxa discover\` first on existing projects
 - \`docxa discover\` saves results to \`.docxa/analysis/repo-analysis.json\` and satisfies
-  \`technical_context\` and \`architecture_context\` evidence requirements
+  \`technical_context\`, \`architecture_context\`, and \`frameworks\` evidence requirements
 - Use \`--mode assisted\` for specific suggestions on missing evidence
 
 ### Checking Readiness Before Generating
@@ -208,7 +208,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 # Google Gemini
 export DOCXA_PROVIDER=google-gemini
-export GOOGLE_GENAI_API_KEY=...
+export GEMINI_API_KEY=...  # or GOOGLE_API_KEY
 
 # Local Ollama
 export DOCXA_PROVIDER=ollama
@@ -233,15 +233,16 @@ docxa --env-file .env.production generate prd
 
 \`\`\`
 .docxa/
-├── project.json          # Project config (name, mode, paths)
-├── analysis.json         # Repository analysis (from docxa discover)
-├── stakeholders.json     # Stakeholder registry
+├── project.json              # Project config (name, mode, paths)
+├── stakeholders.json         # Stakeholder registry
+├── analysis/
+│   └── repo-analysis.json    # Repository analysis (from docxa discover)
 ├── documents/
-│   ├── brd.md            # Generated BRD
-│   ├── prd.md            # Generated PRD
+│   ├── brd.md                # Generated BRD
+│   ├── prd.md                # Generated PRD
 │   └── ...
-├── adr/                  # Architecture Decision Records
-└── interviews/           # Interview sessions (JSON)
+├── adr/                      # Architecture Decision Records
+└── interviews/               # Interview sessions (JSON)
 \`\`\`
 
 ---
@@ -264,7 +265,7 @@ repository analysis.
 | ADR      | architecture_context, decision_context     |
 
 Repository analysis (\`docxa discover\`) satisfies:
-\`technical_context\`, \`architecture_context\`, \`functional_context\`
+\`technical_context\`, \`architecture_context\`, \`frameworks\`
 
 ---
 
