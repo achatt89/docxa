@@ -9,9 +9,9 @@ import { QuestionStrategy } from '../../interview/question-strategy.js';
 import { InterviewEngine } from '../../interview/interview-engine.js';
 import { GenerationPlanner, GenerationMode } from '../../generation/generation-planner.js';
 import { SavedAnalysis } from '../../models/analysis-model.js';
-import { deriveAnalysisEvidence } from '../../generation/analysis-evidence.js';
 import { initializeRuntime, DocxaRuntime } from '../../runtime/initialize-runtime.js';
 import { LLMConfigError } from '../../llm/llm-config.js';
+import { EvidenceResolver } from '../../generation/evidence-resolver.js';
 import { getSkillStatus, installSkill, uninstallSkill } from '../../skill/skill-installer.js';
 import { generateSkillContent } from '../../skill/skill-content.js';
 import { resolveInterviewTemplateDir } from '../../runtime/runtime-paths.js';
@@ -29,7 +29,7 @@ const program = new Command();
 program
   .name('docxa')
   .description('AI-powered documentation intelligence system')
-  .version('0.1.0')
+  .version(pkg.version)
   .option('--env-file <path>', 'Path to custom .env file');
 
 /**
@@ -290,14 +290,15 @@ program
     const existingDocs = await runtime.store.listDocuments();
     const sessions = await runtime.sessionStore.listSessions();
     const savedAnalysis = await runtime.store.loadAnalysis();
-    const analysisAvailable = savedAnalysis ? deriveAnalysisEvidence(savedAnalysis) : [];
+    const resolver = new EvidenceResolver();
+    const evidence = resolver.resolve(savedAnalysis, sessions, existingDocs);
 
     const plan = planner.plan(
       docId,
       existingDocs,
       sessions,
       options.mode as GenerationMode,
-      analysisAvailable,
+      evidence.technicalContext,
     );
 
     if (options.plan || plan.status === 'blocked') {
@@ -376,14 +377,45 @@ program
 
 program
   .command('validate')
-  .description('Validate document consistency')
+  .description('Validate workspace and document consistency')
   .action(async () => {
-    await getRuntime(); // Just to load env/templates
+    const runtime = await getRuntime();
     const { ConsistencyChecker } = await import('../../generation/consistency-checker.js');
-    console.log('Running consistency checks...');
+    console.log('🔍 Running workspace validation...');
     const checker = new ConsistencyChecker();
-    const issues = await checker.check([]);
-    if (issues.length === 0) console.log('✅ No consistency issues found.');
+
+    // 1. Check workspace integrity
+    const workspaceIssues = await checker.checkWorkspace(runtime.cwd);
+
+    // 2. Check document consistency
+    const docs = await runtime.store.listDocuments();
+    const documentObjects = [];
+    for (const docId of docs) {
+      const content = await runtime.store.loadDocument(docId);
+      if (content) {
+        // Mocking a minimal Document object for the checker
+        documentObjects.push({
+          type: docId as any,
+          sections: [{ title: 'Content', content }],
+        } as any);
+      }
+    }
+    const consistencyIssues = await checker.check(documentObjects);
+
+    const allIssues = [...workspaceIssues, ...consistencyIssues];
+
+    if (allIssues.length === 0) {
+      console.log('✅ Workspace and documents are consistent.');
+    } else {
+      console.log(`\nFound ${allIssues.length} issues:`);
+      allIssues.forEach((issue) => {
+        const icon = issue.type === 'error' ? '❌' : '⚠️';
+        console.log(`${icon} [${issue.source}] ${issue.message}`);
+      });
+      if (allIssues.some((i) => i.type === 'error')) {
+        process.exit(1);
+      }
+    }
   });
 
 const skillCmd = program.command('skill').description('Manage the Docxa Claude Code skill');
