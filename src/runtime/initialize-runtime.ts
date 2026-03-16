@@ -34,7 +34,7 @@ export async function initializeRuntime(options: RuntimeOptions): Promise<DocxaR
 
   // 2. Initialize Core Services
   const templateSystem = new TemplateSystem();
-  await TemplateBootstrap.initialize(templateSystem);
+  await TemplateBootstrap.initialize(templateSystem, cwd);
 
   const store = new WorkspaceStore(cwd);
   const sessionStore = new InterviewSessionStore(cwd);

@@ -27,7 +27,8 @@ export function loadEnv(options: LoadEnvOptions): EnvLoadResult {
 
   // 1. Explicit path
   if (customPath) {
-    const fullPath = path.resolve(customPath);
+    // Resolve relative to provided cwd, not process.cwd()
+    const fullPath = path.resolve(cwd, customPath);
     result.filesAttempted.push(fullPath);
     if (fs.existsSync(fullPath)) {
       dotenv.config({ path: fullPath });

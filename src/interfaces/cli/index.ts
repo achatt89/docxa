@@ -11,8 +11,9 @@ import { GenerationPlanner, GenerationMode } from '../../generation/generation-p
 import { SavedAnalysis } from '../../models/analysis-model.js';
 import { deriveAnalysisEvidence } from '../../generation/analysis-evidence.js';
 import { initializeRuntime, DocxaRuntime } from '../../runtime/initialize-runtime.js';
-import { installSkill, uninstallSkill, getSkillStatus } from '../../skill/skill-installer.js';
+import { getSkillStatus, installSkill, uninstallSkill } from '../../skill/skill-installer.js';
 import { generateSkillContent } from '../../skill/skill-content.js';
+import { resolveInterviewTemplateDir } from '../../runtime/runtime-paths.js';
 import path from 'path';
 import fs from 'fs/promises';
 import * as readline from 'readline/promises';
@@ -43,37 +44,19 @@ async function getRuntime(): Promise<DocxaRuntime> {
 }
 
 /**
- * Helper to get the canonical interview directory.
+ * Safely fetches the LLM wrapper, gracefully exiting the process
+ * with a friendly message if the user hasn't configured an API key.
  */
-async function getInterviewDir(cwd: string): Promise<string> {
-  const interviewDir = path.join(cwd, 'templates', 'interviews');
-  const legacyInterviewDir = path.join(cwd, 'interviews');
-
+function getLLMSafe(runtime: DocxaRuntime) {
   try {
-    const officialEntries = await fs.readdir(interviewDir);
-    if (officialEntries.length === 0) {
-      const legacyEntries = await fs.readdir(legacyInterviewDir);
-      if (legacyEntries.length > 0) {
-        console.warn(
-          `⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`,
-        );
-        return legacyInterviewDir;
-      }
+    return runtime.getLLM();
+  } catch (err: any) {
+    if (err.message.includes('LLM configuration is required')) {
+      console.error(`\n❌ ${err.message}\n`);
+      process.exit(1);
     }
-  } catch {
-    try {
-      const legacyEntries = await fs.readdir(legacyInterviewDir);
-      if (legacyEntries.length > 0) {
-        console.warn(
-          `⚠️  Warning: Using legacy interview directory: ${legacyInterviewDir}. Please move interview definitions to templates/interviews/`,
-        );
-        return legacyInterviewDir;
-      }
-    } catch {
-      // Neither exists, Loader will handle it
-    }
+    throw err;
   }
-  return interviewDir;
 }
 
 program
@@ -161,7 +144,7 @@ program
     const detector = new FrameworkDetector();
     const frameworkInfo = await detector.detect(path.resolve(repoPath), result);
 
-    const archDetector = new ArchitectureDetector(runtime.getLLM());
+    const archDetector = new ArchitectureDetector(getLLMSafe(runtime));
     const archInfo = await archDetector.detect(result, frameworkInfo);
 
     const savedAnalysis: SavedAnalysis = {
@@ -200,7 +183,7 @@ interviewCmd
   .option('-n, --name <name>', 'Stakeholder name')
   .action(async (options) => {
     const runtime = await getRuntime();
-    const interviewDir = await getInterviewDir(runtime.cwd);
+    const interviewDir = await resolveInterviewTemplateDir(runtime.cwd);
     const engine = new InterviewEngine(
       runtime.interviewLoader,
       runtime.sessionStore,
@@ -221,7 +204,7 @@ interviewCmd
   .argument('<sessionId>', 'Session ID')
   .action(async (sessionId) => {
     const runtime = await getRuntime();
-    const interviewDir = await getInterviewDir(runtime.cwd);
+    const interviewDir = await resolveInterviewTemplateDir(runtime.cwd);
     const engine = new InterviewEngine(
       runtime.interviewLoader,
       runtime.sessionStore,
@@ -344,7 +327,7 @@ program
     console.log(`📄 Generating ${docId}...`);
 
     const generator = new DocumentGenerator(
-      runtime.getLLM(),
+      getLLMSafe(runtime),
       runtime.templateSystem,
       runtime.store,
     );

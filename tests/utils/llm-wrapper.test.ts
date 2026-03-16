@@ -1,18 +1,22 @@
 import { describe, it, expect, vi } from 'vitest';
 import { LLMWrapper } from '../../src/utils/llm-wrapper.js';
 
-// Mock AxAI
+// Mock AxAI and specific clients
 vi.mock('@ax-llm/ax', () => {
+  const mockAIClass = vi.fn().mockImplementation(() => ({
+    chat: vi.fn(),
+  }));
+
   return {
-    AxAI: vi.fn().mockImplementation(() => {
-      return {
-        chat: vi.fn(),
-      };
-    }),
+    AxAI: mockAIClass,
+    AxAIOpenAI: mockAIClass,
+    AxAIAnthropic: mockAIClass,
+    AxAIGoogleGemini: mockAIClass,
+    AxAIOllama: mockAIClass,
   };
 });
 
-import { AxAI } from '@ax-llm/ax';
+import { AxAIOpenAI } from '@ax-llm/ax';
 
 describe('LLMWrapper', () => {
   const config = {
@@ -23,7 +27,7 @@ describe('LLMWrapper', () => {
 
   it('should call axAI.chat for generate()', async () => {
     const wrapper = new LLMWrapper(config);
-    const mockClient = vi.mocked(AxAI).mock.results[0].value;
+    const mockClient = vi.mocked(AxAIOpenAI).mock.results[0].value;
 
     mockClient.chat.mockResolvedValue({
       results: [{ content: 'Hello World' }],
@@ -38,7 +42,7 @@ describe('LLMWrapper', () => {
 
   it('should call axAI.chat with responseFormat for generateStructured()', async () => {
     const wrapper = new LLMWrapper(config);
-    const mockClient = vi.mocked(AxAI).mock.results[1].value;
+    const mockClient = vi.mocked(AxAIOpenAI).mock.results[1].value;
 
     mockClient.chat.mockResolvedValue({
       results: [{ content: '{"foo": "bar"}' }],

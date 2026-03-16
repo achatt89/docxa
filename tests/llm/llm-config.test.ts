@@ -47,7 +47,7 @@ describe('LLM Config Resolution', () => {
 
   it('should throw if API key is missing', () => {
     process.env.DOCXA_PROVIDER = 'openai';
-    expect(() => resolveLLMConfig()).toThrow(/API key missing/);
+    expect(() => resolveLLMConfig()).toThrow(/LLM configuration is required/);
   });
 
   it('should prioritize DOCXA_API_KEY override', () => {

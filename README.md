@@ -21,6 +21,46 @@ Choose your preferred way to interact with Docxa:
 
 ---
 
+## ⚙️ Configuration & Requirements
+
+Docxa features a **lazy-initialized AI runtime**, meaning you can run many workspace commands completely locally without an API key.
+
+### **Local Commands (No API Key Required)**
+- `docxa init` - Initializes the local `.docxa/` workspace state.
+- `docxa list-documents` - Lists documents.
+- `docxa generate --plan <doc>` - Checks template and evidence readiness locally.
+- `docxa validate` - Validates document consistency locally.
+
+### **AI-Powered Commands (Requires Configuration)**
+Commands that analyze code or generate documentation require LLM access:
+- `docxa discover`
+- `docxa generate <doc>`
+
+**Environment Variables:**
+You must set a provider and an API key:
+- `DOCXA_PROVIDER="openai" | "anthropic" | "google-gemini" | "ollama"`
+- `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or `GEMINI_API_KEY`. (Alternatively, use a generic `DOCXA_API_KEY`).
+- *(Optional)* `DOCXA_MODEL`
+
+**Environment File Priority:**
+Docxa resolves variables in the following order:
+1. Exact file explicitly passed via `--env-file path/to/file`
+2. `.env.local` in the working directory
+3. `.env` in the working directory
+
+---
+
+## 📂 Workspace Structure
+
+Docxa relies on specific directories to manage its lifecycle:
+
+- **State & Evidence**: The `.docxa/` directory holds all auto-generated planning metadata, analyses, and generated documents.
+- **Templates**: To use custom templates, place them in the following canonical directories at the root of your project:
+  - `templates/documents/` — Override default document templates (e.g. `PRD.json`).
+  - `templates/interviews/` — Define custom interview strategies.
+
+---
+
 ## 🏗️ Core Architecture
 
 Docxa is built for enterprise-grade automation. Our architecture is decoupled into specialized engines to support complex, multi-source evidence gathering.
