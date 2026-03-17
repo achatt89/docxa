@@ -95,6 +95,7 @@ program
       version: '0.0.1',
       mode: finalMode,
       rootPath: runtime.cwd,
+      root: runtime.cwd,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       analysisPath: '.docxa/analysis/repo-analysis.json',
