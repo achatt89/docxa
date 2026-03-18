@@ -98,7 +98,7 @@ program
       root: runtime.cwd,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      analysisPath: '.docxa/analysis/repo-analysis.json',
+      analysisPath: '.docxa/analysis.json',
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',
@@ -118,7 +118,7 @@ program
     console.log(`Path:    ${runtime.cwd}\n`);
 
     console.log('📂 Workspace Structure:');
-    const dirs = ['analysis', 'interviews', 'evidence', 'documents', 'adr', 'metadata'];
+    const dirs = ['interviews', 'documents', 'adr'];
     dirs.forEach((d) => console.log(`  [✓] .docxa/${d}/`));
     console.log('  [✓] .docxa/project.json');
     console.log('  [✓] .docxa/stakeholders.json\n');

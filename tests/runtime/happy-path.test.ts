@@ -37,7 +37,7 @@ describe('Docxa Happy Path E2E', () => {
       root: tempDir,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      analysisPath: '.docxa/analysis/repo-analysis.json',
+      analysisPath: '.docxa/analysis.json',
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',
@@ -69,7 +69,7 @@ describe('Docxa Happy Path E2E', () => {
     ).toBe(true);
     expect(
       await fs
-        .access(path.join(docxaDir, 'analysis'))
+        .access(path.join(docxaDir, 'adr'))
         .then(() => true)
         .catch(() => false),
     ).toBe(true);

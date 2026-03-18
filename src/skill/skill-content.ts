@@ -235,8 +235,7 @@ docxa --env-file .env.production generate prd
 .docxa/
 ├── project.json              # Project config (name, mode, paths)
 ├── stakeholders.json         # Stakeholder registry
-├── analysis/
-│   └── repo-analysis.json    # Repository analysis (from docxa discover)
+├── analysis.json             # Repository analysis (from docxa discover)
 ├── documents/
 │   ├── brd.md                # Generated BRD
 │   ├── prd.md                # Generated PRD

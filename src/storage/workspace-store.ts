@@ -18,8 +18,8 @@ export class WorkspaceStore {
   async initWorkspace(config: ProjectConfig): Promise<void> {
     await fs.mkdir(this.docxaDir, { recursive: true });
 
-    // Create standard HLD v1.0 directory structure
-    const dirs = ['analysis', 'interviews', 'evidence', 'documents', 'adr', 'metadata'];
+    // Create lean workspace directory structure matching Claude
+    const dirs = ['interviews', 'documents', 'adr'];
     for (const dir of dirs) {
       await fs.mkdir(path.join(this.docxaDir, dir), { recursive: true });
     }
@@ -72,13 +72,12 @@ export class WorkspaceStore {
   }
 
   async saveAnalysis(analysis: SavedAnalysis): Promise<void> {
-    await fs.mkdir(path.join(this.docxaDir, 'analysis'), { recursive: true });
-    const filePath = path.join(this.docxaDir, 'analysis', 'repo-analysis.json');
+    const filePath = path.join(this.docxaDir, 'analysis.json');
     await fs.writeFile(filePath, JSON.stringify(analysis, null, 2));
   }
 
   async loadAnalysis(): Promise<SavedAnalysis | undefined> {
-    const filePath = path.join(this.docxaDir, 'analysis', 'repo-analysis.json');
+    const filePath = path.join(this.docxaDir, 'analysis.json');
     try {
       const data = await fs.readFile(filePath, 'utf-8');
       return SavedAnalysisSchema.parse(JSON.parse(data));
