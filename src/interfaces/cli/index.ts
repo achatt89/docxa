@@ -2,7 +2,7 @@
 import { Command } from 'commander';
 import { RepositoryScanner } from '../../analysis/repository-scanner.js';
 import { FrameworkDetector } from '../../analysis/framework-detector.js';
-import { ArchitectureDetector } from '../../analysis/architecture-detector.js';
+import { ComprehensiveAnalyzer } from '../../analysis/comprehensive-analyzer.js';
 import { ProjectConfig } from '../../models/project-model.js';
 import { AnswerNormalizer } from '../../interview/answer-normalizer.js';
 import { QuestionStrategy } from '../../interview/question-strategy.js';
@@ -162,9 +162,6 @@ program
     const detector = new FrameworkDetector();
     const frameworkInfo = await detector.detect(path.resolve(repoPath), result);
 
-    const archDetector = new ArchitectureDetector(getLLMSafe(runtime));
-    const archInfo = await archDetector.detect(result, frameworkInfo);
-
     const configContents: Record<string, string> = {};
     for (const configFile of result.configFiles) {
       try {
@@ -176,31 +173,65 @@ program
       }
     }
 
+    const analyzer = new ComprehensiveAnalyzer(getLLMSafe(runtime));
+    console.log('🤖 Running comprehensive AI analysis (this may take a minute)...');
+
+    // Fallbacks just in case LLM misses required fields
+    const defaultRichAnalysis = {
+      analyzed: new Date().toISOString().split('T')[0],
+      project: {
+        name: path.basename(path.resolve(repoPath)),
+        type: 'Unknown',
+        description: 'Auto-generated analysis',
+      },
+      techStack: {},
+      devTooling: {},
+      directoryStructure: {},
+      evidenceSatisfied: [],
+    };
+
+    let comprehensiveInfo: Partial<SavedAnalysis> = {};
+    try {
+      comprehensiveInfo = await analyzer.detect(
+        result,
+        frameworkInfo,
+        configContents,
+        path.resolve(repoPath),
+      );
+    } catch (err: any) {
+      console.warn(
+        `\n⚠️ Comprehensive LLM analysis failed: ${err.message}. Saving basic analysis instead.`,
+      );
+    }
+
     const savedAnalysis: SavedAnalysis = {
+      ...defaultRichAnalysis,
+      ...comprehensiveInfo,
       scannedAt: new Date().toISOString(),
       repositoryPath: path.resolve(repoPath),
       languages: Array.from(result.languages),
       frameworks: frameworkInfo.frameworks,
       services: frameworkInfo.services,
       isMonorepo: frameworkInfo.isMonorepo,
-      architecture: {
-        pattern: archInfo.pattern,
-        reasoning: archInfo.reasoning,
-        confidence: archInfo.confidence,
-      },
       configFiles: result.configFiles,
       configContents,
-    };
+    } as SavedAnalysis;
 
     await runtime.store.saveAnalysis(savedAnalysis);
 
     console.log('\n--- Analysis Result ---');
+    console.log(`Project Name: ${savedAnalysis.project?.name || 'Unknown'}`);
+    console.log(`Project Type: ${savedAnalysis.project?.type || 'Unknown'}`);
     console.log(`Languages: ${Array.from(result.languages).join(', ')}`);
     console.log(`Frameworks: ${frameworkInfo.frameworks.join(', ')}`);
-    console.log(`Services: ${frameworkInfo.services.join(', ')}`);
-    console.log(`Monorepo: ${frameworkInfo.isMonorepo ? 'Yes' : 'No'}`);
-    console.log(`Detected Pattern: ${archInfo.pattern}`);
-    console.log(`Reasoning: ${archInfo.reasoning}`);
+    if (savedAnalysis.architecture?.patterns) {
+      console.log(`Patterns: ${savedAnalysis.architecture.patterns.join(', ')}`);
+    } else if (savedAnalysis.architecture?.pattern) {
+      console.log(`Pattern: ${savedAnalysis.architecture.pattern}`);
+    }
+    if (savedAnalysis.keyComponents && savedAnalysis.keyComponents.length > 0) {
+      console.log(`Key Components Detected: ${savedAnalysis.keyComponents.length}`);
+    }
   });
 
 const interviewCmd = program.command('interview').description('Stakeholder interview commands');

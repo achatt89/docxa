@@ -43,6 +43,16 @@ describe('WorkspaceStore', () => {
         confidence: 0.9,
       },
       configFiles: ['package.json', 'tsconfig.json'],
+      analyzed: new Date().toISOString().split('T')[0],
+      project: {
+        name: 'test',
+        type: 'test',
+        description: 'test',
+      },
+      techStack: {},
+      devTooling: {},
+      directoryStructure: {},
+      evidenceSatisfied: [],
     };
 
     await store.saveAnalysis(mockAnalysis);
