@@ -18,7 +18,7 @@ describe('WorkspaceStore', () => {
       rootPath: tmpDir,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      analysisPath: '.docxa/analysis.json',
+      analysisPath: '.docxa/analysis/repo-analysis.json',
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',
@@ -43,16 +43,6 @@ describe('WorkspaceStore', () => {
         confidence: 0.9,
       },
       configFiles: ['package.json', 'tsconfig.json'],
-      analyzed: new Date().toISOString().split('T')[0],
-      project: {
-        name: 'test',
-        type: 'test',
-        description: 'test',
-      },
-      techStack: {},
-      devTooling: {},
-      directoryStructure: {},
-      evidenceSatisfied: [],
     };
 
     await store.saveAnalysis(mockAnalysis);

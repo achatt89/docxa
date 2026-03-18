@@ -37,7 +37,7 @@ describe('Docxa Happy Path E2E', () => {
       root: tempDir,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      analysisPath: '.docxa/analysis.json',
+      analysisPath: '.docxa/analysis/repo-analysis.json',
       documentsDir: '.docxa/documents/',
       adrDir: '.docxa/adr/',
       stakeholdersPath: '.docxa/stakeholders.json',

@@ -108,7 +108,7 @@ describe('Docxa Phase 1 Smoke Tests', () => {
       // or just verify the SaveAnalysis writes to the right place.
       const mockAnalysis: any = { scannedAt: new Date().toISOString(), repositoryPath: __dirname };
 
-      const expectedPath = path.join(__dirname, '.docxa', 'analysis.json');
+      const expectedPath = path.join(__dirname, '.docxa', 'analysis', 'repo-analysis.json');
 
       await runtime.store.saveAnalysis(mockAnalysis);
       expect(fs.existsSync(expectedPath)).toBe(true);

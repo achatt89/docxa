@@ -1,7 +1,7 @@
 import { LLMWrapper } from '../utils/llm-wrapper.js';
 import { FrameworkInfo } from './framework-detector.js';
 import { ScanResult } from './repository-scanner.js';
-import { SavedAnalysis } from '../models/analysis-model.js';
+import { ComprehensiveAnalysis } from '../models/analysis-model.js';
 
 export class ComprehensiveAnalyzer {
   private llm: LLMWrapper;
@@ -15,7 +15,7 @@ export class ComprehensiveAnalyzer {
     frameworkInfo: FrameworkInfo,
     configContents: Record<string, string>,
     repoPath: string,
-  ): Promise<Partial<SavedAnalysis>> {
+  ): Promise<ComprehensiveAnalysis> {
     const prompt = `
 You are an expert software architect analyzing a codebase.
 Analyze the following project structure, frameworks, and configuration files to output a comprehensive analysis JSON.
@@ -54,100 +54,27 @@ Output a JSON object that strictly matches this structure. Omit optional fields 
 - evidenceReadiness: Object mapping document type (e.g. "TRD", "HLD") to { status, missing: [], suggestion }
 `;
 
-    const schema = {
-      type: 'object',
-      properties: {
-        analyzed: { type: 'string' },
-        project: {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            type: { type: 'string' },
-            domain: { type: 'string' },
-            description: { type: 'string' },
-            owner: { type: 'string' },
-            ownerBackground: { type: 'string' },
-          },
-          required: ['name', 'type', 'description'],
-        },
-        rendering: { type: 'object', additionalProperties: true },
-        techStack: { type: 'object', additionalProperties: true },
-        devTooling: { type: 'object', additionalProperties: true },
-        routes: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              path: { type: 'string' },
-              label: { type: 'string' },
-            },
-            required: ['path', 'label'],
-          },
-        },
-        architecture: {
-          type: 'object',
-          properties: {
-            pattern: { type: 'string' },
-            reasoning: { type: 'string' },
-            confidence: { type: 'number' },
-            patterns: { type: 'array', items: { type: 'string' } },
-            designSystem: { type: 'object', additionalProperties: true },
-          },
-          additionalProperties: true,
-        },
-        directoryStructure: { type: 'object', additionalProperties: { type: 'string' } },
-        keyComponents: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              role: { type: 'string' },
-            },
-            required: ['name', 'role'],
-          },
-        },
-        seo: { type: 'object', additionalProperties: true },
-        externalIntegrations: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              service: { type: 'string' },
-              method: { type: 'string' },
-            },
-            required: ['service', 'method'],
-          },
-        },
-        performance: { type: 'object', additionalProperties: true },
-        evidenceSatisfied: { type: 'array', items: { type: 'string' } },
-        evidenceReadiness: {
-          type: 'object',
-          additionalProperties: {
-            type: 'object',
-            properties: {
-              status: { type: 'string' },
-              missing: { type: 'array', items: { type: 'string' } },
-              suggestion: { type: 'string' },
-            },
-            required: ['status', 'missing'],
-          },
-        },
-      },
-      required: [
-        'analyzed',
-        'project',
-        'techStack',
-        'devTooling',
-        'directoryStructure',
-        'evidenceSatisfied',
-      ],
-    };
+    // We use generate() instead of generateStructured() since complex nested schemas
+    // without perfectly strict definitions commonly trigger HTTP 400 from strict mode APIs.
+    const systemPrompt =
+      'You are an expert software architect building a technical analysis document. You must return only valid JSON matching the requested structure.';
 
-    return await this.llm.generateStructured<Partial<SavedAnalysis>>(
-      prompt,
-      schema,
-      'You are an expert software architect building a technical analysis document.',
-    );
+    // Explicitly add JSON instruction to user prompt
+    const enhancedPrompt =
+      prompt + '\n\nIMPORTANT: You must return the analysis strictly as a valid JSON object.';
+
+    const responseText = await this.llm.generate(enhancedPrompt, systemPrompt);
+
+    try {
+      // Find the JSON block if wrapped in markdown
+      const match = responseText.match(/```json\n([\s\S]*)\n```/);
+      const jsonString = match ? match[1] : responseText;
+      return JSON.parse(jsonString) as ComprehensiveAnalysis;
+    } catch (e: any) {
+      throw new Error(
+        `Failed to parse LLM JSON output: ${e.message}\nOutput was: ${responseText.substring(0, 100)}...`,
+        { cause: e },
+      );
+    }
   }
 }

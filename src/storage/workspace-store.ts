@@ -2,7 +2,11 @@ import fs from 'fs/promises';
 import path from 'path';
 import { ProjectConfig, ProjectConfigSchema } from '../models/project-model.js';
 import { Stakeholder, StakeholderSchema } from '../models/stakeholder-model.js';
-import { SavedAnalysis, SavedAnalysisSchema } from '../models/analysis-model.js';
+import {
+  SavedAnalysis,
+  SavedAnalysisSchema,
+  ComprehensiveAnalysis,
+} from '../models/analysis-model.js';
 
 export class WorkspaceStore {
   private workspaceDir: string;
@@ -72,12 +76,18 @@ export class WorkspaceStore {
   }
 
   async saveAnalysis(analysis: SavedAnalysis): Promise<void> {
+    await fs.mkdir(path.join(this.docxaDir, 'analysis'), { recursive: true });
+    const filePath = path.join(this.docxaDir, 'analysis', 'repo-analysis.json');
+    await fs.writeFile(filePath, JSON.stringify(analysis, null, 2));
+  }
+
+  async saveComprehensiveAnalysis(analysis: ComprehensiveAnalysis): Promise<void> {
     const filePath = path.join(this.docxaDir, 'analysis.json');
     await fs.writeFile(filePath, JSON.stringify(analysis, null, 2));
   }
 
   async loadAnalysis(): Promise<SavedAnalysis | undefined> {
-    const filePath = path.join(this.docxaDir, 'analysis.json');
+    const filePath = path.join(this.docxaDir, 'analysis', 'repo-analysis.json');
     try {
       const data = await fs.readFile(filePath, 'utf-8');
       return SavedAnalysisSchema.parse(JSON.parse(data));
