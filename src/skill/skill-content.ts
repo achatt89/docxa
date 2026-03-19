@@ -210,6 +210,13 @@ export ANTHROPIC_API_KEY=sk-ant-...
 export DOCXA_PROVIDER=google-gemini
 export GEMINI_API_KEY=...  # or GOOGLE_API_KEY
 
+# Azure OpenAI
+export DOCXA_PROVIDER=azure-openai
+export AZURE_OPENAI_API_KEY=your-azure-key
+export AZURE_OPENAI_ENDPOINT=https://your-resource-name.cognitiveservices.azure.com/
+export AZURE_OPENAI_DEPLOYMENT=gpt-5-mini
+export DOCXA_MODEL=gpt-5-mini
+
 # Local Ollama
 export DOCXA_PROVIDER=ollama
 export DOCXA_OLLAMA_URL=http://localhost:11434/v1

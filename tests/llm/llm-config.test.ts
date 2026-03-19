@@ -15,6 +15,11 @@ describe('LLM Config Resolution', () => {
     delete process.env.ANTHROPIC_API_KEY;
     delete process.env.GEMINI_API_KEY;
     delete process.env.GOOGLE_API_KEY;
+    delete process.env.AZURE_OPENAI_API_KEY;
+    delete process.env.AZURE_OPENAI_ENDPOINT;
+    delete process.env.AZURE_OPENAI_DEPLOYMENT;
+    delete process.env.AZURE_OPENAI_API_MODE;
+    delete process.env.AZURE_OPENAI_API_VERSION;
   });
 
   afterEach(() => {
@@ -70,5 +75,20 @@ describe('LLM Config Resolution', () => {
     expect(config.provider).toBe('ollama');
     expect(config.model).toBe('llama3.1');
     expect(config.apiKey).toBe('');
+  });
+
+  it('should resolve Azure OpenAI config', () => {
+    process.env.DOCXA_PROVIDER = 'azure-openai';
+    process.env.AZURE_OPENAI_API_KEY = 'azure-test';
+    process.env.AZURE_OPENAI_ENDPOINT = 'https://example.cognitiveservices.azure.com/';
+    process.env.AZURE_OPENAI_DEPLOYMENT = 'gpt-5-mini';
+
+    const config = resolveLLMConfig();
+    expect(config.provider).toBe('azure-openai');
+    expect(config.apiKey).toBe('azure-test');
+    expect(config.endpoint).toBe('https://example.cognitiveservices.azure.com/');
+    expect(config.deploymentName).toBe('gpt-5-mini');
+    expect(config.model).toBe('gpt-5-mini');
+    expect(config.apiMode).toBe('v1');
   });
 });

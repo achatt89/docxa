@@ -37,10 +37,16 @@ Commands that analyze code or generate documentation require LLM access:
 - `docxa generate <doc>`
 
 **Environment Variables:**
-You must set a provider and an API key:
-- `DOCXA_PROVIDER="openai" | "anthropic" | "google-gemini" | "ollama"`
-- `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or `GEMINI_API_KEY`. (Alternatively, use a generic `DOCXA_API_KEY`).
+You can set a provider explicitly, or let Docxa auto-detect one from the available API keys:
+- `DOCXA_PROVIDER="openai" | "anthropic" | "google-gemini" | "azure-openai" | "ollama"`
+- `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, or `AZURE_OPENAI_API_KEY`. (Alternatively, use a generic `DOCXA_API_KEY`).
 - `DOCXA_MODEL` — *(Recommended)* Set your preferred model ID. If unset, Docxa defaults to the latest stable flagships (e.g. `gpt-5.4`, `claude-sonnet-4-6`, `gemini-2.5-flash`).
+
+For Azure OpenAI, also set:
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_DEPLOYMENT`
+- `AZURE_OPENAI_API_MODE` (optional, defaults to `v1`)
+- `AZURE_OPENAI_API_VERSION` (optional, only used for `legacy` mode)
 
 **Environment File Priority:**
 Docxa resolves variables in the following order:

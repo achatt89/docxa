@@ -5,9 +5,11 @@ export class LLMWrapper {
   // Use 'any' here since the specific AI classes (AxAIOpenAI, AxAIAnthropic)
   // don't perfectly overlap with the generic AxAI class type signature.
   private client: any;
+  private readonly config: LLMConfig;
 
   constructor(config: LLMConfig) {
     const { provider, model, apiKey } = config;
+    this.config = config;
 
     switch (provider) {
       case 'openai':
@@ -35,6 +37,9 @@ export class LLMWrapper {
           config: { model: model as any, stream: false },
         });
         break;
+      case 'azure-openai':
+        this.client = undefined;
+        break;
       default:
         // Fallback for any unknown variants
         this.client = new AxAI({
@@ -50,6 +55,10 @@ export class LLMWrapper {
 
   async generate(prompt: string, systemPrompt?: string): Promise<string> {
     try {
+      if (this.config.provider === 'azure-openai') {
+        return await this.generateWithAzure(prompt, systemPrompt);
+      }
+
       const response = await this.client.chat({
         chatPrompt: [
           ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
@@ -89,6 +98,11 @@ export class LLMWrapper {
 
   async generateStructured<T>(prompt: string, schema: any, systemPrompt?: string): Promise<T> {
     try {
+      if (this.config.provider === 'azure-openai') {
+        const responseText = await this.generateWithAzure(prompt, systemPrompt, schema);
+        return JSON.parse(responseText) as T;
+      }
+
       const response = await this.client.chat({
         chatPrompt: [
           ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
@@ -123,5 +137,83 @@ export class LLMWrapper {
       }
       throw new LLMRuntimeError(`LLM Structured Generation Error: ${msg}`, error);
     }
+  }
+
+  private async generateWithAzure(prompt: string, systemPrompt?: string, schema?: any): Promise<string> {
+    const model = this.config.model;
+    const messages = [
+      ...(systemPrompt ? [{ role: 'system', content: systemPrompt }] : []),
+      { role: 'user', content: prompt },
+    ];
+
+    const body: Record<string, unknown> = {
+      messages,
+      stream: false,
+      model,
+    };
+
+    if (schema) {
+      body.response_format = {
+        type: 'json_schema',
+        json_schema: {
+          name: 'docxa_structured_response',
+          schema,
+          strict: true,
+        },
+      };
+    }
+
+    if (this.isReasoningModel(model)) {
+      body.max_completion_tokens = schema ? 4096 : 2048;
+      body.reasoning_effort = 'minimal';
+    } else {
+      body.temperature = 0;
+    }
+
+    const response = await fetch(this.getAzureChatUrl(), {
+      method: 'POST',
+      headers: this.getAzureHeaders(),
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Azure OpenAI request failed (${response.status}): ${errorText}`);
+    }
+
+    const payload = await response.json();
+    return payload.choices?.[0]?.message?.content || '';
+  }
+
+  private getAzureHeaders(): HeadersInit {
+    if (this.config.apiMode === 'legacy') {
+      return {
+        'Content-Type': 'application/json',
+        'api-key': this.config.apiKey,
+      };
+    }
+
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.config.apiKey}`,
+    };
+  }
+
+  private getAzureChatUrl(): string {
+    const endpoint = this.ensureTrailingSlash(this.config.endpoint || '');
+
+    if (this.config.apiMode === 'legacy') {
+      return `${endpoint}openai/deployments/${this.config.deploymentName}/chat/completions?api-version=${this.config.apiVersion || '2024-10-21'}`;
+    }
+
+    return `${endpoint}openai/v1/chat/completions`;
+  }
+
+  private ensureTrailingSlash(value: string): string {
+    return value.endsWith('/') ? value : `${value}/`;
+  }
+
+  private isReasoningModel(model: string): boolean {
+    return /^gpt-5|^o[134]/i.test(model);
   }
 }

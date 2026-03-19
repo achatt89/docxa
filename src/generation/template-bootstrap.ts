@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { TemplateSystem } from './template-system.js';
 import { TemplateLoader } from './template-loader.js';
 import { fileURLToPath } from 'url';
@@ -20,9 +21,11 @@ export class TemplateBootstrap {
 
     // Load from custom source if it exists
     try {
+      if (fs.existsSync(customDir)) {
       const customTemplates = await loader.loadTemplates(customDir);
       if (customTemplates.length > 0) {
         templateSystem.registerMany(customTemplates);
+      }
       }
     } catch {
       // Ignore if user doesn't have custom templates

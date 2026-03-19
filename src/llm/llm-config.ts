@@ -1,4 +1,10 @@
-export type SupportedProvider = 'openai' | 'anthropic' | 'google-gemini' | 'google' | 'ollama';
+export type SupportedProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'google-gemini'
+  | 'google'
+  | 'ollama'
+  | 'azure-openai';
 
 export class LLMConfigError extends Error {
   constructor(message: string) {
@@ -21,6 +27,10 @@ export interface LLMConfig {
   provider: Exclude<SupportedProvider, 'google'> | 'google-gemini';
   model: string;
   apiKey: string;
+  endpoint?: string;
+  deploymentName?: string;
+  apiMode?: 'v1' | 'legacy';
+  apiVersion?: string;
 }
 
 export const PROVIDER_ENV_VARS: Record<string, string[]> = {
@@ -28,6 +38,7 @@ export const PROVIDER_ENV_VARS: Record<string, string[]> = {
   anthropic: ['ANTHROPIC_API_KEY'],
   google: ['GEMINI_API_KEY', 'GOOGLE_API_KEY'],
   'google-gemini': ['GEMINI_API_KEY', 'GOOGLE_API_KEY'],
+  'azure-openai': ['AZURE_OPENAI_API_KEY', 'AZURE_OPENAI_KEY'],
   ollama: [], // Ollama usually doesn't need an API key locally
 };
 
@@ -37,6 +48,7 @@ export const DEFAULT_MODELS: Record<string, string> = {
   anthropic: 'claude-sonnet-4-6',
   google: 'gemini-2.5-flash',
   'google-gemini': 'gemini-2.5-flash',
+  'azure-openai': 'gpt-5-mini',
   ollama: 'llama3.1',
 };
 
@@ -45,14 +57,14 @@ export const DEFAULT_MODELS: Record<string, string> = {
  * Conceptually follows the Sylva pattern.
  */
 export function resolveLLMConfig(): LLMConfig {
-  const providerInput = (process.env.DOCXA_PROVIDER as SupportedProvider) || 'openai';
+  const providerInput = (process.env.DOCXA_PROVIDER as SupportedProvider) || detectProviderFromEnv();
 
   // Map 'google' to 'google-gemini' for Ax compatibility
   const provider: any = providerInput === 'google' ? 'google-gemini' : providerInput;
 
-  if (!['openai', 'anthropic', 'google-gemini', 'ollama'].includes(provider)) {
+  if (!['openai', 'anthropic', 'google-gemini', 'ollama', 'azure-openai'].includes(provider)) {
     throw new LLMConfigError(
-      `Unsupported provider: ${providerInput}. Supported providers: openai, anthropic, google, ollama`,
+      `Unsupported provider: ${providerInput}. Supported providers: openai, anthropic, google, azure-openai, ollama`,
     );
   }
 
@@ -62,8 +74,29 @@ export function resolveLLMConfig(): LLMConfig {
   if (apiKey === undefined) {
     throw new LLMConfigError(
       `LLM configuration is required for this command.\n` +
-        `Set DOCXA_PROVIDER and the appropriate API key (e.g. OPENAI_API_KEY / ANTHROPIC_API_KEY / GEMINI_API_KEY), or pass --env-file.`,
+        `Set DOCXA_PROVIDER and the appropriate API key (e.g. OPENAI_API_KEY / ANTHROPIC_API_KEY / GEMINI_API_KEY / AZURE_OPENAI_API_KEY), or pass --env-file.`,
     );
+  }
+
+  if (provider === 'azure-openai') {
+    const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
+    const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT || model;
+
+    if (!endpoint || !deploymentName) {
+      throw new LLMConfigError(
+        'Azure OpenAI configuration is incomplete. Set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT, or provide DOCXA_MODEL as the deployment/model name.',
+      );
+    }
+
+    return {
+      provider,
+      model,
+      apiKey,
+      endpoint,
+      deploymentName,
+      apiMode: (process.env.AZURE_OPENAI_API_MODE as 'v1' | 'legacy') || 'v1',
+      apiVersion: process.env.AZURE_OPENAI_API_VERSION || '2024-10-21',
+    };
   }
 
   return {
@@ -71,6 +104,30 @@ export function resolveLLMConfig(): LLMConfig {
     model,
     apiKey,
   };
+}
+
+function detectProviderFromEnv(): SupportedProvider {
+  if (process.env.AZURE_OPENAI_API_KEY && process.env.AZURE_OPENAI_ENDPOINT) {
+    return 'azure-openai';
+  }
+
+  if (process.env.OPENAI_API_KEY) {
+    return 'openai';
+  }
+
+  if (process.env.ANTHROPIC_API_KEY) {
+    return 'anthropic';
+  }
+
+  if (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY) {
+    return 'google-gemini';
+  }
+
+  if (process.env.DOCXA_OLLAMA_URL) {
+    return 'ollama';
+  }
+
+  return 'openai';
 }
 
 function resolveApiKey(provider: SupportedProvider): string | undefined {

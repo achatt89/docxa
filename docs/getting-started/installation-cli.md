@@ -44,4 +44,14 @@ export DOCXA_PROVIDER=openai
 export OPENAI_API_KEY=sk-proj-xxxxxx
 ```
 
+Azure OpenAI is also supported:
+
+```bash
+export DOCXA_PROVIDER=azure-openai
+export AZURE_OPENAI_API_KEY=your-azure-key
+export AZURE_OPENAI_ENDPOINT=https://your-resource-name.cognitiveservices.azure.com/
+export AZURE_OPENAI_DEPLOYMENT=gpt-5-mini
+export DOCXA_MODEL=gpt-5-mini
+```
+
 For more details on configuration, see the [Configuration Guide](configuration.md).
