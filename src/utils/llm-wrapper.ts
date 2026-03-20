@@ -32,8 +32,8 @@ export class LLMWrapper {
         break;
       case 'ollama':
         this.client = new AxAIOllama({
-          apiKey: apiKey || '', // Satisfy interface even if not used
-          apiURL: process.env.DOCXA_OLLAMA_URL || 'http://localhost:11434/v1',
+          apiKey: apiKey || 'ollama', // Satisfy interface even if not used
+          url: process.env.DOCXA_OLLAMA_URL || 'http://localhost:11434/v1',
           config: { model: model as any, stream: false },
         });
         break;
