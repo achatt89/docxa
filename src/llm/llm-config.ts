@@ -46,10 +46,10 @@ export const PROVIDER_ENV_VARS: Record<string, string[]> = {
 export const DEFAULT_MODELS: Record<string, string> = {
   openai: 'gpt-5.4',
   anthropic: 'claude-sonnet-4-6',
-  google: 'gemini-2.5-flash',
-  'google-gemini': 'gemini-2.5-flash',
-  'azure-openai': 'gpt-5-mini',
-  ollama: 'llama3.1',
+  google: 'gemini-3-flash',
+  'google-gemini': 'gemini-3-flash',
+  'azure-openai': 'gpt-5.4',
+  ollama: 'qwen3-vl:8b',
 };
 
 /**
@@ -57,7 +57,8 @@ export const DEFAULT_MODELS: Record<string, string> = {
  * Conceptually follows the Sylva pattern.
  */
 export function resolveLLMConfig(): LLMConfig {
-  const providerInput = (process.env.DOCXA_PROVIDER as SupportedProvider) || detectProviderFromEnv();
+  const providerInput =
+    (process.env.DOCXA_PROVIDER as SupportedProvider) || detectProviderFromEnv();
 
   // Map 'google' to 'google-gemini' for Ax compatibility
   const provider: any = providerInput === 'google' ? 'google-gemini' : providerInput;

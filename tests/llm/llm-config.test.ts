@@ -73,7 +73,7 @@ describe('LLM Config Resolution', () => {
     process.env.DOCXA_PROVIDER = 'ollama';
     const config = resolveLLMConfig();
     expect(config.provider).toBe('ollama');
-    expect(config.model).toBe('llama3.1');
+    expect(config.model).toBe('qwen3-vl:8b');
     expect(config.apiKey).toBe('');
   });
 
@@ -81,14 +81,14 @@ describe('LLM Config Resolution', () => {
     process.env.DOCXA_PROVIDER = 'azure-openai';
     process.env.AZURE_OPENAI_API_KEY = 'azure-test';
     process.env.AZURE_OPENAI_ENDPOINT = 'https://example.cognitiveservices.azure.com/';
-    process.env.AZURE_OPENAI_DEPLOYMENT = 'gpt-5-mini';
+    process.env.AZURE_OPENAI_DEPLOYMENT = 'gpt-5.4';
 
     const config = resolveLLMConfig();
     expect(config.provider).toBe('azure-openai');
     expect(config.apiKey).toBe('azure-test');
     expect(config.endpoint).toBe('https://example.cognitiveservices.azure.com/');
-    expect(config.deploymentName).toBe('gpt-5-mini');
-    expect(config.model).toBe('gpt-5-mini');
+    expect(config.deploymentName).toBe('gpt-5.4');
+    expect(config.model).toBe('gpt-5.4');
     expect(config.apiMode).toBe('v1');
   });
 });
